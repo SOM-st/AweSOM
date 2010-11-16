@@ -1,0 +1,415 @@
+Class {
+	#name : #SOMUniverse,
+	#superclass : #Object,
+	#instVars : [
+		'globals',
+		'interpreter',
+		'outStream',
+		'heap',
+		'symbolTable',
+		'numberCache'
+	],
+	#classVars : [
+		'ClassPaths'
+	],
+	#category : #'AweSOM-VM'
+}
+
+{ #category : #accessing }
+SOMUniverse class >> classPaths [
+
+	^ ClassPaths ifNil: [
+		self notify: 'classPaths was not set. Use SOMTools>>setClassPathBase: and pass the path to the SOM directory'].
+]
+
+{ #category : #accessing }
+SOMUniverse class >> classPaths: anObject [
+	ClassPaths := anObject
+]
+
+{ #category : #bootstrapping }
+SOMUniverse >> bootstrapMethod [
+
+	^ SOMMethod
+		inUniverse: self
+		named: #bootstrap
+		numArgs: 1
+		numLocals: 0
+		maxStackDepth: 2
+		bytecodes: {SOMBCHalt new}
+		holder: (self globalAt: #System)
+		lexicalContext: self globalNil.
+
+]
+
+{ #category : #bootstrapping }
+SOMUniverse >> bootstrapWithArguments: args [ 
+
+	self 
+		bootstrapWithEntryPoint: ((self globalAt: #System) lookupInvokable: #initialize:)
+		withArguments: args.
+]
+
+{ #category : #bootstrapping }
+SOMUniverse >> bootstrapWithEntryPoint: invokable withArguments: args [
+
+	| bootstrapFrame |
+	bootstrapFrame := (self interpreter pushNewFrameWithMethod: self bootstrapMethod)
+		push: (self globalAt: #system);
+		push: args;
+		yourself.
+	invokable ifNotNil: [invokable invokeInFrame: bootstrapFrame].
+	self interpreter start.
+]
+
+{ #category : #accessing }
+SOMUniverse >> compiler [
+
+	^ SOMCompiler inUniverse: self on: self class classPaths
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> createGlobal: globalName somClass: className [
+
+	| sqClassName sqClass somClass instance |
+	"If class exists in Squeak use it as base class"
+	sqClassName :=  ('SOM' , className) asSymbol.
+	sqClass := (Smalltalk
+		classNamed: sqClassName)
+		ifNil: [SOMObject].
+	somClass := self
+		globalAt: className
+		ifAbsentPut: [self loadSOMClass: className].
+	instance := sqClass
+		inUniverse: self
+		withSomClass: somClass.
+	^ self
+		globalAt: globalName
+		put: instance.
+]
+
+{ #category : #'code evaluation' }
+SOMUniverse >> createShellClassWith: code [
+
+	^ String streamContents: [:stream |
+		stream
+			nextPutAll: 'ShellClass = ('; cr;
+			nextPutAll: 'run = ('; cr;
+			nextPutAll: code; cr;
+			nextPutAll: '))'].
+]
+
+{ #category : #'code evaluation' }
+SOMUniverse >> eval: code [
+
+	| shellClassSource shellClass |
+	self initializeRealGlobalsIfNecessary.
+	shellClassSource := self createShellClassWith: code.
+	shellClass := self loadAndStoreFromSource: shellClassSource.
+	self start: {shellClass somName string}.
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalAt: aSymbol [ 
+
+	^ globals at: aSymbol
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalAt: aSymbol ifAbsent: aBlock [
+	^ globals at: aSymbol ifAbsent: aBlock.
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalAt: aSymbol ifAbsentPut: aBlock [
+"Treat nil values as absent values"
+	| result |
+	result := globals at: aSymbol ifAbsentPut: aBlock.
+	result ifNil: [
+		result := aBlock value.
+		globals at: aSymbol put: result].
+	^ result
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalAt: aSymbol put: anObject [ 
+
+	^ globals 
+		at: aSymbol
+		put: anObject
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalNil [
+
+	^ self globalAt: #nil
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globals [
+
+	^ globals
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> hasGlobalAt: aSymbol [ 
+	^ globals includesKey: aSymbol
+]
+
+{ #category : #accessing }
+SOMUniverse >> heap [
+	^ heap
+]
+
+{ #category : #accessing }
+SOMUniverse >> heap: anObject [
+	heap := anObject
+]
+
+{ #category : #initializing }
+SOMUniverse >> initClassSystem [
+
+	| class metaclass |
+	class := SOMClass inUniverse: self.
+	metaclass := SOMClass inUniverse: self.
+	class somClass: metaclass.
+	metaclass somClass: class.
+	metaclass somSuperClass: class.
+	self globalAt: #Class put: class.
+	self globalAt: #Metaclass put: metaclass.
+]
+
+{ #category : #initializing }
+SOMUniverse >> initNil [
+
+	self globalAt: #nil put: nil.
+	self globalAt: #nil put: (SOMObject inUniverse: self).
+]
+
+{ #category : #initializing }
+SOMUniverse >> initSystemClassFrom: sqClass [
+
+	| superclass somClass |
+	superclass := sqClass = SOMObject
+		ifTrue: [self globalNil]
+		ifFalse: [self globalAt: sqClass superclass somName].
+	somClass := SOMClass
+		inUniverse: self
+		withSomSuperClass: superclass.
+	self
+		globalAt: sqClass somName
+		ifAbsentPut: [somClass].
+]
+
+{ #category : #initializing }
+SOMUniverse >> initSystemClassesWith: classLoader [
+
+	| systemClasses name |
+	systemClasses := self sortedSubClassesOf: SOMObject.
+	systemClasses do: [:class | self initSystemClassFrom: class].
+	(self globalAt: #Class) somSuperClass: (self globalAt: #Object).
+	systemClasses do: [:class |
+		name := class somName.
+		(self globalAt: name) somName: (self newSymbol: name).
+		classLoader value: name].
+]
+
+{ #category : #initializing }
+SOMUniverse >> initialize [
+
+	super initialize.
+	self interpreter: (SOMInterpreter inUniverse: self).
+	globals := Dictionary new.
+	heap := SOMHeap in: self.
+	symbolTable := SOMSymbolTable in: self.
+	numberCache := IdentityDictionary new.
+]
+
+{ #category : #initializing }
+SOMUniverse >> initializeFakeGlobals [
+
+	| nilClass |
+	self
+		initNil;
+		initClassSystem;
+		initSystemClassesWith: [:className | "do nothing"].
+	"prepare for tests"
+	nilClass := SOMClass 
+		inUniverse: self
+		withSomSuperClass: (self globalAt: #Object).
+	(self globalAt: #nil) somClass: nilClass.
+	self globalAt: #Nil put: nilClass.
+	self globalAt: #system put: (SOMSystem inUniverse: self).
+	self globalAt: #System put: (SOMClass inUniverse: self).
+	self globalAt: #true put: (SOMObject inUniverse: self).
+	self globalAt: #false put: (SOMObject inUniverse: self).
+]
+
+{ #category : #initializing }
+SOMUniverse >> initializeRealGlobals [
+
+	"self initializeGlobalsWithClassLoader: [:className | self loadSOMClass: className]."
+	self
+		initNil;
+		initClassSystem;
+		createGlobal: #nil somClass: #Nil;
+		createGlobal: #true somClass: #True;
+		createGlobal: #false somClass: #False;
+		initSystemClassesWith: [:className | self loadSystemClass: className];
+		createGlobal: #system somClass: #System.
+]
+
+{ #category : #initializing }
+SOMUniverse >> initializeRealGlobalsIfNecessary [
+
+	self globalAt: #Array ifAbsent: [self initializeRealGlobals].
+]
+
+{ #category : #accessing }
+SOMUniverse >> interpreter [
+	^ interpreter
+]
+
+{ #category : #accessing }
+SOMUniverse >> interpreter: anObject [
+	interpreter := anObject
+]
+
+{ #category : #loading }
+SOMUniverse >> loadAndStoreFromSource: source [
+
+	| class |
+	class := self compiler
+		compileSOMClassSource: source
+		stub: nil.
+	^ self
+		globalAt: class somName string
+		put: class
+]
+
+{ #category : #loading }
+SOMUniverse >> loadAndStoreSOMClass: className [
+
+	^ self
+		globalAt: className
+		put: (self loadSOMClass: className)
+]
+
+{ #category : #loading }
+SOMUniverse >> loadSOMClass: className [
+
+	^ self compiler
+		loadAndCompileSOMClass: className
+		stub: nil.
+]
+
+{ #category : #loading }
+SOMUniverse >> loadSystemClass: classStubName [
+
+	^ self compiler
+		loadAndCompileSOMClass: classStubName
+		stub: (self globalAt: classStubName ifAbsent: [nil]).
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newArrayWithAll: collection [
+
+	^ SOMArray
+		inUniverse: self
+		withAll: collection
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newBool: squeakBool [
+
+	^ self globals at: squeakBool name asSymbol.
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newNumber: number [
+
+	^ self numberCache
+		at: number
+		ifAbsentPut: [SOMNumber create: number in: self].
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newString: string [
+
+	^ SOMString
+		inUniverse: self
+		string: string
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newSymbol: symbolOrString [
+
+	^ self symbolTable somSymbolFor: symbolOrString.
+]
+
+{ #category : #accessing }
+SOMUniverse >> numberCache [
+	^ numberCache
+]
+
+{ #category : #accessing }
+SOMUniverse >> numberCache: anObject [
+	numberCache := anObject
+]
+
+{ #category : #accessing }
+SOMUniverse >> outStream [
+
+	^ outStream ifNil: [Transcript]
+]
+
+{ #category : #accessing }
+SOMUniverse >> outStream: writeStream [
+
+	outStream := writeStream
+]
+
+{ #category : #quiting }
+SOMUniverse >> quit: errorCode [
+
+	interpreter stop.
+	Transcript
+		cr; cr; cr;
+		show: 'VM exited with error code ', errorCode number asString
+]
+
+{ #category : #initializing }
+SOMUniverse >> sortedSubClassesOf: class [
+
+	"Sort by inheritance hierarchy"
+	^ (SortedCollection sortBlock: [:a :b | (a inheritsFrom: b) not])
+		addAll: class withAllSubclasses;
+		sortTopologically;
+		yourself
+]
+
+{ #category : #initializing }
+SOMUniverse >> start: arguments [
+
+	| wrappedArguments |
+ 	self initializeRealGlobalsIfNecessary.
+	wrappedArguments := arguments collect: [ :arg | self newString: arg].
+	self bootstrapWithArguments: (SOMArray inUniverse: self withAll: wrappedArguments).
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> symbolFor: global [
+
+	self flag: #rkrk. "Should return SOMSymbol!!?"
+	^ globals keyAtValue: global ifAbsent: [nil].
+]
+
+{ #category : #accessing }
+SOMUniverse >> symbolTable [
+	^ symbolTable
+]
+
+{ #category : #accessing }
+SOMUniverse >> symbolTable: anObject [
+	symbolTable := anObject
+]

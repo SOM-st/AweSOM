@@ -4,7 +4,7 @@ Class {
 	#category : #'AweSOM-Compiler'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> classBody [
 	self expect: #newTerm.
 	
@@ -17,12 +17,12 @@ SOMClassParser >> classBody [
 	self expect: #endTerm.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> classInstanceSwitch [
 	^ self accept: #seperator.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> classSide [
 	self vars.
 	
@@ -34,7 +34,7 @@ SOMClassParser >> classSide [
 			self foreignParseMethod].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> classStart [
 	cgenc theName: text asSymbol.
 	self expect: #identifier.
@@ -47,13 +47,13 @@ SOMClassParser >> classStart [
 		
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> classdef [
 	self classStart.
 	self classBody.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> foreignParseMethod [
 	| parser result |
 	parser := self methodParser.
@@ -66,14 +66,14 @@ SOMClassParser >> foreignParseMethod [
 	^ result
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SOMClassParser >> initialize [
 	super initialize.
 	
 	self cgenc: SOMClassGenerationContext new.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMClassParser >> methodParser [
 
 	^ super methodParser
@@ -81,13 +81,13 @@ SOMClassParser >> methodParser [
 		yourself.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parsing }
 SOMClassParser >> start [
 	self classdef.
 	^ cgenc
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMClassParser >> vars [
 	(self accept: #or) ifTrue: [
 		[sym == #identifier] whileTrue: [

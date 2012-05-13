@@ -16,12 +16,12 @@ SOMMethodParser >> acceptOneOf: symbols [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> argument [
 	^ self variable
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> assignation [
 	| list |
 	list := OrderedCollection new.
@@ -34,7 +34,7 @@ SOMMethodParser >> assignation [
 	list do: [:v | mgenc lookUpAndPop: v in: universe ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> assignment [
 	| v |
 	v := self variable.
@@ -45,7 +45,7 @@ SOMMethodParser >> assignment [
 	^ v
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> assignments: vars [
 	sym == #identifier ifTrue: [
 		| var |
@@ -61,7 +61,7 @@ SOMMethodParser >> assignments: vars [
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> binaryMessage: superSend [
 	| sel |
 	sel := self binarySelector.
@@ -74,7 +74,7 @@ SOMMethodParser >> binaryMessage: superSend [
 				ifFalse:[mgenc bcSend: sel].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> binaryOperand: superSend [
 	| doSuper |
 	doSuper := self primary: superSend.
@@ -107,21 +107,13 @@ SOMMethodParser >> binarySelector [
 	^ s
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> blockArgPattern [
 	| blockSig |
 	sym == #colon ifTrue: [self blockPattern ].
-	
-	"blockSig := '$block method'.
-	
-	mgenc numberOfArguments - 1
-		timesRepeat: [blockSig := blockSig, ':'].
-	
-	mgenc signature: blockSig.
-	"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> blockArguments [
 	[ self expect: #colon.
 	  mgenc addArgumentIfAbsent: self argument
@@ -163,7 +155,7 @@ SOMMethodParser >> blockContents [
 	self blockBody: false.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> blockPattern [
 	self blockArguments.
 	self expect: #or.
@@ -233,7 +225,7 @@ SOMMethodParser >> fakeMgenc [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> formula [
 	| superSend |
 	superSend := self binaryOperand: false.
@@ -246,7 +238,7 @@ SOMMethodParser >> formula [
 		whileTrue: [self binaryMessage: false ].
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> keyword [
 	| s |
 	s := text.
@@ -254,7 +246,7 @@ SOMMethodParser >> keyword [
 	^ s
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> keywordMessage: superSend [
 	| kw sel |
 	kw := RWBinaryOrTextStream on: String new.
@@ -270,7 +262,7 @@ SOMMethodParser >> keywordMessage: superSend [
 				ifFalse: [mgenc bcSend: sel]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'selector patterns' }
 SOMMethodParser >> keywordPattern [
 	| kw |
 	kw := RWBinaryOrTextStream on: String new.
@@ -322,7 +314,7 @@ SOMMethodParser >> literalNumber [
 	mgenc bcPushConstant: lit.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> literalString [
 	| s |
 	s := universe newString: self string.
@@ -424,30 +416,30 @@ SOMMethodParser >> methodName [
 	^ self binaryPattern.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMMethodParser >> methodParser [
 	^ super methodParser
 		mgenc: (SOMMethodGenerationContext blockIn: mgenc);
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMMethodParser >> mgenc [
 	^ mgenc
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMMethodParser >> mgenc: anMgenc [
 	mgenc := anMgenc
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> negativeDecimal [
 	self expect: #minus.
 	^ self literalInteger negated 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> nestedBlock [
 	self expect: #newBlock.
 	
@@ -465,7 +457,7 @@ SOMMethodParser >> nestedBlock [
 	^ mgenc
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> nestedTerm [
 	self expect: #newTerm.
 	
@@ -522,7 +514,7 @@ SOMMethodParser >> primary: doSuper [
 	^ superSend
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> primitiveBlock [
 	self expect: #primitive.
 	mgenc fakeSource: '^ SOMPrimitives ', 
@@ -554,7 +546,7 @@ SOMMethodParser >> selector [
 	^ self unarySelector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMMethodParser >> string [
 	| s |
 	s := text contents.

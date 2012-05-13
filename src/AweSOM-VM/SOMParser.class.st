@@ -86,13 +86,13 @@ SOMParser >> expect: aSymbol [
 	Error signal: msg contents.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SOMParser >> getSym [
 	sym  := lexer symbol.
 	text := lexer text.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #patterns }
 SOMParser >> identifier [
 	| s | 
 	s := text.
@@ -103,7 +103,7 @@ SOMParser >> identifier [
 	^ s
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SOMParser >> initialize [
 	super initialize.
 	sym := #none.
@@ -111,7 +111,7 @@ SOMParser >> initialize [
 	shouldReadSources := false.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMParser >> methodParser [
 	^ SOMMethodParser new
 			universe: self universe;
@@ -119,12 +119,12 @@ SOMParser >> methodParser [
 			yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMParser >> parseState [
 	^ {sym. text. lexer. nextSym.}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMParser >> parseState: state [
 	sym    := state first.
 	text   := state second.
@@ -132,12 +132,12 @@ SOMParser >> parseState: state [
 	nextSym:= state fourth.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SOMParser >> peek [
 	nextSym := lexer peek.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SOMParser >> printableSymbol [
 	^ sym == #integer         or: [
 	  sym == #STString        or: [

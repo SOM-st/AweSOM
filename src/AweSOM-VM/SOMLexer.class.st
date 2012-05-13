@@ -44,7 +44,7 @@ SOMLexer >> currentLineNumber [
 	^ lineNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SOMLexer >> endOfBuffer [
 	^ bufP > (buf size)
 ]
@@ -62,7 +62,7 @@ SOMLexer >> fillBuffer [
 	^ buf size.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #private }
 SOMLexer >> hasMoreInput [
 	self readBufferIfEmpty: [^ false].
 	
@@ -78,7 +78,7 @@ SOMLexer >> initialize [
 	bufP := 1.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMLexer >> isOperator: char [
 	^ char == $~ or: [
 	  char == $& or: [
@@ -96,7 +96,7 @@ SOMLexer >> isOperator: char [
 	]]]]]]]]]]]].
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> match: aSymbol [
 	sym := aSymbol.
 	symChr := self currentChar.
@@ -105,7 +105,7 @@ SOMLexer >> match: aSymbol [
 	^ sym.
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchColonOrAssignment [
 	(self bufchar: bufP + 1) == $= ifTrue: [
 		sym := #assign.
@@ -118,7 +118,7 @@ SOMLexer >> matchColonOrAssignment [
 	^ self match: #colon.
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchDigit [
 	sym    := #integer.
 	symChr := nil.
@@ -131,7 +131,7 @@ SOMLexer >> matchDigit [
 	^ sym
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchLetter [
 	symChr := nil.
 	text := RWBinaryOrTextStream on: String new.
@@ -165,7 +165,7 @@ SOMLexer >> matchLetter [
 	^ sym
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchMinusOrSeparator [
 	(self nextInBufIs: self seperator) ifTrue: [
 		text := RWBinaryOrTextStream on: String new.
@@ -181,7 +181,7 @@ SOMLexer >> matchMinusOrSeparator [
 	
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchOperator [
 	| cur |
 	(self isOperator: (self bufchar: bufP + 1)) ifTrue: [
@@ -214,7 +214,7 @@ SOMLexer >> matchOperator [
 	Error signal: 'STEFAN: this is unexpected, I think...'.
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchPrimitive [
 	bufP := bufP + self primitive size.
 	sym := #primitive.
@@ -224,7 +224,7 @@ SOMLexer >> matchPrimitive [
 	
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> matchString [
 	sym := #STString.
 	symChr := nil.
@@ -242,7 +242,7 @@ SOMLexer >> matchString [
 	^ sym
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMLexer >> nextInBufIs: aString [
 	| p |
 	p := buf findString: aString startingAt: bufP.
@@ -254,7 +254,7 @@ SOMLexer >> nextText [
 	^ nextText asString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #lexing }
 SOMLexer >> peek [
 	| oldSym oldSymChr oldText |
 	peekDone
@@ -287,7 +287,7 @@ SOMLexer >> rawBuffer [
 	^ buf
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMLexer >> readBufferIfEmpty: aBlock [
 	[self endOfBuffer] whileTrue: [
 		self fillBuffer == -1
@@ -304,7 +304,7 @@ SOMLexer >> seperator [
 	^ '----'
 ]
 
-{ #category : #private }
+{ #category : #helper }
 SOMLexer >> skipComment [
 	self currentChar == $" ifTrue: [
 		[
@@ -316,7 +316,7 @@ SOMLexer >> skipComment [
 
 ]
 
-{ #category : #private }
+{ #category : #helper }
 SOMLexer >> skipWhitespace [
 	[self currentChar isSeparator]
 		whileTrue: [
@@ -324,7 +324,7 @@ SOMLexer >> skipWhitespace [
 			self readBufferIfEmpty: [^ self]]
 ]
 
-{ #category : #private }
+{ #category : #helper }
 SOMLexer >> skipWhitespaceAndCommentsOrEnd: atEndBlock [
 	[	self hasMoreInput ifFalse: atEndBlock.
 		self skipWhitespace.
@@ -340,7 +340,7 @@ SOMLexer >> stream: aReadStream [
 	stream := aReadStream.
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> symbol [
 	| currentChar |
 	peekDone ifTrue: [^ self symbolAfterPeek].
@@ -379,7 +379,7 @@ SOMLexer >> symbol [
 	^ sym
 ]
 
-{ #category : #private }
+{ #category : #lexing }
 SOMLexer >> symbolAfterPeek [
 	peekDone := false.
 	sym      := nextSym.

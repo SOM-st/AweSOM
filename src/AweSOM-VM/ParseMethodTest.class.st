@@ -7,7 +7,7 @@ Class {
 { #category : #running }
 ParseMethodTest >> parserClass [
 
-	^ SOMMethodParser2
+	^ SOMMethodParser
 ]
 
 { #category : #running }
@@ -52,11 +52,10 @@ ParseMethodTest >> test03FakeParseBody [
 { #category : #tests }
 ParseMethodTest >> test04Primitive [
 
-	| result |
+	| res |
 	self setUpParser: '"Accessing" at: index = primitive'.
-	parser clazzName: 'XYZ'.
-	self assertNoFail: (result := parser apply: #method).
-	self assert: result isPrimitive.
+	self assertNoFail: (res := parser apply: #method).
+	self assert: res isPrimitive.
 ]
 
 { #category : #tests }
@@ -134,4 +133,16 @@ ParseMethodTest >> test11ReflectionTestRun [
 	self setUpParser: src.
 	self assertNoFail: (result := parser apply: #method).
 "	self halt."
+]
+
+{ #category : #tests }
+ParseMethodTest >> test12SimpleOperatorMethodDef [
+
+	self setUpParser: '& bool = ()'.
+	self assertNoFail: (result := parser apply: #method).
+	self assert: (result isKindOf: SOMMethodGenerationContext).
+	self assert: result signature 			equals: '&'.
+	self assert: result arguments size  		equals: 2.
+	self assert: result arguments first 		equals: #self.
+	self assert: result arguments second 	equals: #bool.
 ]

@@ -14,11 +14,23 @@ Class {
 }
 
 { #category : #adding }
+SOMClassGenerationContext >> addField: field [
+	self isClassSide
+		ifTrue:  [classFields add: field]
+		ifFalse: [instanceFields add: field].
+]
+
+{ #category : #adding }
 SOMClassGenerationContext >> addFields: fieldNames [
 
 	^ self isClassSide
 		ifTrue: [self classFields: fieldNames]
 		ifFalse: [self instanceFields: fieldNames]
+]
+
+{ #category : #adding }
+SOMClassGenerationContext >> addInstanceField: field [
+	instanceFields add: field.
 ]
 
 { #category : #adding }

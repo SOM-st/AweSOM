@@ -81,7 +81,7 @@ SOMTools class >> setClassPathBase: basePath [
 	standard := {basePath , '/Smalltalk'. basePath , '/TestSuite'}.
 	dir := FileDirectory on: basePath , '/Examples'.
 	examples := dir directoryNames
-		select: [:ea | (ea startsWith: '.') not]
+		select: [:ea | (ea beginsWith: '.') not]
 		thenCollect: [:ea | dir fullPathFor: ea].
 	^ SOMUniverse classPaths: standard , examples.
 ]

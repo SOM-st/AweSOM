@@ -19,7 +19,7 @@ Class {
 { #category : #accessing }
 SOMObject class >> allSharedFields [
 
-	^ self allInstVarNames select: [:each | each startsWith: 'som']
+	^ self allInstVarNames select: [:each | each beginsWith: 'som']
 ]
 
 { #category : #compiling }

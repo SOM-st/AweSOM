@@ -39,10 +39,10 @@ SOMVariableLookup >> contextIndex: anObject [
 { #category : #testing }
 SOMVariableLookup >> found [
 
-	^ self isArgument
-		or: [self isLocal]
-		or: [self isField]
-		or: [self isGlobal]
+	^ self isArgument or: [
+	  self isLocal    or: [
+	  self isField    or: [
+	  self isGlobal]]]
 ]
 
 { #category : #accessing }

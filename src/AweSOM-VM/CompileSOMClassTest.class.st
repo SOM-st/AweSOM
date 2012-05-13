@@ -22,7 +22,7 @@ CompileSOMClassTest >> compileSource: source [
 CompileSOMClassTest >> createCgencFromSource: source [
 	
 	| parser |
-	parser := SOMClassParser2 inUniverse: universe onSource: source.
+	parser := SOMClassParser inUniverse: universe onSource: source.
 	parser start.
 	^ parser cgenc.
 ]
@@ -95,7 +95,7 @@ CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 	universe 
 		bootstrapWithEntryPoint: (somClass somInstanceInvokables at: 1)
 		withArguments: instance.
-	privateInstVarNames := instance class instVarNames select: [ :each | (each startsWith: 'som') not ].
+	privateInstVarNames := instance class instVarNames select: [ :each | (each beginsWith: 'som') not ].
 	privateInstVarNames do: 
 		[ :each | 
 		self 

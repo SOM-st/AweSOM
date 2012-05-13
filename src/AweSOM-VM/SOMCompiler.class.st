@@ -37,7 +37,7 @@ SOMCompiler >> classPaths: anObject [
 SOMCompiler >> compileSOMClassSource: source stub: classStubOrNil [
 
 	| cgenc |
-	cgenc := (SOMClassParser2 inUniverse: universe onSource: source) start.
+	cgenc := (SOMClassParser inUniverse: universe onSource: source) start.
 	^ classStubOrNil
 		ifNil: [cgenc assembleIn: universe]
 		ifNotNil: [cgenc assembleIn: universe stub: classStubOrNil].
@@ -62,7 +62,7 @@ SOMCompiler >> sourceOfClassFile: className [
 		detect: [:dir | dir fileExists: classFile]
 		ifNone: [^ nil].
 	"theDir ifNil: [self error: 'Cannot find class in classPath']."
-	CrLfFileStream
+	FileStream
 		fileNamed: (theDir fullPathFor: classFile)
 		do: [:s | source := s contents].
 	^ source

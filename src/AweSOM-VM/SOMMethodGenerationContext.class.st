@@ -263,7 +263,7 @@ SOMMethodGenerationContext >> combineSelectorAndArgs [
 		with: args
 		collect: [:sig :arg | sig , ': ' , arg].
 	"Neeeeed join!!!"
-	^ (parts inject: '' into: [:all :ea | all , ' ' , ea]) withBlanksTrimmed.
+	^ (parts inject: '' into: [:all :ea | all , ' ' , ea]) trimBoth.
 ]
 
 { #category : #'stack size' }
@@ -462,6 +462,11 @@ SOMMethodGenerationContext >> printOn: stream [
 		nextPutAll: '<SOMMgenc signature: ';
 		nextPutAll: self signature;
 		nextPut: $>.
+]
+
+{ #category : #bytecode }
+SOMMethodGenerationContext >> removeLastBytecode [
+	self bytecode removeLast.
 ]
 
 { #category : #bytecode }

@@ -36,7 +36,7 @@ ParseBytecodeTest >> assertLiteralAt: idx equals: expected [
 { #category : #running }
 ParseBytecodeTest >> parserClass [
 
-	^ SOMMethodParser
+	^ universe methodParser
 ]
 
 { #category : #'as yet unclassified' }

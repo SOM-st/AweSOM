@@ -10,7 +10,8 @@ Class {
 		'numberCache'
 	],
 	#classVars : [
-		'ClassPaths'
+		'ClassPaths',
+		'UseOMeta'
 	],
 	#category : #'AweSOM-VM'
 }
@@ -25,6 +26,17 @@ SOMUniverse class >> classPaths [
 { #category : #accessing }
 SOMUniverse class >> classPaths: anObject [
 	ClassPaths := anObject
+]
+
+{ #category : #accessing }
+SOMUniverse class >> useOMeta [
+	UseOMeta ifNil: [UseOMeta := true].
+	^ UseOMeta
+]
+
+{ #category : #accessing }
+SOMUniverse class >> useOMeta: aBool [
+	UseOMeta := aBool
 ]
 
 { #category : #bootstrapping }
@@ -60,6 +72,13 @@ SOMUniverse >> bootstrapWithEntryPoint: invokable withArguments: args [
 		yourself.
 	invokable ifNotNil: [invokable invokeInFrame: bootstrapFrame].
 	self interpreter start.
+]
+
+{ #category : #'as yet unclassified' }
+SOMUniverse >> classParser [
+	^ UseOMeta
+		ifTrue: [ SOMClassParser2 ]
+		ifFalse:[ SOMClassParser ]
 ]
 
 { #category : #accessing }
@@ -309,6 +328,13 @@ SOMUniverse >> loadSystemClass: classStubName [
 	^ self compiler
 		loadAndCompileSOMClass: classStubName
 		stub: (self globalAt: classStubName ifAbsent: [nil]).
+]
+
+{ #category : #'as yet unclassified' }
+SOMUniverse >> methodParser [
+	^ UseOMeta
+		ifTrue: [ SOMMethodParser2 ]
+		ifFalse:[ SOMMethodParser ]
 ]
 
 { #category : #'object creation' }

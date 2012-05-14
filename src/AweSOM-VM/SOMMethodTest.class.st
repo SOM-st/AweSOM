@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SOMMethodTest >> createMethod: source [
 
-	method := ((SOMMethodParser
+	method := ((universe methodParser
 		inUniverse: universe
 		onSource: source) apply: #method) assembleIn: universe.
 ]

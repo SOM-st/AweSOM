@@ -37,7 +37,7 @@ SOMCompiler >> classPaths: anObject [
 SOMCompiler >> compileSOMClassSource: source stub: classStubOrNil [
 
 	| cgenc |
-	cgenc := (SOMClassParser inUniverse: universe onSource: source) start.
+	cgenc := (universe classParser inUniverse: universe onSource: source) start.
 	^ classStubOrNil
 		ifNil: [cgenc assembleIn: universe]
 		ifNotNil: [cgenc assembleIn: universe stub: classStubOrNil].

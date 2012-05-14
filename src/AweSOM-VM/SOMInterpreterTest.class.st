@@ -43,7 +43,7 @@ SOMInterpreterTest >> assembleMethod: name withLocals: locals withByteCodes: byt
 SOMInterpreterTest >> compileMethod: source [ 
 
 	| parser mgenc |
-	parser := SOMMethodParser inUniverse: universe onSource: source.
+	parser := universe methodParser inUniverse: universe onSource: source.
 	mgenc := parser apply: #method.
 	^ mgenc assembleIn: universe.
 ]

@@ -18,7 +18,7 @@ ParseClassTest >> assertNoFail: parseResult [
 { #category : #running }
 ParseClassTest >> parserClass [
 
-	^ SOMClassParser
+	^ universe classParser
 ]
 
 { #category : #running }

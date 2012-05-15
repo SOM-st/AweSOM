@@ -74,10 +74,10 @@ SOMUniverse >> bootstrapWithEntryPoint: invokable withArguments: args [
 	self interpreter start.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parser }
 SOMUniverse >> classParser [
-	^ UseOMeta
-		ifTrue: [ SOMClassParser2 ]
+	^ ((Smalltalk hasClassNamed: #SOMClassParser2) and: UseOMeta)
+		ifTrue: [ Smalltalk at: #SOMClassParser2 ]
 		ifFalse:[ SOMClassParser ]
 ]
 
@@ -330,10 +330,10 @@ SOMUniverse >> loadSystemClass: classStubName [
 		stub: (self globalAt: classStubName ifAbsent: [nil]).
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #parser }
 SOMUniverse >> methodParser [
-	^ UseOMeta
-		ifTrue: [ SOMMethodParser2 ]
+	^ ((Smalltalk hasClassNamed: #SOMMethodParser2) and: UseOMeta)
+		ifTrue: [ Smalltalk at: #SOMMethodParser2 ]
 		ifFalse:[ SOMMethodParser ]
 ]
 

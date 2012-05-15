@@ -80,7 +80,7 @@ SOMMethodParser >> binaryOperand: superSend [
 	doSuper := self primary: superSend.
 	
 	[sym == #identifier] whileTrue:
-		[doSuper := self unaryMessage: doSuper].
+		[self unaryMessage: doSuper].
 	
 	^ doSuper
 ]
@@ -94,7 +94,7 @@ SOMMethodParser >> binaryPattern [
 { #category : #'selector patterns' }
 SOMMethodParser >> binarySelector [
 	| s |
-	s := text.
+	s := text asSymbol.
 	
 	(self accept: #or)		ifFalse: [
 	(self accept: #comma)	ifFalse: [
@@ -255,7 +255,7 @@ SOMMethodParser >> keywordMessage: superSend [
 	  self formula.
 	] doWhileTrue: [sym == #keyword].
 
-	sel := kw contents.
+	sel := kw contents asSymbol.
 	
 	mgenc addLiteralIfAbsent: sel.
 	superSend ifTrue:  [mgenc bcSuperSend: sel]
@@ -270,13 +270,13 @@ SOMMethodParser >> keywordPattern [
 	  mgenc addArgumentIfAbsent: self argument
 	] doWhileTrue: [sym == #keyword].
 
-	mgenc signature: kw contents. "(universe newSymbol:)"
+	mgenc signature: kw contents asSymbol. "(universe newSymbol:)"
 ]
 
 { #category : #'selector patterns' }
 SOMMethodParser >> keywordSelector [
 	| s |
-	s := text.
+	s := text asSymbol.
 	
 	self expectOneOf: KeywordSelectorSyms.
 	
@@ -569,5 +569,5 @@ SOMMethodParser >> unaryPattern [
 
 { #category : #'selector patterns' }
 SOMMethodParser >> unarySelector [
-	^ self identifier
+	^ self identifier asSymbol
 ]

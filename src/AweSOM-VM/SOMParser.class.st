@@ -95,7 +95,7 @@ SOMParser >> getSym [
 { #category : #patterns }
 SOMParser >> identifier [
 	| s | 
-	s := text.
+	s := text asSymbol.
 	
 	(self accept: #primitive) ifFalse: [
 		self expect: #identifier]. 

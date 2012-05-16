@@ -8,36 +8,15 @@ Class {
 		'stoppedFrame',
 		'stopped'
 	],
-	#classVars : [
-		'DefaultInterpreter'
-	],
 	#category : #'AweSOM-Interpreter'
 }
-
-{ #category : #'as yet unclassified' }
-SOMInterpreter class >> default [
-	DefaultInterpreter ifNil: [ DefaultInterpreter := self ].
-	
-	^ DefaultInterpreter
-	
-]
-
-{ #category : #'as yet unclassified' }
-SOMInterpreter class >> default: interpClass [
-	DefaultInterpreter := interpClass.
-]
 
 { #category : #'instance creation' }
 SOMInterpreter class >> inUniverse: universe [
 
-	^ self default new
+	^ self new
 		universe: universe;
 		yourself.
-]
-
-{ #category : #'as yet unclassified' }
-SOMInterpreter class >> initialize [
-	DefaultInterpreter := self.
 ]
 
 { #category : #accessing }

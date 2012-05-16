@@ -9,7 +9,7 @@ SOMBCPushConstant >> const [
 	^ self literalValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMBCPushConstant >> stackDepth [
 
 	^ 1

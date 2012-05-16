@@ -11,6 +11,7 @@ Class {
 	],
 	#classVars : [
 		'ClassPaths',
+		'DefaultInterpreter',
 		'UseOMeta'
 	],
 	#category : #'AweSOM-VM'
@@ -26,6 +27,17 @@ SOMUniverse class >> classPaths [
 { #category : #accessing }
 SOMUniverse class >> classPaths: anObject [
 	ClassPaths := anObject
+]
+
+{ #category : #accessing }
+SOMUniverse class >> defaultInterpreter [
+	DefaultInterpreter ifNil: [DefaultInterpreter := SOMInterpreter ].
+	^ DefaultInterpreter
+]
+
+{ #category : #accessing }
+SOMUniverse class >> defaultInterpreter: interpClass [
+	DefaultInterpreter := interpClass
 ]
 
 { #category : #accessing }
@@ -237,7 +249,7 @@ SOMUniverse >> initSystemClassesWith: classLoader [
 SOMUniverse >> initialize [
 
 	super initialize.
-	self interpreter: (SOMInterpreter inUniverse: self).
+	self interpreter: (self class defaultInterpreter inUniverse: self).
 	globals := Dictionary new.
 	heap := SOMHeap in: self.
 	symbolTable := SOMSymbolTable in: self.

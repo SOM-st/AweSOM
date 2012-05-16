@@ -37,7 +37,7 @@ SOMBytecodeWithIndex >> literalValue [
 	^ self mgenc literals at: self index
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SOMBytecodeWithIndex >> printOn: stream [
 
 	"stream

@@ -4,12 +4,12 @@ Class {
 	#category : #'AweSOM-Interpreter'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMBCPushBlock >> isPushBlock [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMBCPushBlock >> stackDepth [
 
 	^ 1

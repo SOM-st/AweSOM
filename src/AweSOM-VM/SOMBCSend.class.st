@@ -10,7 +10,7 @@ SOMBCSend >> selector [
 	^ self literalValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMBCSend >> stackDepth [
 
 	^ self selector string numArgs negated + 1

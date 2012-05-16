@@ -4,7 +4,7 @@ Class {
 	#category : #'AweSOM-Interpreter'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMBCPop >> stackDepth [
 
 	^ -1

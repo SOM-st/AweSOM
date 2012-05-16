@@ -32,7 +32,7 @@ SOMBytecodeWithIndexAndContextIndex >> length [
 	^ 3
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SOMBytecodeWithIndexAndContextIndex >> printOn: stream [
 	
 	stream

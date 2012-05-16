@@ -9,7 +9,7 @@ SOMBCPushGlobal >> global [
 	^ self literalValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMBCPushGlobal >> stackDepth [
 
 	^ 1

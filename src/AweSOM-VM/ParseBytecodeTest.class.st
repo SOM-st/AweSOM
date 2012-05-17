@@ -467,7 +467,7 @@ ParseBytecodeTest >> test29do [
 	
 	self assertBcAt: 2 is: SOMBCPushBlock.
 	self assert: (bytecode at: 2) index equals: 1.
-	self assert: (bytecode at: 2) literalValue class equals: SOMMethod.
+	self assert: ((bytecode at: 2) literalValue isKindOf: SOMMethod).
 	
 	self assertBcAt: 3 is: SOMBCSend.
 	self assert: (bytecode at: 3) index equals: 2.

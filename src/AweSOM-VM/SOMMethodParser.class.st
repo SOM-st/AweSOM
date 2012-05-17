@@ -220,7 +220,7 @@ SOMMethodParser >> fakeCgenc [
 { #category : #helper }
 SOMMethodParser >> fakeMgenc [
 
-	mgenc := (SOMMethodGenerationContext named: #dummy)
+	mgenc := (universe methodGenClass named: #dummy)
 		somHolder: cgenc;
 		yourself
 ]
@@ -405,7 +405,7 @@ SOMMethodParser >> methodBlock [
 
 { #category : #patterns }
 SOMMethodParser >> methodName [
-	mgenc := SOMMethodGenerationContext new.
+	mgenc := universe methodGenClass new.
 	mgenc addArgumentIfAbsent: #self.
 	mgenc holder: cgenc.
 	
@@ -419,7 +419,7 @@ SOMMethodParser >> methodName [
 { #category : #helper }
 SOMMethodParser >> methodParser [
 	^ super methodParser
-		mgenc: (SOMMethodGenerationContext blockIn: mgenc);
+		mgenc: (universe methodGenClass blockIn: mgenc);
 		yourself
 ]
 

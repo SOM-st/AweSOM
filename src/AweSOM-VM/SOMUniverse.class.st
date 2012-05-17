@@ -86,7 +86,7 @@ SOMUniverse >> bootstrapWithEntryPoint: invokable withArguments: args [
 	self interpreter start.
 ]
 
-{ #category : #parser }
+{ #category : #'universe configuration' }
 SOMUniverse >> classParser [
 	^ ((Smalltalk hasClassNamed: #SOMClassParser2) and: UseOMeta)
 		ifTrue: [ Smalltalk at: #SOMClassParser2 ]
@@ -342,7 +342,17 @@ SOMUniverse >> loadSystemClass: classStubName [
 		stub: (self globalAt: classStubName ifAbsent: [nil]).
 ]
 
-{ #category : #parser }
+{ #category : #'universe configuration' }
+SOMUniverse >> methodClass [
+	^ SOMMethod
+]
+
+{ #category : #'universe configuration' }
+SOMUniverse >> methodGenClass [
+	^ SOMMethodGenerationContext
+]
+
+{ #category : #'universe configuration' }
 SOMUniverse >> methodParser [
 	^ ((Smalltalk hasClassNamed: #SOMMethodParser2) and: UseOMeta)
 		ifTrue: [ Smalltalk at: #SOMMethodParser2 ]
@@ -405,6 +415,11 @@ SOMUniverse >> outStream [
 SOMUniverse >> outStream: writeStream [
 
 	outStream := writeStream
+]
+
+{ #category : #'universe configuration' }
+SOMUniverse >> primitiveClass [
+	^ SOMPrimitive
 ]
 
 { #category : #quiting }

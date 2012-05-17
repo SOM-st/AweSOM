@@ -20,7 +20,7 @@ SOMInterpreterTest >> assembleMethod: name withArguments: args withByteCodes: by
 SOMInterpreterTest >> assembleMethod: name withArguments: args withLocals: locals withByteCodes: byteCodeGenerator [
 
 	| testMgenc |
-	testMgenc := SOMMethodGenerationContext named: name.
+	testMgenc := universe methodGenClass named: name.
 	byteCodeGenerator value: testMgenc.
 	testMgenc arguments
 		add: 'self';

@@ -7,15 +7,17 @@ Class {
 	#category : #'AweSOM-VM-Test'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #helper }
 SOMMethodTest >> createMethod: source [
 
 	method := ((universe methodParser
 		inUniverse: universe
-		onSource: source) apply: #method) assembleIn: universe.
+		onSource: source)
+			fakeCgenc;
+			apply: #method) assembleIn: universe.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMMethodTest >> test01MaxStackSize [
 
 	self createMethod: 'x = ()'.
@@ -24,14 +26,14 @@ SOMMethodTest >> test01MaxStackSize [
 	self assert: method maxStackDepth equals: 1.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMMethodTest >> test02MaxStackSize [
 
 	self createMethod: 'x = (1+2)'.
 	self assert: method maxStackDepth equals: 2.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMMethodTest >> test03MaxStackSize [
 
 	self createMethod: 'x: a = ( self a: 3 b: a)'.

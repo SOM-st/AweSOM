@@ -380,11 +380,8 @@ SOMMethodParser >> method [
 	self methodName.
 	self expect: #equal.
 	
-	sym == #primitive
-		ifTrue:  [ mgenc isPrimitive: true.
-					 self primitiveBlock.]
-		ifFalse: [ self methodBlock ].
-	
+	self methodBody.
+		
 	^ mgenc
 ]
 
@@ -401,6 +398,15 @@ SOMMethodParser >> methodBlock [
 	].
 
 	self expect: #endTerm.
+]
+
+{ #category : #patterns }
+SOMMethodParser >> methodBody [
+	sym == #primitive
+		ifTrue:  [ mgenc isPrimitive: true.
+					 self primitiveBlock.]
+		ifFalse: [ self methodBlock ].
+
 ]
 
 { #category : #patterns }

@@ -13,7 +13,7 @@ TestCaseWithUniverse >> loadClazzes: classes [
 	classes do: [:class | universe loadSystemClass: class]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 TestCaseWithUniverse >> setUp [
 	super setUp.
 	universe := SOMUniverse new.

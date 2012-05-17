@@ -36,14 +36,12 @@ SOMClassParser >> classSide [
 
 { #category : #patterns }
 SOMClassParser >> classStart [
-	cgenc theName: text asSymbol.
-	self expect: #identifier.
+	cgenc theName: self identifier.
 	
 	self expect: #equal.
 	
 	sym == #identifier
-		ifTrue:  [cgenc superName: text.
-					self accept: #identifier.].
+		ifTrue:  [cgenc superName: self identifier.].
 		
 ]
 

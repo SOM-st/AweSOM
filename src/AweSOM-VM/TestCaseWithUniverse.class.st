@@ -16,6 +16,6 @@ TestCaseWithUniverse >> loadClazzes: classes [
 { #category : #running }
 TestCaseWithUniverse >> setUp [
 	super setUp.
-	universe := SOMUniverse new.
+	universe := SOMUniverse default new.
 	universe initializeFakeGlobals.
 ]

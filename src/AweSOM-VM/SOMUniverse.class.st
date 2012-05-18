@@ -11,6 +11,7 @@ Class {
 	],
 	#classVars : [
 		'ClassPaths',
+		'Default',
 		'DefaultInterpreter',
 		'UseOMeta'
 	],
@@ -27,6 +28,17 @@ SOMUniverse class >> classPaths [
 { #category : #accessing }
 SOMUniverse class >> classPaths: anObject [
 	ClassPaths := anObject
+]
+
+{ #category : #accessing }
+SOMUniverse class >> default [
+	Default ifNil: [Default := self].
+	^ Default
+]
+
+{ #category : #accessing }
+SOMUniverse class >> default: aUniverseClass [
+	Default := aUniverseClass
 ]
 
 { #category : #accessing }

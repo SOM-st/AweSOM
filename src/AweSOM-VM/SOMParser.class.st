@@ -113,7 +113,7 @@ SOMParser >> initialize [
 
 { #category : #helper }
 SOMParser >> methodParser [
-	^ SOMMethodParser new
+	^ universe methodParser new
 			universe: self universe;
 			shouldReadSources: self shouldReadSources;
 			yourself

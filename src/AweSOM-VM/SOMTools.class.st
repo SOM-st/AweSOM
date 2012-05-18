@@ -79,7 +79,9 @@ SOMTools class >> setClassPathBase: basePath [
 	"SOMTools setClassPathBase: SmalltalkImage current imagePath , '/SOM'"
 	| standard examples dir |
 	standard := {basePath , '/Smalltalk'.
-				   basePath , '/TestSuite'}.
+				   basePath , '/TestSuite'.
+				   basePath , '/SUnit'.
+				   basePath , '/Omni' }.
 	
 	
 	dir := FileDirectory on: basePath , '/Examples'.

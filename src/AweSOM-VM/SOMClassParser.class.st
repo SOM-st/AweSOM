@@ -26,7 +26,7 @@ SOMClassParser >> classInstanceSwitch [
 SOMClassParser >> classSide [
 	self vars.
 	
-	[sym == #identifier       or: [
+	[self symIsIdentifier     or: [
 	 sym == #keyword          or: [
 	 sym == #operatorSequence or: [
 	 self symIn: BinaryOpSyms]]]]
@@ -88,7 +88,7 @@ SOMClassParser >> start [
 { #category : #patterns }
 SOMClassParser >> vars [
 	(self accept: #or) ifTrue: [
-		[sym == #identifier] whileTrue: [
+		[self symIsIdentifier] whileTrue: [
 			cgenc addField: self variable.
 		].
 		

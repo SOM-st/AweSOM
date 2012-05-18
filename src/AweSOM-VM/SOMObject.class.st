@@ -90,7 +90,7 @@ SOMObject class >> inUniverse: universe withSomClass: aSOMClass numIndexable: nu
 
 { #category : #initialization }
 SOMObject class >> initialize [
-
+	" self initialize "
 	super initialize.
 	self withAllSubclassesDo: [:each | each resetCaches].
 ]
@@ -120,6 +120,7 @@ SOMObject class >> realFieldIndexFor: index [
 
 { #category : #'as yet unclassified' }
 SOMObject class >> resetCaches [
+	" self resetCaches "
 	RealFieldIndexCache := Dictionary new.
 	NumberOfSharedFieldsCache := self allSharedFields size.
 ]
@@ -256,6 +257,12 @@ SOMObject >> primhashcode [
 ]
 
 { #category : #primitives }
+SOMObject >> priminspect [
+	self inspect.
+	Halt now.
+]
+
+{ #category : #primitives }
 SOMObject >> primobjectSize [
 
 	"basic object size in SOM++ is: 5 words (vtable, hash, objectSize, numberOfFields, gcField)
@@ -266,6 +273,13 @@ SOMObject >> primobjectSize [
 		(self class instSize - 1 +
 		self numberOfSharedFields +
 		self numberOfIndexableFields) * 4
+]
+
+{ #category : #primitives }
+SOMObject >> primperform: aSOMSymbol [
+	self sendMessage: aSOMSymbol symbol
+		withArguments: 
+			(SOMArray inUniverse: universe size: 0)
 ]
 
 { #category : #printing }

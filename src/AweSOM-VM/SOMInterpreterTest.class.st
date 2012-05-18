@@ -268,7 +268,7 @@ SOMInterpreterTest >> test11Send [
 			withAll: {  testMethod  }).
 	testClazz somInstanceFields: (SOMArray 
 			inUniverse: universe
-			withAll: {  (universe newString: 'class')  }).
+			withAll: {  (universe newSymbol: 'class')  }).
 	testInstance := SOMObject 
 		inUniverse: universe
 		withSomClass: testClazz.
@@ -319,7 +319,7 @@ SOMInterpreterTest >> test12DNU [
 			withAll: {  testMethod  }).
 	testClazz somInstanceFields: (SOMArray 
 			inUniverse: universe
-			withAll: {  (universe newString: 'class')  }).
+			withAll: {  (universe newSymbol: 'class')  }).
 	testInstance := SOMObject 
 		inUniverse: universe
 		withSomClass: testClazz.
@@ -422,7 +422,7 @@ SOMInterpreterTest >> test15SuperSend [
 			withAll: {  superMethod  }).
 	superClazz somInstanceFields: (SOMArray 
 			inUniverse: universe
-			withAll: {  (universe newString: 'class')  }).
+			withAll: {  (universe newSymbol: 'class')  }).
 	testClazz := SOMClass 
 		inUniverse: universe
 		withSomSuperClass: superClazz.
@@ -464,7 +464,7 @@ SOMInterpreterTest >> test15SuperSend [
 { #category : #tests }
 SOMInterpreterTest >> test16PushField [
 	| testClazz testMethod testInstance testFieldName |
-	testFieldName := universe newString: 'testField'.
+	testFieldName := universe newSymbol: 'testField'.
 	testClazz := SOMClass inUniverse: universe.
 	testMethod := self 
 		assembleMethod: 'testMessage'
@@ -504,7 +504,7 @@ SOMInterpreterTest >> test16PushField [
 { #category : #tests }
 SOMInterpreterTest >> test17PopField [
 	| testClazz testMethod testInstance testFieldName |
-	testFieldName := universe newString: 'testField'.
+	testFieldName := universe newSymbol: 'testField'.
 	testClazz := SOMClass inUniverse: universe.
 	testMethod := self 
 		assembleMethod: 'testMessage'

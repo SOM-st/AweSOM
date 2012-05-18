@@ -21,6 +21,6 @@ SOMBytecodeWithFieldIndex >> fieldIndex: anObject [
 SOMBytecodeWithFieldIndex >> inferFieldIndexFrom: object [
 
 	| fieldName |
-	fieldName := object universe newString: self literalValue.
+	fieldName := object universe newSymbol: self literalValue.
 	self fieldIndex: (object indexOfInstanceField: fieldName).
 ]

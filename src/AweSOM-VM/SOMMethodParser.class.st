@@ -47,7 +47,7 @@ SOMMethodParser >> assignment [
 
 { #category : #patterns }
 SOMMethodParser >> assignments: vars [
-	sym == #identifier ifTrue: [
+	self symIsIdentifier ifTrue: [
 		| var |
 		var := self assignment.
 		
@@ -79,7 +79,7 @@ SOMMethodParser >> binaryOperand: superSend [
 	| doSuper |
 	doSuper := self primary: superSend.
 	
-	[sym == #identifier] whileTrue:
+	[self symIsIdentifier] whileTrue:
 		[self unaryMessage: doSuper].
 	
 	^ doSuper
@@ -166,7 +166,7 @@ SOMMethodParser >> evaluation [
 	| superSend |
 	superSend := self primary: false.
 	
-	(sym == #identifier       or: [
+	(self symIsIdentifier     or: [
 	 sym == #keyword          or: [
 	 sym == #operatorSequence or: [
 	 self symIn: BinaryOpSyms]]]) ifTrue: [
@@ -335,7 +335,7 @@ SOMMethodParser >> literalSymbol [
 
 { #category : #patterns }
 SOMMethodParser >> locals [
-	[sym == #identifier] whileTrue: [
+	[self symIsIdentifier] whileTrue: [
 		mgenc addLocalIfAbsent: self variable.
 	]
 ]
@@ -345,10 +345,10 @@ SOMMethodParser >> messages: superSend [
 	| doSuper |
 	doSuper := superSend.
 		
-	sym == #identifier ifTrue: [
+	self symIsIdentifier ifTrue: [
 		[ self unaryMessage: doSuper.
 		  doSuper := false.
-		] doWhileTrue: [sym == #identifier].
+		] doWhileTrue: [self symIsIdentifier].
 		
 		[sym == #operatorSequence or: [self symIn: BinaryOpSyms]] whileTrue: [
 			self binaryMessage: false.
@@ -415,8 +415,8 @@ SOMMethodParser >> methodName [
 	mgenc addArgumentIfAbsent: #self.
 	mgenc holder: cgenc.
 	
-	sym == #identifier ifTrue: [ ^ self unaryPattern   ].
-	sym == #keyword    ifTrue: [ ^ self keywordPattern ].
+	self symIsIdentifier ifTrue: [ ^ self unaryPattern   ].
+	sym == #keyword      ifTrue: [ ^ self keywordPattern ].
 	
 	"else"
 	^ self binaryPattern.
@@ -494,7 +494,7 @@ SOMMethodParser >> primary: doSuper [
 	| superSend |
 	superSend := doSuper.
 	
-	sym == #identifier ifTrue: [
+	self symIsIdentifier ifTrue: [
 		| v |
 		v := self variable.
 		v = #super ifTrue: [

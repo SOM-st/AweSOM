@@ -78,7 +78,10 @@ SOMTools class >> setClassPathBase: basePath [
 
 	"SOMTools setClassPathBase: SmalltalkImage current imagePath , '/SOM'"
 	| standard examples dir |
-	standard := {basePath , '/Smalltalk'. basePath , '/TestSuite'}.
+	standard := {basePath , '/Smalltalk'.
+				   basePath , '/TestSuite'}.
+	
+	
 	dir := FileDirectory on: basePath , '/Examples'.
 	examples := dir directoryNames
 		select: [:ea | (ea beginsWith: '.') not]

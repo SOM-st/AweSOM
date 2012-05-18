@@ -141,7 +141,7 @@ SOMParser >> peek [
 SOMParser >> printableSymbol [
 	^ sym == #integer         or: [
 	  sym == #STString        or: [
-	  sym == #identifier      or: [
+	  self symIsIdentifier    or: [
 	  sym == #keyword         or: [
 	  sym == #keywordSequence or: [
 	  sym == #operatorSequence    ]]]]]
@@ -166,6 +166,11 @@ SOMParser >> stream: aReadStream [
 { #category : #helper }
 SOMParser >> symIn: symbols [
 	^ symbols includes: sym 
+]
+
+{ #category : #helper }
+SOMParser >> symIsIdentifier [
+	^ sym == #identifier or: [sym == #primitive]
 ]
 
 { #category : #accessing }

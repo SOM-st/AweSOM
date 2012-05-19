@@ -4,13 +4,6 @@ Class {
 	#category : #'AweSOM-CoreObjects'
 }
 
-{ #category : #primitives }
-SOMArray class >> inSomClass: somClass primnew: size [ 
-	^ self 
-		inUniverse: somClass universe
-		size: size number
-]
-
 { #category : #'as yet unclassified' }
 SOMArray class >> inUniverse: universe size: size [
 
@@ -27,6 +20,13 @@ SOMArray class >> inUniverse: universe withAll: squeakColl [
 	result := self inUniverse: universe size: squeakColl size.
 	squeakColl withIndexDo: [:each :i | result at: i put: each].
 	^ result
+]
+
+{ #category : #primitives }
+SOMArray class >> primnew: size inSomClass: somClass [
+	^ self 
+		inUniverse: somClass universe
+		size: size number
 ]
 
 { #category : #adding }

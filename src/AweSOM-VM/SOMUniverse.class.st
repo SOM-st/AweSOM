@@ -64,6 +64,14 @@ SOMUniverse class >> useOMeta: aBool [
 ]
 
 { #category : #bootstrapping }
+SOMUniverse >> bootstrapFrameWithArguments: args [
+	^ (self interpreter pushNewFrameWithMethod: self bootstrapMethod)
+		push: (self globalAt: #system);
+		push: args;
+		yourself.
+]
+
+{ #category : #bootstrapping }
 SOMUniverse >> bootstrapMethod [
 
 	^ SOMMethod
@@ -90,12 +98,14 @@ SOMUniverse >> bootstrapWithArguments: args [
 SOMUniverse >> bootstrapWithEntryPoint: invokable withArguments: args [
 
 	| bootstrapFrame |
-	bootstrapFrame := (self interpreter pushNewFrameWithMethod: self bootstrapMethod)
-		push: (self globalAt: #system);
-		push: args;
-		yourself.
+	bootstrapFrame := self bootstrapFrameWithArguments: args.
 	invokable ifNotNil: [invokable invokeInFrame: bootstrapFrame].
 	self interpreter start.
+]
+
+{ #category : #'universe configuration' }
+SOMUniverse >> classClass [
+	^ SOMClass
 ]
 
 { #category : #'universe configuration' }
@@ -150,6 +160,11 @@ SOMUniverse >> eval: code [
 	shellClassSource := self createShellClassWith: code.
 	shellClass := self loadAndStoreFromSource: shellClassSource.
 	self start: {shellClass somName string}.
+]
+
+{ #category : #'universe configuration' }
+SOMUniverse >> frameClass [
+	^ SOMFrame
 ]
 
 { #category : #'gobal accessing' }
@@ -213,8 +228,8 @@ SOMUniverse >> heap: anObject [
 SOMUniverse >> initClassSystem [
 
 	| class metaclass |
-	class := SOMClass inUniverse: self.
-	metaclass := SOMClass inUniverse: self.
+	class     := self classClass inUniverse: self.
+	metaclass := self classClass inUniverse: self.
 	class somClass: metaclass.
 	metaclass somClass: class.
 	metaclass somSuperClass: class.
@@ -236,7 +251,7 @@ SOMUniverse >> initSystemClassFrom: sqClass [
 	superclass := sqClass = SOMObject
 		ifTrue: [self globalNil]
 		ifFalse: [self globalAt: sqClass superclass somName].
-	somClass := SOMClass
+	somClass := self classClass
 		inUniverse: self
 		withSomSuperClass: superclass.
 	self
@@ -277,15 +292,15 @@ SOMUniverse >> initializeFakeGlobals [
 		initClassSystem;
 		initSystemClassesWith: [:className | "do nothing"].
 	"prepare for tests"
-	nilClass := SOMClass 
+	nilClass := self classClass 
 		inUniverse: self
 		withSomSuperClass: (self globalAt: #Object).
 	(self globalAt: #nil) somClass: nilClass.
 	self globalAt: #Nil put: nilClass.
 	self globalAt: #system put: (SOMSystem inUniverse: self).
-	self globalAt: #System put: (SOMClass inUniverse: self).
+	self globalAt: #System put: (self classClass inUniverse: self).
 	self globalAt: #true put: (SOMObject inUniverse: self).
-	self globalAt: #false put: (SOMObject inUniverse: self).
+	self globalAt: #false put: (self classClass inUniverse: self).
 ]
 
 { #category : #initializing }

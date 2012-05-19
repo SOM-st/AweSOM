@@ -245,6 +245,16 @@ SOMObject >> primEqualEqual: otherObject [
 ]
 
 { #category : #primitives }
+SOMObject >> primat: idx [
+	^ self fieldAtIndex: idx number.
+]
+
+{ #category : #primitives }
+SOMObject >> primat: idx put: val [
+	^ self fieldAtIndex: idx number put: val.
+]
+
+{ #category : #primitives }
 SOMObject >> primhalt [
 
 	self universe interpreter showInspection.
@@ -279,7 +289,9 @@ SOMObject >> primobjectSize [
 SOMObject >> primperform: aSOMSymbol [
 	self sendMessage: aSOMSymbol symbol
 		withArguments: 
-			(SOMArray inUniverse: universe size: 0)
+			(SOMArray inUniverse: universe size: 0).
+	
+	^ nil "return nil, to avoid pushing a wrong return value on the stack."
 ]
 
 { #category : #printing }

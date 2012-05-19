@@ -19,7 +19,7 @@ SOMClassTest >> test02Subclassing [
 	| somArray newClass newInstance |
 	self loadClazzes: {  #Array. #Object  }.
 	somArray := universe globalAt: #Array.
-	newClass := SOMClass 
+	newClass := universe classClass 
 		inUniverse: universe
 		withSomSuperClass: somArray.
 	self 

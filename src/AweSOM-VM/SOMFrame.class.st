@@ -44,7 +44,7 @@ SOMFrame >> arguments [
 		]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMFrame >> at: index put: object [
 
 	object = false ifTrue: [self halt].
@@ -233,7 +233,7 @@ SOMFrame >> printBytecodesOn: stream [
 	]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SOMFrame >> printOn: stream [
 
 	stream 

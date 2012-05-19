@@ -254,6 +254,21 @@ SOMLexer >> nextText [
 	^ nextText asString
 ]
 
+{ #category : #helper }
+SOMLexer >> nextWordInBufIs: aString [
+   (self nextInBufIs: aString) ifTrue: [
+     | nextPos nextChar |
+      nextPos := bufP + aString size.
+       
+      nextPos > buf size ifTrue: [^true].
+       
+      nextChar := buf at: nextPos.
+      ^ (nextChar isLetter or: [nextChar isDigit]) not.
+	].
+
+	^ false.
+]
+
 { #category : #lexing }
 SOMLexer >> peek [
 	| oldSym oldSymChr oldText |
@@ -366,7 +381,7 @@ SOMLexer >> symbol [
 	currentChar == $- ifTrue: [ ^ self matchMinusOrSeparator ].
 	(self isOperator: currentChar) ifTrue: [ ^ self matchOperator ].
 
-	(self nextInBufIs: self primitive) ifTrue: [ ^ self matchPrimitive ].
+	(self nextWordInBufIs: self primitive) ifTrue: [ ^ self matchPrimitive ].
 	
 	currentChar isLetter ifTrue: [ ^ self matchLetter ].
 	currentChar isDigit  ifTrue: [ ^ self matchDigit  ].

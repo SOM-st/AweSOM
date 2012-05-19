@@ -6,16 +6,20 @@ Class {
 
 { #category : #tests }
 SOMObjectTest >> test01CreateSimpleObject [
-	| object |
+	| object somFieldCnt |
+	somFieldCnt := SOMObject allSharedFields size.
+	
 	object := SOMObject inUniverse: universe withNumberOfAdditionalFields: 1.
+	
+	
 	"Objects now come with a default class"
 	"self 
 		assert: (object fieldAtIndex: 1)
 		equals: (universe globalAt: #nil)."
 	self 
-		assert: (object fieldAtIndex: 2)
+		assert: (object fieldAtIndex: somFieldCnt + 1)
 		equals: (universe globalNil).
-	self assert: object numberOfFields equals: 2.
+	self assert: object numberOfFields equals: somFieldCnt + 1.
 ]
 
 { #category : #tests }
@@ -33,12 +37,15 @@ SOMObjectTest >> test02FieldAccess [
 
 { #category : #tests }
 SOMObjectTest >> test03aSharedFields [
-	| clazz object |
+	| clazz object somFieldCnt |
+	somFieldCnt := SOMObject allSharedFields size.
+	
 	clazz := SOMObject inUniverse: universe.
 	object := SOMObject 
 		inUniverse: universe
 		withNumberOfAdditionalFields: 0.
 	object somClass: clazz.
+	
 	self 
 		assert: object somClass
 		equals: (object fieldAtIndex: 1).
@@ -50,44 +57,47 @@ SOMObjectTest >> test03aSharedFields [
 		assert: object somClass
 		equals: (object fieldAtIndex: 1).
 	self 
-		should: [ object fieldAtIndex: 2 ]
+		should: [ object fieldAtIndex: 1 + somFieldCnt ]
 		raise: Error.
 	self 
 		should: 
 			[ object 
-				fieldAtIndex: 2
+				fieldAtIndex: 1 + somFieldCnt
 				put: 42 ]
 		raise: Error
 ]
 
 { #category : #tests }
 SOMObjectTest >> test03bSharedFields [
-	| clazz1 clazz2 |
-	clazz1 := SOMClass inUniverse: universe.
-	clazz2 := SOMClass inUniverse: universe.
+	| clazz1 clazz2 somFieldCnt clsIdx |
+	somFieldCnt := SOMObject allSharedFields size.
+	clsIdx := somFieldCnt + 1.
+	
+	clazz1 := universe classClass inUniverse: universe.
+	clazz2 := universe classClass inUniverse: universe.
 	clazz1 somSuperClass: clazz2.
 	self 
 		assert: clazz2
 		equals: clazz1 somSuperClass.
 	self 
 		assert: clazz2
-		equals: (clazz1 fieldAtIndex: 2).
+		equals: (clazz1 fieldAtIndex: clsIdx ).
 	clazz1 somSuperClass: nil.
 	self 
 		assert: nil
 		equals: clazz1 somSuperClass.
 	self 
 		assert: nil
-		equals: (clazz1 fieldAtIndex: 2).
+		equals: (clazz1 fieldAtIndex: clsIdx).
 	clazz1 
-		fieldAtIndex: 2
+		fieldAtIndex: clsIdx
 		put: clazz2.
 	self 
 		assert: clazz2
 		equals: clazz1 somSuperClass.
 	self 
 		assert: clazz2
-		equals: (clazz1 fieldAtIndex: 2)
+		equals: (clazz1 fieldAtIndex: clsIdx)
 ]
 
 { #category : #tests }

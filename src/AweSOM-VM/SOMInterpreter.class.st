@@ -308,7 +308,7 @@ SOMInterpreter >> pushNewFrameWithMethod: method [
 	frameLength := method numberOfArguments
 		+ method numberOfLocals
 		+ method maxStackDepth.
-	^ frame := (SOMFrame 
+	^ frame := (universe frameClass 
 		inUniverse: self universe
 		size: frameLength)
 		somMethod: method;

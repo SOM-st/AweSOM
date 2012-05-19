@@ -99,9 +99,9 @@ SOMClass >> performPrimitive: selector withArguments: arguments [
 	This is extremely unsexy code. Class primitives might need access to the universe or the class. Currently class primitives are implemented on the class side of SOMObject subclasses. As class methods do not have access to the universe this / the SOMClass object has to be passed in."
 	| class classSelector |
 	class := self squeakClass.
-	classSelector := ('inSomClass:', selector) asSymbol.
+	classSelector := (selector, #inSomClass:) asSymbol.
 	^ (class respondsTo: classSelector)
-		ifTrue: [class perform: classSelector withArguments: {self}, arguments.]
+		ifTrue: [class perform: classSelector withArguments: arguments, {self}.]
 		ifFalse:[self perform: selector withArguments: arguments].
 ]
 

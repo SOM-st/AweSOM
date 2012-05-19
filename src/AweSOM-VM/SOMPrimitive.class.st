@@ -37,7 +37,10 @@ SOMPrimitive >> invokeInFrame: frame [
 	result := theSelf
 		performPrimitive: self realSignature symbol
 		withArguments: arguments.
-	frame push: result.
+
+	result isSOMObject
+		ifTrue: [	frame push: result. ].
+	
 ]
 
 { #category : #accessing }

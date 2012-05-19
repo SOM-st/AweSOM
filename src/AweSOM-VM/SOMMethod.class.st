@@ -141,16 +141,6 @@ SOMMethod >> maxStackDepth: anObject [
 ]
 
 { #category : #accessing }
-SOMMethod >> mgenc [
-	^ mgenc
-]
-
-{ #category : #accessing }
-SOMMethod >> mgenc: anObject [
-	mgenc := anObject
-]
-
-{ #category : #accessing }
 SOMMethod >> numberOfBytecodes [
 	^ bytecodes size
 ]

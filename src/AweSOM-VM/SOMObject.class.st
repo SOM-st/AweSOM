@@ -61,7 +61,8 @@ SOMObject class >> inUniverse: universe withNumberOfAdditionalFields: nFields wi
 	result
 		wipe;
 		setDefaultClass;
-		initialize.
+		initialize;
+		postInitialize.
 	universe heap allocateFor: result.
 	^ result
 ]
@@ -247,7 +248,7 @@ SOMObject >> primEqualEqual: otherObject [
 
 { #category : #primitives }
 SOMObject >> primhalt [
-
+	Halt now.
 	self universe interpreter showInspection.
 ]
 
@@ -265,6 +266,7 @@ SOMObject >> priminspect [
 
 { #category : #primitives }
 SOMObject >> priminstVarAt: idx [
+Halt now.
 	^ self fieldAtIndex: idx number.
 ]
 

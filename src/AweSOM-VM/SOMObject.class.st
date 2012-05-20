@@ -7,7 +7,8 @@ Class {
 		'fields',
 		'indexableFields',
 		'gcField',
-		'somClass'
+		'somClass',
+		'somDomain'
 	],
 	#classInstVars : [
 		'RealFieldIndexCache',
@@ -245,16 +246,6 @@ SOMObject >> primEqualEqual: otherObject [
 ]
 
 { #category : #primitives }
-SOMObject >> primat: idx [
-	^ self fieldAtIndex: idx number.
-]
-
-{ #category : #primitives }
-SOMObject >> primat: idx put: val [
-	^ self fieldAtIndex: idx number put: val.
-]
-
-{ #category : #primitives }
 SOMObject >> primhalt [
 
 	self universe interpreter showInspection.
@@ -270,6 +261,21 @@ SOMObject >> primhashcode [
 SOMObject >> priminspect [
 	self inspect.
 	Halt now.
+]
+
+{ #category : #primitives }
+SOMObject >> priminstVarAt: idx [
+	^ self fieldAtIndex: idx number.
+]
+
+{ #category : #primitives }
+SOMObject >> priminstVarAt: idx put: val [
+	^ self fieldAtIndex: idx number put: val.
+]
+
+{ #category : #primitives }
+SOMObject >> priminstVarNamed: aSOMSymbol [
+	^ self valueInField: aSOMSymbol
 ]
 
 { #category : #primitives }
@@ -290,6 +296,34 @@ SOMObject >> primperform: aSOMSymbol [
 	self sendMessage: aSOMSymbol symbol
 		withArguments: 
 			(SOMArray inUniverse: universe size: 0).
+	
+	^ nil "return nil, to avoid pushing a wrong return value on the stack."
+]
+
+{ #category : #primitives }
+SOMObject >> primperform: aSOMSymbol inSuperclass: class [
+	self
+		sendMessage: aSOMSymbol symbol
+		withArguments: (SOMArray inUniverse: universe size: 0)
+		inClass: class.
+	
+	^ nil "return nil, to avoid pushing a wrong return value on the stack."
+]
+
+{ #category : #primitives }
+SOMObject >> primperform: aSOMSymbol withArguments: args [
+	self sendMessage: aSOMSymbol symbol
+		withArguments: args.
+	
+	^ nil "return nil, to avoid pushing a wrong return value on the stack."
+]
+
+{ #category : #primitives }
+SOMObject >> primperform: aSOMSymbol withArguments: args inSuperclass: class [
+	self
+		sendMessage: aSOMSymbol symbol
+		withArguments: args
+		inClass: class.
 	
 	^ nil "return nil, to avoid pushing a wrong return value on the stack."
 ]
@@ -321,11 +355,16 @@ SOMObject >> realFieldIndexFor: index [
 
 { #category : #'message sending' }
 SOMObject >> sendMessage: message withArguments: args [ 
+	self sendMessage: message withArguments: args inClass: self somClass
+]
+
+{ #category : #'message sending' }
+SOMObject >> sendMessage: message withArguments: args inClass: class [
 	| frame invokable |
 	frame := self universe interpreter somFrame.
 	frame push: self.
 	args do: [ :arg | frame push: arg ].
-	invokable := self somClass lookupInvokable: message.
+	invokable := class lookupInvokable: message.
 	invokable invokeInFrame: frame
 ]
 

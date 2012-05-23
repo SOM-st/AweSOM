@@ -236,10 +236,9 @@ SOMFrame >> printBytecodesOn: stream [
 { #category : #printing }
 SOMFrame >> printOn: stream [
 
-	stream 
-		nextPutAll: 'SOMFrame(';
-		print: self somMethod;
-		nextPut: $).
+	stream nextPutAll: 'SOMFrame:'.
+	stream cr.
+	self printStackOn: stream
 ]
 
 { #category : #printing }
@@ -254,9 +253,9 @@ SOMFrame >> printStackElement: somObject atIndex: index on: stream [
 	
 	| somNil somClazz |
 	stream
-		nextPutAll: 'index ';
+		nextPutAll: '[';
 		nextPutAll: index asString;
-		nextPutAll: ': '.
+		nextPutAll: '] '.
 		
 	index <= self somMethod numberOfArguments 
 		ifTrue: [stream nextPutAll: '(arg '; nextPutAll: index asString; nextPutAll: ') '].
@@ -286,13 +285,17 @@ SOMFrame >> printStackElement: somObject atIndex: index on: stream [
 SOMFrame >> printStackOn: stream [
 	"prints value of stack pointer and the content of each stack slot"
 
-	stream nextPutAll: 'Method: ';
+	stream nextPutAll: '    Method: ';
 		nextPutAll: self somMethod asString;
 		nextPutAll: '; Stackpointer: ';
 		nextPutAll: self stackPointer asString;
 		cr.
-	1 to: self stackPointer do:
-		[ :index | | somObject |
+	
+	self stackPointer to: 1 by: -1 do:
+		[ :index |
+		| somObject |
+		index = self stackPointer ifTrue: [stream nextPutAll: '-> ']
+									   ifFalse:[stream nextPutAll: '   '].
 		somObject := self at: index.
 		self printStackElement: somObject atIndex: index on: stream ]
 ]

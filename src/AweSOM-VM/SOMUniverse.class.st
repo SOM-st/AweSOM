@@ -74,7 +74,7 @@ SOMUniverse >> bootstrapFrameWithArguments: args [
 { #category : #bootstrapping }
 SOMUniverse >> bootstrapMethod [
 
-	^ SOMMethod
+	^ self methodClass
 		inUniverse: self
 		named: #bootstrap
 		numArgs: 1

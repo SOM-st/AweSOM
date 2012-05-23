@@ -89,10 +89,8 @@ SOMArray >> primlength [
 { #category : #printing }
 SOMArray >> printOn: stream [
 
-	stream
-		nextPutAll: 'SOMArray(';
-		print: self elements;
-		nextPut: $).
+	stream nextPutAll: 'SOMArray'.
+	self elements printAsSelfEvaluatingFormOn: stream.
 ]
 
 { #category : #resizing }

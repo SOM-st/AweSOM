@@ -48,6 +48,8 @@ SOMInvokable >> printOn: stream [
 	stream
 		nextPut: $<;
 		nextPutAll: self class name; space;
+		nextPutAll: self somHolder somName symbol asString;
+		nextPutAll: '>>#';
 		nextPutAll: self somSignature string;
 		nextPut: $>.
 ]

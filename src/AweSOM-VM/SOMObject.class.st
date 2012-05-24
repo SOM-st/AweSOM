@@ -266,7 +266,6 @@ SOMObject >> priminspect [
 
 { #category : #primitives }
 SOMObject >> priminstVarAt: idx [
-Halt now.
 	^ self fieldAtIndex: idx number.
 ]
 

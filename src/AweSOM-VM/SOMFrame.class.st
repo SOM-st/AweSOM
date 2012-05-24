@@ -287,7 +287,8 @@ SOMFrame >> printStackOn: stream [
 
 	stream nextPutAll: '    Method: ';
 		nextPutAll: self somMethod asString;
-		nextPutAll: '; Stackpointer: ';
+		cr;
+		nextPutAll: '    Stackpointer: ';
 		nextPutAll: self stackPointer asString;
 		cr.
 	

@@ -240,6 +240,10 @@ SOMObject >> performPrimitive: selector withArguments: arguments [
 	^ self perform: selector withArguments: arguments
 ]
 
+{ #category : #'initialize-release' }
+SOMObject >> postInitialize [
+]
+
 { #category : #primitives }
 SOMObject >> primEqualEqual: otherObject [ 
 

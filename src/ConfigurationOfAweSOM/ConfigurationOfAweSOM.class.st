@@ -138,6 +138,21 @@ ConfigurationOfAweSOM >> baseline10: spec [
 		
 ]
 
+{ #category : #'symbolic versions' }
+ConfigurationOfAweSOM >> bleedingEdge: spec [
+	<symbolicVersion: #bleedingEdge>
+
+	spec for: #common version: '1.0-baseline'
+
+]
+
+{ #category : #'symbolic versions' }
+ConfigurationOfAweSOM >> development: spec [
+    <symbolicVersion: #development>
+
+    spec for: #common version: '1.0-baseline'
+]
+
 { #category : #accessing }
 ConfigurationOfAweSOM >> project [
 
@@ -149,4 +164,35 @@ ConfigurationOfAweSOM >> project [
 		project := constructor project.
 		project loadType: #linear. "change to #atomic if desired"
 		project ]
+]
+
+{ #category : #'symbolic versions' }
+ConfigurationOfAweSOM >> stable: spec [
+	<symbolicVersion: #stable>
+
+	spec for: #common version: '1.0.0'
+
+]
+
+{ #category : #versions }
+ConfigurationOfAweSOM >> version100: spec [
+	<version: '1.0.0' imports: #('1.0-baseline')>
+	
+	spec for: #common do: [
+		spec blessing: #release.
+		spec description: '1.0.0 (mha.149)
+Latest official version by Michael Haupt before Stefan Marr started working on experiments with AweSOM.
+This version is considered the stable mainline.'.
+		spec author: 'StefanMarr'.
+		spec timestamp: '05/26/2012 18:05'.
+		
+		spec
+			package: 'AweSOM' with: 'AweSOM-mha.149'
+	].
+
+	spec for: #squeak do: [
+		spec
+			package: 'OMeta2-Preload'  with: 'OMeta2-Postload-hmm.11';
+			package: 'OMeta2-Postload' with: 'OMeta2-Preload-hmm.11'
+		]
 ]

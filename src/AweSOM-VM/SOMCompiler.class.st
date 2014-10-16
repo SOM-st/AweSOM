@@ -55,16 +55,16 @@ SOMCompiler >> loadAndCompileSOMClass: className stub: classStubOrNil [
 { #category : #'file access' }
 SOMCompiler >> sourceOfClassFile: className [
 
-	| classFile theDir source |
+	| classFile theDir source stream |
 	classFile := className , self classFileExtension.
 	theDir := (self classPaths
-		collect: [:path |FileDirectory on: path])
-		detect: [:dir | dir fileExists: classFile]
+		collect: [:path | path asFileReference ])
+		detect: [:dir | (dir resolveString: classFile) exists ]
 		ifNone: [^ nil].
 	"theDir ifNil: [self error: 'Cannot find class in classPath']."
-	FileStream
-		fileNamed: (theDir fullPathFor: classFile)
-		do: [:s | source := s contents].
+	stream := (theDir resolveString: classFile) readStream.
+	source := stream contents.
+	stream close.
 	^ source
 ]
 

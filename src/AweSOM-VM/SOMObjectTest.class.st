@@ -6,9 +6,7 @@ Class {
 
 { #category : #tests }
 SOMObjectTest >> test01CreateSimpleObject [
-	| object somFieldCnt |
-	somFieldCnt := SOMObject allSharedFields size.
-	
+	| object |
 	object := SOMObject inUniverse: universe withNumberOfAdditionalFields: 1.
 	
 	
@@ -17,9 +15,9 @@ SOMObjectTest >> test01CreateSimpleObject [
 		assert: (object fieldAtIndex: 1)
 		equals: (universe globalAt: #nil)."
 	self 
-		assert: (object fieldAtIndex: somFieldCnt + 1)
+		assert: (object fieldAtIndex: 1)
 		equals: (universe globalNil).
-	self assert: object numberOfFields equals: somFieldCnt + 1.
+	self assert: object numberOfFields equals: 1.
 ]
 
 { #category : #tests }
@@ -33,71 +31,6 @@ SOMObjectTest >> test02FieldAccess [
 	self 
 		assert: (object1 fieldAtIndex: 1)
 		equals: object2
-]
-
-{ #category : #tests }
-SOMObjectTest >> test03aSharedFields [
-	| clazz object somFieldCnt |
-	somFieldCnt := SOMObject allSharedFields size.
-	
-	clazz := SOMObject inUniverse: universe.
-	object := SOMObject 
-		inUniverse: universe
-		withNumberOfAdditionalFields: 0.
-	object somClass: clazz.
-	
-	self 
-		assert: object somClass
-		equals: (object fieldAtIndex: 1).
-	object somClass: nil.
-	object 
-		fieldAtIndex: 1
-		put: clazz.
-	self 
-		assert: object somClass
-		equals: (object fieldAtIndex: 1).
-	self 
-		should: [ object fieldAtIndex: 1 + somFieldCnt ]
-		raise: Error.
-	self 
-		should: 
-			[ object 
-				fieldAtIndex: 1 + somFieldCnt
-				put: 42 ]
-		raise: Error
-]
-
-{ #category : #tests }
-SOMObjectTest >> test03bSharedFields [
-	| clazz1 clazz2 somFieldCnt clsIdx |
-	somFieldCnt := SOMObject allSharedFields size.
-	clsIdx := somFieldCnt + 1.
-	
-	clazz1 := universe classClass inUniverse: universe.
-	clazz2 := universe classClass inUniverse: universe.
-	clazz1 somSuperClass: clazz2.
-	self 
-		assert: clazz2
-		equals: clazz1 somSuperClass.
-	self 
-		assert: clazz2
-		equals: (clazz1 fieldAtIndex: clsIdx ).
-	clazz1 somSuperClass: nil.
-	self 
-		assert: nil
-		equals: clazz1 somSuperClass.
-	self 
-		assert: nil
-		equals: (clazz1 fieldAtIndex: clsIdx).
-	clazz1 
-		fieldAtIndex: clsIdx
-		put: clazz2.
-	self 
-		assert: clazz2
-		equals: clazz1 somSuperClass.
-	self 
-		assert: clazz2
-		equals: (clazz1 fieldAtIndex: clsIdx)
 ]
 
 { #category : #tests }

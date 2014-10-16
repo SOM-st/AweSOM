@@ -7,8 +7,7 @@ Class {
 		'fields',
 		'indexableFields',
 		'gcField',
-		'somClass',
-		'somDomain'
+		'somClass'
 	],
 	#classInstVars : [
 		'RealFieldIndexCache',
@@ -16,12 +15,6 @@ Class {
 	],
 	#category : #'AweSOM-CoreObjects'
 }
-
-{ #category : #accessing }
-SOMObject class >> allSharedFields [
-
-	^ self allInstVarNames select: [:each | each beginsWith: 'som']
-]
 
 { #category : #compiling }
 SOMObject class >> doneCompiling [
@@ -70,7 +63,7 @@ SOMObject class >> inUniverse: universe withNumberOfAdditionalFields: nFields wi
 { #category : #'instance creation' }
 SOMObject class >> inUniverse: universe withSomClass: aSOMClass [ 
 	| numberOfAdditionalFields |
-	numberOfAdditionalFields := aSOMClass numberOfInstanceFields - self numberOfSharedFields.
+	numberOfAdditionalFields := aSOMClass numberOfInstanceFields.
 	^ (self 
 		inUniverse: universe
 		withNumberOfAdditionalFields: numberOfAdditionalFields)
@@ -81,7 +74,7 @@ SOMObject class >> inUniverse: universe withSomClass: aSOMClass [
 { #category : #'instance creation' }
 SOMObject class >> inUniverse: universe withSomClass: aSOMClass numIndexable: numIndexable [ 
 	| numberOfAdditionalFields |
-	numberOfAdditionalFields := aSOMClass numberOfInstanceFields - self numberOfSharedFields.
+	numberOfAdditionalFields := aSOMClass numberOfInstanceFields.
 	^ (self 
 		inUniverse: universe
 		withNumberOfAdditionalFields: numberOfAdditionalFields
@@ -100,24 +93,6 @@ SOMObject class >> initialize [
 { #category : #'instance creation' }
 SOMObject class >> new [
 	self error: 'Use factory methods instead.'
-]
-
-{ #category : #accessing }
-SOMObject class >> numberOfSharedFields [
-
-	"Returns the number of fields that are shared between VM and SOM code"
-	^ NumberOfSharedFieldsCache
-]
-
-{ #category : #accessing }
-SOMObject class >> realFieldIndexFor: index [
-	^ RealFieldIndexCache at: index ifAbsentPut: [
-		| diff |
-		diff := index - self numberOfSharedFields.
-		diff <= 0
-			ifTrue: [{#shared.
-				self allInstVarNames indexOf: (self allSharedFields at: index)}]
-			ifFalse: [{#fields. diff}].]
 ]
 
 { #category : #'as yet unclassified' }
@@ -142,22 +117,12 @@ SOMObject >> allMyReferences [
 
 { #category : #accessing }
 SOMObject >> fieldAtIndex: index [
-
-	| realIndex |
-	realIndex := self realFieldIndexFor: index.
-	realIndex first = #fields ifTrue: [^ fields at: realIndex second].
-	realIndex first = #shared ifTrue: [^ self instVarAt: realIndex second].
-	self error: ['Unexpected symbol'].
+	^ fields at: index
 ]
 
 { #category : #accessing }
 SOMObject >> fieldAtIndex: index put: object [
-
-	| realIndex |
-	realIndex := self realFieldIndexFor: index.
-	realIndex first = #fields ifTrue: [^ fields at: realIndex second put: object].
-	realIndex first = #shared ifTrue: [^ self instVarAt: realIndex second put: object].
-	self error: ['Unexpected symbol'].
+	^ fields at: index put: object
 ]
 
 { #category : #accessing }
@@ -221,17 +186,12 @@ SOMObject >> isSOMSymbol [
 
 { #category : #accessing }
 SOMObject >> numberOfFields [
-	^ self class numberOfSharedFields + fields size
+	^ fields size
 ]
 
 { #category : #accessing }
 SOMObject >> numberOfIndexableFields [
 	^ self indexableFields size
-]
-
-{ #category : #accessing }
-SOMObject >> numberOfSharedFields [
-	^ self class numberOfSharedFields
 ]
 
 { #category : #'message sending' }
@@ -292,7 +252,6 @@ SOMObject >> primobjectSize [
 	word is 4 byte and objectSize returns the size in bytes (32-bit aligned)"
 	^ self universe newNumber:
 		(self class instSize - 1 +
-		self numberOfSharedFields +
 		self numberOfIndexableFields) * 4
 ]
 
@@ -350,12 +309,6 @@ SOMObject >> printOn: stream [
 	stream
 		nextPutAll: 'a SOM';
 		nextPutAll: self somClass somName string
-]
-
-{ #category : #accessing }
-SOMObject >> realFieldIndexFor: index [
-
-	^ self class realFieldIndexFor: index
 ]
 
 { #category : #'message sending' }

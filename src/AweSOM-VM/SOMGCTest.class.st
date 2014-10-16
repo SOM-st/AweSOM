@@ -43,11 +43,11 @@ SOMGCTest >> test03DontCollectGlobalObjects [
 { #category : #'as yet unclassified' }
 SOMGCTest >> test04DontCollectObjectsReferencedFromGlobals [
 
-	| object object2 |
+	| arr object |
+	arr := SOMArray inUniverse: universe size: 1.
+	universe globalAt: #test put: arr.
 	object := SOMObject inUniverse: universe.
-	universe globalAt: #test put: object.
-	object2 := SOMObject inUniverse: universe.
-	object fieldAtIndex: 1 put: object2.
+	arr at: 1 put: object.
 	self assert: universe heap objects size equals: 2.
 	universe heap collectGarbage.
 	self assert: universe heap objects size equals: 2.
@@ -56,15 +56,15 @@ SOMGCTest >> test04DontCollectObjectsReferencedFromGlobals [
 { #category : #'as yet unclassified' }
 SOMGCTest >> test05CollectObjectsNotReferencedAnymore [
 
-	| object object2 |
-	object := SOMObject inUniverse: universe.
-	universe globalAt: #test put: object.
+	| arr object2 |
+	arr := SOMArray inUniverse: universe size: 1.
+	universe globalAt: #test put: arr.
 	object2 := SOMObject inUniverse: universe.
-	object fieldAtIndex: 1 put: object2.
+	arr at: 1 put: object2.
 	self assert: universe heap objects size equals: 2.
 	universe heap collectGarbage.
 	self assert: universe heap objects size equals: 2.
-	object fieldAtIndex: 1 put: nil.
+	arr at: 1 put: nil.
 	universe heap collectGarbage.
 	self assert: universe heap objects size equals: 1.
 ]

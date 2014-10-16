@@ -47,14 +47,20 @@ SOMClassTest >> test03LookupOfFields [
 { #category : #tests }
 SOMClassTest >> test04LookupOfFieldDefinedInSuperclass [
 
-	| source class method pushBc field |
+	| sourceSuper sourceSub
+	  class method pushBc field |
 	self loadClazzes: {#Object.}.
-	source := 'ClassA = ( m=(class) )'.
-	class := universe loadAndStoreFromSource: source.
+	sourceSuper := 'ClassA = ( | aField | )'.
+	sourceSub   := 'ClassB = ClassA ( m=(aField) )'.
+	
+	universe loadAndStoreFromSource: sourceSuper.
+	class := universe loadAndStoreFromSource: sourceSub.
+	
 	method := class somInstanceInvokables at: 1.
 	pushBc := method bytecodes first.
 	self shouldnt: [field := class allInstanceFields at: pushBc fieldIndex] raise: Error.
-	self assert: field string equals: 'class'.
+	self assert: field string equals: 'aField'.
+
 ]
 
 { #category : #tests }

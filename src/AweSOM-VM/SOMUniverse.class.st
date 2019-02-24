@@ -12,8 +12,7 @@ Class {
 	#classVars : [
 		'ClassPaths',
 		'Default',
-		'DefaultInterpreter',
-		'UseOMeta'
+		'DefaultInterpreter'
 	],
 	#category : #'AweSOM-VM'
 }
@@ -50,17 +49,6 @@ SOMUniverse class >> defaultInterpreter [
 { #category : #accessing }
 SOMUniverse class >> defaultInterpreter: interpClass [
 	DefaultInterpreter := interpClass
-]
-
-{ #category : #accessing }
-SOMUniverse class >> useOMeta [
-	UseOMeta ifNil: [UseOMeta := true].
-	^ UseOMeta
-]
-
-{ #category : #accessing }
-SOMUniverse class >> useOMeta: aBool [
-	UseOMeta := aBool
 ]
 
 { #category : #bootstrapping }
@@ -110,9 +98,7 @@ SOMUniverse >> classClass [
 
 { #category : #'universe configuration' }
 SOMUniverse >> classParser [
-	^ ((Smalltalk hasClassNamed: #SOMClassParser2) and: UseOMeta)
-		ifTrue: [ Smalltalk at: #SOMClassParser2 ]
-		ifFalse:[ SOMClassParser ]
+	^ SOMClassParser
 ]
 
 { #category : #accessing }
@@ -391,9 +377,7 @@ SOMUniverse >> methodGenClass [
 
 { #category : #'universe configuration' }
 SOMUniverse >> methodParser [
-	^ ((Smalltalk hasClassNamed: #SOMMethodParser2) and: UseOMeta)
-		ifTrue: [ Smalltalk at: #SOMMethodParser2 ]
-		ifFalse:[ SOMMethodParser ]
+	^ SOMMethodParser
 ]
 
 { #category : #'object creation' }

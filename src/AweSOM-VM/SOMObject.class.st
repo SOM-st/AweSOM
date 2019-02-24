@@ -10,8 +10,6 @@ Class {
 		'somClass'
 	],
 	#classInstVars : [
-		'RealFieldIndexCache',
-		'NumberOfSharedFieldsCache'
 	],
 	#category : #'AweSOM-CoreObjects'
 }
@@ -19,7 +17,6 @@ Class {
 { #category : #compiling }
 SOMObject class >> doneCompiling [
 	super doneCompiling.
-	self withAllSubclassesDo: [:each | each resetCaches]
 ]
 
 { #category : #'instance creation' }
@@ -83,23 +80,9 @@ SOMObject class >> inUniverse: universe withSomClass: aSOMClass numIndexable: nu
 		yourself
 ]
 
-{ #category : #initialization }
-SOMObject class >> initialize [
-	" self initialize "
-	super initialize.
-	self withAllSubclassesDo: [:each | each resetCaches].
-]
-
 { #category : #'instance creation' }
 SOMObject class >> new [
 	self error: 'Use factory methods instead.'
-]
-
-{ #category : #'as yet unclassified' }
-SOMObject class >> resetCaches [
-	" self resetCaches "
-	RealFieldIndexCache := Dictionary new.
-	NumberOfSharedFieldsCache := self allSharedFields size.
 ]
 
 { #category : #accessing }

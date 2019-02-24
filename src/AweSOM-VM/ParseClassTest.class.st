@@ -8,13 +8,6 @@ Class {
 	#category : #'AweSOM-Compiler-Test'
 }
 
-{ #category : #assertion }
-ParseClassTest >> assertNoFail: parseResult [
-
-	"parser printPosition"
-	self deny: (parseResult isKindOf: OMetaFail).
-]
-
 { #category : #running }
 ParseClassTest >> parserClass [
 
@@ -46,7 +39,7 @@ ParseClassTest >> setUpParser: source andApply: rule [
 ParseClassTest >> test01SimpleClassDef [
 
 	self setUpParser: 'Class1 = ()'.
-	self assertNoFail: parser start.
+	parser start.
 	self assert: parser cgenc theName equals: #Class1.
 	self assert: parser cgenc superName equals: #Object.
 ]
@@ -55,7 +48,7 @@ ParseClassTest >> test01SimpleClassDef [
 ParseClassTest >> test02ClassInstVars [
 
 	self setUpParser: 'Class1 = ( | a b cdef |)'.
-	self assertNoFail: parser start.
+	parser start.
 	self
 		assert: parser cgenc instanceFields
 		equals: {'a'. 'b'. 'cdef'} asOrderedCollection.
@@ -65,7 +58,7 @@ ParseClassTest >> test02ClassInstVars [
 ParseClassTest >> test03RecognizeSpaces [
 
 	self setUpParser: '"bla " Class1 = ()'.
-	self assertNoFail: parser start.
+	parser start.
 	self assert: parser cgenc theName equals: #Class1.
 ]
 
@@ -73,7 +66,7 @@ ParseClassTest >> test03RecognizeSpaces [
 ParseClassTest >> test04aRecognizeMethodUnary [
 	| methods |
 	self setUpParser: 'Class1 = ( abc = ())'.
-	self assertNoFail: parser start.
+	parser start.
 	methods := parser cgenc instanceMethods.
 	self 
 		assert: methods size
@@ -87,7 +80,7 @@ ParseClassTest >> test04aRecognizeMethodUnary [
 ParseClassTest >> test04bRecognizeMethodBinary [
 	| methods |
 	self setUpParser: 'Class1 = ( & a = ())'.
-	self assertNoFail: parser start.
+	parser start.
 	methods := parser cgenc instanceMethods.
 	self 
 		assert: methods size
@@ -101,7 +94,7 @@ ParseClassTest >> test04bRecognizeMethodBinary [
 ParseClassTest >> test04cRecognizeKeywordMethod [
 	| methods |
 	self setUpParser: 'Class1 = ( a: x abc: y = ())'.
-	self assertNoFail: parser start.
+	parser start.
 	methods := parser cgenc instanceMethods.
 	self 
 		assert: methods size
@@ -119,7 +112,7 @@ ParseClassTest >> test05RecognizeMultipleMethods [
      & bool = ()
 	test = ()
 )'.
-	self assertNoFail: parser start.
+	parser start.
 	methods := parser cgenc instanceMethods.
 	self assert: methods size equals: 3.
 ]
@@ -129,7 +122,7 @@ ParseClassTest >> test06RecognizeClassMethods [
 
 	| methods |
 	self setUpParser: 'Class1 = ( ---- test = () )'.
-	self assertNoFail: parser start.
+	parser start.
 	self assert: parser cgenc isClassSide.
 	methods := parser cgenc classMethods.
 	self assert: methods size equals: 1.
@@ -139,7 +132,7 @@ ParseClassTest >> test06RecognizeClassMethods [
 ParseClassTest >> test06aRecognizeClassSide [
 
 	self setUpParser: 'Class1 = ( ---- | a | test = () x = (1 +2))'.
-	self assertNoFail: parser start.
+	parser start.
 	self assert: parser cgenc isClassSide.
 	self assert: parser cgenc classMethods size equals: 2.
 	self assert: parser cgenc classFields size equals: 1.
@@ -149,7 +142,7 @@ ParseClassTest >> test06aRecognizeClassSide [
 ParseClassTest >> test06bRecognizeInstanceAndClassSide [
 
 	self setUpParser: 'Class1 = ( | a | y = (1) ---- | a | test = ())'.
-	self assertNoFail: parser start.
+	parser start.
 	self assert: parser cgenc instanceMethods size equals: 1.
 	self assert: parser cgenc instanceFields size equals: 1.
 	self assert: parser cgenc classMethods size equals: 1.
@@ -161,7 +154,7 @@ ParseClassTest >> test07AccessInstanceVars [
 
 	| mgenc bc |
 	self setUpParser: 'Class1 = (|a| y = (^a))'.
-	self assertNoFail: parser start.
+	parser start.
 	mgenc := parser cgenc instanceMethods first.
 	bc := mgenc bytecode.
 	self assert: (bc first isKindOf: SOMBCPushField).

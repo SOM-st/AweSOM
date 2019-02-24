@@ -293,7 +293,20 @@ SOMMethodParser >> literal [
 
 { #category : #patterns }
 SOMMethodParser >> literalDecimal [
-	^ self literalInteger.
+	sym == #integer ifTrue: [
+		^ self literalInteger ].
+	
+	self assert: sym == #double.
+	^ self literalDouble.
+	
+]
+
+{ #category : #patterns }
+SOMMethodParser >> literalDouble [
+	| val |
+	val := Float readFrom: text contents.
+	self expect: #double.
+	^ val
 ]
 
 { #category : #patterns }

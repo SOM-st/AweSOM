@@ -120,12 +120,24 @@ SOMLexer >> matchColonOrAssignment [
 
 { #category : #lexing }
 SOMLexer >> matchDigit [
+	| sawDecimalMark |
 	sym    := #integer.
 	symChr := nil.
 	text   := RWBinaryOrTextStream on: String new.
+	
+	sawDecimalMark := false.
 
 	[ text nextPut: self currentChar.
-	  self readNext
+	  self readNext.
+	
+	  (sawDecimalMark not and: [
+		  $. == self currentChar and: [
+			self nextChar notNil and: [ 
+				self nextChar isDigit ] ] ]) ifTrue: [
+				sym := #double.
+				text nextPut: self currentChar.
+				self readNext ].
+	  
 	] doWhileTrue: [self currentChar notNil and: [ self currentChar isDigit ]].
 
 	^ sym
@@ -240,6 +252,11 @@ SOMLexer >> matchString [
 	self readNext. "skip the ending $'"
 	
 	^ sym
+]
+
+{ #category : #private }
+SOMLexer >> nextChar [
+	^ self bufchar: bufP + 1
 ]
 
 { #category : #helper }

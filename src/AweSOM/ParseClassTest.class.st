@@ -25,7 +25,8 @@ ParseClassTest >> setUpParser: source [
 
 	parser := self parserClass
 		inUniverse: universe
-		onSource: source.
+		onSource: source
+		from: 'test'.
 ]
 
 { #category : #running }

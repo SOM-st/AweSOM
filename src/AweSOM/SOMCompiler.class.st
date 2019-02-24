@@ -34,10 +34,10 @@ SOMCompiler >> classPaths: anObject [
 ]
 
 { #category : #compiling }
-SOMCompiler >> compileSOMClassSource: source stub: classStubOrNil [
+SOMCompiler >> compileSOMClassSource: source stub: classStubOrNil from: aFileName [
 
 	| cgenc |
-	cgenc := (universe classParser inUniverse: universe onSource: source) start.
+	cgenc := (universe classParser inUniverse: universe onSource: source from: aFileName) start.
 	^ classStubOrNil
 		ifNil: [cgenc assembleIn: universe]
 		ifNotNil: [cgenc assembleIn: universe stub: classStubOrNil].
@@ -46,10 +46,10 @@ SOMCompiler >> compileSOMClassSource: source stub: classStubOrNil [
 { #category : #loading }
 SOMCompiler >> loadAndCompileSOMClass: className stub: classStubOrNil [
 
-	| source |
-	source := self sourceOfClassFile: className.
-	source ifNil: [^ nil].
-	^ self compileSOMClassSource: source stub: classStubOrNil.
+	| sourceAndFile |
+	sourceAndFile := self sourceOfClassFile: className.
+	sourceAndFile ifNil: [^ nil].
+	^ self compileSOMClassSource: (sourceAndFile at: 1) stub: classStubOrNil from: (sourceAndFile at: 2).
 ]
 
 { #category : #'file access' }
@@ -65,7 +65,7 @@ SOMCompiler >> sourceOfClassFile: className [
 	stream := (theDir resolveString: classFile) readStream.
 	source := stream contents.
 	stream close.
-	^ source
+	^ {source. classFile}
 ]
 
 { #category : #accessing }

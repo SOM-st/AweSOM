@@ -8,7 +8,7 @@ Class {
 CompileSOMMethodTest >> createMgencFromSource: source [
 	
 	| parser |
-	parser := universe methodParser inUniverse: universe onSource: source.
+	parser := universe methodParser inUniverse: universe onSource: source from: 'test'.
 	^ parser apply: #method.
 ]
 

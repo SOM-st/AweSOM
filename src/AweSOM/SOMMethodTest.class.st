@@ -12,7 +12,7 @@ SOMMethodTest >> createMethod: source [
 
 	method := ((universe methodParser
 		inUniverse: universe
-		onSource: source)
+		onSource: source from: 'test')
 			fakeCgenc;
 			apply: #method) assembleIn: universe.
 ]

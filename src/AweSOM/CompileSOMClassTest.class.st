@@ -22,7 +22,7 @@ CompileSOMClassTest >> compileSource: source [
 CompileSOMClassTest >> createCgencFromSource: source [
 	
 	| parser |
-	parser := universe classParser inUniverse: universe onSource: source.
+	parser := universe classParser inUniverse: universe onSource: source from: 'test'.
 	parser start.
 	^ parser cgenc.
 ]

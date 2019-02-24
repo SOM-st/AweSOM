@@ -341,7 +341,8 @@ SOMUniverse >> loadAndStoreFromSource: source [
 	| class |
 	class := self compiler
 		compileSOMClassSource: source
-		stub: nil.
+		stub: nil
+		from: '<eval>'.
 	^ self
 		globalAt: class somName string
 		put: class

@@ -8,7 +8,8 @@ Class {
 		'text',
 		'lexer',
 		'nextSym',
-		'shouldReadSources'
+		'shouldReadSources',
+		'fileName'
 	],
 	#classVars : [
 		'BinaryOpSyms',
@@ -19,13 +20,14 @@ Class {
 }
 
 { #category : #'instance creation' }
-SOMParser class >> inUniverse: universe onSource: string [
+SOMParser class >> inUniverse: universe onSource: string from: aFileName [
 	| readStream parser |
 	readStream := string asString readStream.
 	
 	parser := self new.
 	parser stream: readStream.
 	parser universe: universe.
+	parser fileName: aFileName.
 	
 	^ parser
 ]
@@ -64,26 +66,32 @@ SOMParser >> cgenc: anObject [
 	cgenc := anObject
 ]
 
+{ #category : #accessing }
+SOMParser >> currentColumn [
+	^ -1
+]
+
+{ #category : #accessing }
+SOMParser >> currentLineNumber [
+	^ lexer currentLineNumber
+]
+
 { #category : #'accept and expect' }
 SOMParser >> expect: aSymbol [
-	| msg |
 	(self accept: aSymbol) ifTrue: [ ^ true ].
-	
-	msg := RWBinaryOrTextStream on: String new.
-	msg nextPutAll: 'unexpected symbol in line '.
-	msg nextPutAll: lexer currentLineNumber asString.
-	msg nextPutAll: '. Expected '.
-	msg nextPutAll: aSymbol asString.
-	msg nextPutAll: ', but found '.
-	msg nextPutAll: sym asString.
-	
-	self printableSymbol ifTrue: [
-		msg nextPutAll: ' (', text contents, ')'.].
-	
-	msg nextPutAll: ': '.
-	msg nextPutAll: lexer rawBuffer.
-	
-	Error signal: msg contents.
+		
+	SOMParseError signalWith: 'Expected symbol <1p>, but found <2p>.'
+				    expectedSym: aSymbol and: self
+]
+
+{ #category : #accessing }
+SOMParser >> fileName [
+	^ fileName
+]
+
+{ #category : #accessing }
+SOMParser >> fileName: aString [
+	fileName := aString asString
 ]
 
 { #category : #private }
@@ -115,6 +123,7 @@ SOMParser >> initialize [
 SOMParser >> methodParser [
 	^ universe methodParser new
 			universe: self universe;
+			fileName: fileName;
 			shouldReadSources: self shouldReadSources;
 			yourself
 ]
@@ -148,6 +157,11 @@ SOMParser >> printableSymbol [
 ]
 
 { #category : #accessing }
+SOMParser >> rawBuffer [
+	^ lexer rawBuffer
+]
+
+{ #category : #accessing }
 SOMParser >> shouldReadSources [
 	^ shouldReadSources
 ]
@@ -163,6 +177,11 @@ SOMParser >> stream: aReadStream [
 	self getSym.
 ]
 
+{ #category : #accessing }
+SOMParser >> sym [
+	^ sym
+]
+
 { #category : #helper }
 SOMParser >> symIn: symbols [
 	^ symbols includes: sym 
@@ -171,6 +190,11 @@ SOMParser >> symIn: symbols [
 { #category : #helper }
 SOMParser >> symIsIdentifier [
 	^ sym == #identifier or: [sym == #primitive]
+]
+
+{ #category : #accessing }
+SOMParser >> text [
+	^ text
 ]
 
 { #category : #accessing }

@@ -94,6 +94,7 @@ CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 	instance := somClass primnew.
 	universe 
 		bootstrapWithEntryPoint: (somClass somInstanceInvokables at: 1)
+		on: (universe globalAt: #system)
 		withArguments: instance.
 	privateInstVarNames := instance class instVarNames select: [ :each | (each beginsWith: 'som') not ].
 	privateInstVarNames do: 

@@ -52,11 +52,15 @@ SOMUniverse class >> defaultInterpreter: interpClass [
 ]
 
 { #category : #bootstrapping }
-SOMUniverse >> bootstrapFrameWithArguments: args [
-	^ (self interpreter pushNewFrameWithMethod: self bootstrapMethod)
-		push: (self globalAt: #system);
-		push: args;
-		yourself.
+SOMUniverse >> bootstrapFrameFor: receiver withArguments: args [
+	| frame |
+	frame := self interpreter pushNewFrameWithMethod: self bootstrapMethod.
+	frame push: receiver.
+	args ifNotNil: [
+		frame push: args ].
+
+	^ frame
+
 ]
 
 { #category : #bootstrapping }
@@ -79,16 +83,18 @@ SOMUniverse >> bootstrapWithArguments: args [
 
 	self 
 		bootstrapWithEntryPoint: ((self globalAt: #System) lookupInvokable: #initialize:)
+		on: (self globalAt: #system)
 		withArguments: args.
 ]
 
 { #category : #bootstrapping }
-SOMUniverse >> bootstrapWithEntryPoint: invokable withArguments: args [
+SOMUniverse >> bootstrapWithEntryPoint: invokable on: receiver withArguments: args [
 
 	| bootstrapFrame |
-	bootstrapFrame := self bootstrapFrameWithArguments: args.
+	bootstrapFrame := self bootstrapFrameFor: receiver withArguments: args.
 	invokable ifNotNil: [invokable invokeInFrame: bootstrapFrame].
 	self interpreter start.
+	^ bootstrapFrame
 ]
 
 { #category : #'universe configuration' }
@@ -469,6 +475,22 @@ SOMUniverse >> start: arguments [
  	self initializeRealGlobalsIfNecessary.
 	wrappedArguments := arguments collect: [ :arg | self newString: arg].
 	self bootstrapWithArguments: (SOMArray inUniverse: self withAll: wrappedArguments).
+]
+
+{ #category : #initializing }
+SOMUniverse >> start: className method: methodName [
+	| invokable class frame |
+ 	self initializeRealGlobalsIfNecessary.
+	
+	class := self globalAt: className asSymbol.
+	invokable := class somClass lookupInvokable: methodName asSymbol.
+	 
+	frame := self 
+		bootstrapWithEntryPoint: invokable
+		on: class
+		withArguments: nil.
+	^ frame pop
+
 ]
 
 { #category : #'gobal accessing' }

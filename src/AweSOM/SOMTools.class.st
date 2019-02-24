@@ -1,8 +1,34 @@
 Class {
 	#name : #SOMTools,
 	#superclass : #Object,
+	#classInstVars : [
+		'basePath'
+	],
 	#category : #'AweSOM-Meta'
 }
+
+{ #category : #'class path' }
+SOMTools class >> basePath [
+	^ basePath
+]
+
+{ #category : #'class path' }
+SOMTools class >> basePath: aString [
+	"Sets the base path for SOMUniverse.
+	 Example:
+		SOMTools basePath: '/home/.../AweSOM/core-lib'
+	"
+	basePath := aString
+]
+
+{ #category : #'class path' }
+SOMTools class >> basicInterpreterTestClassPath [
+	basePath ifNil: [
+		self notify: 'SOMTools basePath was not set. Use SOMTools>>basePath: to set path to core-lib directory.' ].
+
+	^ { basePath, '/Smalltalk'.
+		 basePath, '/TestSuite/BasicInterpreterTests' }
+]
 
 { #category : #fileout }
 SOMTools class >> fileout [
@@ -32,7 +58,7 @@ SOMTools class >> lintOnClasses: classes [
 		environment: env.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tools }
 SOMTools class >> loc [
 
 	| pi |
@@ -41,7 +67,7 @@ SOMTools class >> loc [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tools }
 SOMTools class >> locWithoutTests [
 
 	| pi |
@@ -74,10 +100,12 @@ SOMTools class >> recompile [
 ]
 
 { #category : #'class path' }
-SOMTools class >> setClassPathBase: basePath [
+SOMTools class >> setClassPathBase: aBasePath [
 
 	"SOMTools setClassPathBase: SmalltalkImage current imagePath , '/SOM'"
 	| standard examples dir |
+	basePath := aBasePath.
+	
 	standard := {basePath , '/Smalltalk'.
 				   basePath , '/TestSuite'.
 				   basePath , '/SUnit'}.

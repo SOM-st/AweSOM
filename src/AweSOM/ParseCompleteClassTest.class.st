@@ -175,19 +175,17 @@ System = (
 { #category : #tests }
 ParseCompleteClassTest >> test01parseSystem [
 
-	| cgenc |
 	self setUpParser: self classSystem.
-	self assertNoFail: parser start.
-	cgenc := parser cgenc.
+	parser start.
+	parser cgenc.
 	"self halt."
 ]
 
 { #category : #tests }
 ParseCompleteClassTest >> test02parseObject [
 
-	| cgenc |
 	self setUpParser: self classObject.
-	self assertNoFail: parser start.
-	cgenc := parser cgenc.
+	parser start.
+	parser cgenc.
 	"self halt."
 ]

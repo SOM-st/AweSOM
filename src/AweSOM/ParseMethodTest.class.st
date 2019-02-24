@@ -23,7 +23,7 @@ ParseMethodTest >> setUpParser: source [
 ParseMethodTest >> test01SimpleMethodDef [
 
 	self setUpParser: 'x = (1)'.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: (result isKindOf: SOMMethodGenerationContext).
 	self 
 		assert: result signature
@@ -34,7 +34,7 @@ ParseMethodTest >> test01SimpleMethodDef [
 ParseMethodTest >> test02ParseArguments [
 
 	self setUpParser: 'x: abc y: def4 = ( 1 + 1 )'.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: result arguments size = 3. "First is self"
 	self assert: (result arguments includes: 'abc').
 	self assert: (result arguments includes: 'def4').
@@ -45,7 +45,7 @@ ParseMethodTest >> test03FakeParseBody [
 
 	self setUpParser: 'x: abc y: def4 = ( 1 * (2*(2)). )'.
 	parser shouldReadSources: true.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: result fakeSource equals: ' 1 * (2*(2)). '.
 ]
 
@@ -54,7 +54,7 @@ ParseMethodTest >> test04Primitive [
 
 	| res |
 	self setUpParser: '"Accessing" at: index = primitive'.
-	self assertNoFail: (res := parser apply: #method).
+	res := parser apply: #method.
 	self assert: res isPrimitive.
 ]
 
@@ -63,7 +63,7 @@ ParseMethodTest >> test05PrimitiveMethodGeneratesBody [
 
 	self setUpParser: 'test = primitive'.
 	parser fakeCgenc. "className = Dummy"
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: result fakeSource equals: '^ SOMPrimitives Dummytest'
 ]
 
@@ -71,16 +71,15 @@ ParseMethodTest >> test05PrimitiveMethodGeneratesBody [
 ParseMethodTest >> test06PrimitiveWithParameters [
 
 	self setUpParser: 'test: a test: b = primitive'.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: result fakeSource equals: '^ SOMPrimitives Dummytest: a test: b'
 ]
 
 { #category : #tests }
 ParseMethodTest >> test07LocalVars [
 
-	| result |
 	self setUpParser: 'x = (| abc |)'.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: result locals equals: {'abc'} asOrderedCollection.
 ]
 
@@ -101,7 +100,7 @@ ParseMethodTest >> test08SystemResolveMethod [
         self error: ''Unable to resolve '' + symbol
     )'.
 	self setUpParser: src.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	"self halt."
 ]
 
@@ -111,7 +110,7 @@ ParseMethodTest >> test09HashEntryRun [
 	| src |
 	src := 'run = ("(")'.
 	self setUpParser: src.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 "	self halt."
 ]
 
@@ -121,7 +120,7 @@ ParseMethodTest >> test10BigIntegerTestRun [
 	| src |
 	src := 'run: harness = (-1)'.
 	self setUpParser: src.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 "	self halt."
 ]
 
@@ -131,7 +130,7 @@ ParseMethodTest >> test11ReflectionTestRun [
 	| src |
 	src := 'run: harness = (self x: #==)'.
 	self setUpParser: src.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 "	self halt."
 ]
 
@@ -139,7 +138,7 @@ ParseMethodTest >> test11ReflectionTestRun [
 ParseMethodTest >> test12SimpleOperatorMethodDef [
 
 	self setUpParser: '& bool = ()'.
-	self assertNoFail: (result := parser apply: #method).
+	result := parser apply: #method.
 	self assert: (result isKindOf: SOMMethodGenerationContext).
 	self assert: result signature 			equals: '&'.
 	self assert: result arguments size  		equals: 2.

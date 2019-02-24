@@ -78,7 +78,10 @@ SOMClassTest >> test06ClassClassHasCorrectInstanceFields [
 	classClass := universe globalAt: #Class.
 	self
 		assert: classClass allInstanceFields
-		equals: #('class' 'superClass' 'name' 'instanceFields' 'instanceInvokables')
+		equals: #()
+		"Note: in previous versions of SOM we did have the following fields:
+		       'class' 'superClass' 'name' 'instanceFields' 'instanceInvokables'"
+
 ]
 
 { #category : #tests }

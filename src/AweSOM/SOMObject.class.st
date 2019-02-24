@@ -9,8 +9,6 @@ Class {
 		'gcField',
 		'somClass'
 	],
-	#classInstVars : [
-	],
 	#category : #'AweSOM-CoreObjects'
 }
 

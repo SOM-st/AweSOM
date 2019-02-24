@@ -259,7 +259,7 @@ SOMMethodGenerationContext >> combineSelectorAndArgs [
 	args := self arguments allButFirst. "First is self"
 	args ifEmpty: [^ self signature].
 	args size = 1 ifTrue: [^ self signature , ' ' , args first].
-	parts := (self signature subStrings: ':')
+	parts := (self signature substrings: ':')
 		with: args
 		collect: [:sig :arg | sig , ': ' , arg].
 	"Neeeeed join!!!"

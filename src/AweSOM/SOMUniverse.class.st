@@ -391,7 +391,7 @@ SOMUniverse >> newArrayWithAll: collection [
 { #category : #'object creation' }
 SOMUniverse >> newBool: squeakBool [
 
-	^ self globals at: squeakBool name asSymbol.
+	^ self globals at: squeakBool asString asSymbol.
 ]
 
 { #category : #'object creation' }

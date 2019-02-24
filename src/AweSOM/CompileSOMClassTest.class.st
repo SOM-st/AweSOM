@@ -4,7 +4,7 @@ Class {
 	#category : #'AweSOM-Compiler-Test'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #asserting }
 CompileSOMClassTest >> assertSuperClassOf: className is: superClassName [
 
 	self
@@ -12,7 +12,7 @@ CompileSOMClassTest >> assertSuperClassOf: className is: superClassName [
 		equals: (universe globalAt: className) somSuperClass.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #compiling }
 CompileSOMClassTest >> compileSource: source [
 	
 	^ universe loadAndStoreFromSource: source
@@ -27,7 +27,7 @@ CompileSOMClassTest >> createCgencFromSource: source [
 	^ parser cgenc.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMClassTest >> test01SimpleClassCreation [
 
 	| cgenc clazz |
@@ -43,7 +43,7 @@ CompileSOMClassTest >> test01SimpleClassCreation [
 	self assert: (clazz somInstanceFields at: 1) string equals: 'alter'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMClassTest >> test02CompileClass [
 	| cgenc clazz |
 	cgenc := SOMClassGenerationContext new.
@@ -54,7 +54,7 @@ CompileSOMClassTest >> test02CompileClass [
 		equals: 'alter'
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMClassTest >> test03CompileClassWithMethod [
 	| cgenc clazz |
 	cgenc := self createCgencFromSource: 'Bla = Array (method1 = (^ 42) method2 = primitive ---- classMethod = ())'.
@@ -69,7 +69,7 @@ CompileSOMClassTest >> test03CompileClassWithMethod [
 		equals: 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMClassTest >> test04CompileClassWithSuperclass [
 	| cgenc clazz |
 	cgenc := self createCgencFromSource: 'Bla = Array (method1 = (^ 42) method2 = primitive)'.
@@ -80,7 +80,7 @@ CompileSOMClassTest >> test04CompileClassWithSuperclass [
 	"self assert: clazz superClazz theName symbol equals: #Array."
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 	| cgenc somClass instance privateInstVarNames |
 	
@@ -103,7 +103,7 @@ CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 			equals: (universe globalAt: #false) ]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMClassTest >> test06AssembleNormalClass [
 
 	| class |
@@ -112,8 +112,8 @@ CompileSOMClassTest >> test06AssembleNormalClass [
 	self assert: class somInstanceInvokables size equals: 1.
 ]
 
-{ #category : #'as yet unclassified' }
-CompileSOMClassTest >> xtest07InternalClassHierarchyEqualsSomClassHierarchy [
+{ #category : #tests }
+CompileSOMClassTest >> test07InternalClassHierarchyEqualsSomClassHierarchy [
 
 	"This test is currently deactivated. It tests if the class
 	hierarchy of system classes is the same as in SOM. Currently

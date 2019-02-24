@@ -36,7 +36,7 @@ SOMFrame >> argumentAtIndex: index contextLevel: level put: object [
 		at: index put: object
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMFrame >> arguments [
 
 	^ (1 to: self somMethod numberOfArguments) collect: [ :argIndex |
@@ -66,7 +66,7 @@ SOMFrame >> clearPreviousFrame [
 	self somPreviousFrame: self universe globalNil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #copying }
 SOMFrame >> copyArgumentsFrom: oldFrame [
 
 	| numArgs |
@@ -178,7 +178,7 @@ SOMFrame >> localOffset: anObject [
 	localOffset := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMFrame >> outerContext [
 	| currentContext |
 	currentContext := self.
@@ -325,7 +325,7 @@ SOMFrame >> removeN: numOfElements [
 	self stackPointer: oldPosition - numOfElements.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SOMFrame >> resetStackPointer [
 	self localOffset: 
 		(self somMethod numberOfArguments).
@@ -343,7 +343,7 @@ SOMFrame >> somContext: anObject [
 	somContext := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SOMFrame >> somCurrentObject [
 	self somMethod somSignature = self universe globalNil
 		ifTrue: [^ self universe globalNil].

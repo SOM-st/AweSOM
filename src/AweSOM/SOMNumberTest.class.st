@@ -4,7 +4,7 @@ Class {
 	#category : #'AweSOM-VM-Test'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMNumberTest >> testIntegerVsBigInteger [
 
 	| n |

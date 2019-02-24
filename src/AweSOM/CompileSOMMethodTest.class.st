@@ -12,7 +12,7 @@ CompileSOMMethodTest >> createMgencFromSource: source [
 	^ parser apply: #method.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMMethodTest >> test01BuildSimpleMethod [
 	| mgenc method |
 	mgenc := universe methodGenClass named: 'a:b:c:'.
@@ -22,7 +22,7 @@ CompileSOMMethodTest >> test01BuildSimpleMethod [
 		equals: #a:b:c:
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMMethodTest >> test02BuildByteCode [
 	| mgenc method |
 	mgenc := self createMgencFromSource: 'x: a = (|aLocal| ^a)'.
@@ -34,7 +34,7 @@ CompileSOMMethodTest >> test02BuildByteCode [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 CompileSOMMethodTest >> test02BuildMethodWithConstants [
 	| mgenc method |
 	mgenc := self createMgencFromSource: 'x: a = (a foo: 42)'.

@@ -4,21 +4,21 @@ Class {
 	#category : #'AweSOM-GarbageCollector-Test'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #running }
 SOMGCTest >> setUp [
 
 	universe := SOMUniverse new.
 	universe globalAt: #nil put: nil.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMGCTest >> test01ObjectCollectionExists [
 
 	universe initializeFakeGlobals.
 	self assert: universe heap objects notEmpty.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMGCTest >> test02CollectUnreferencedObjects [
 
 	| object |
@@ -29,7 +29,7 @@ SOMGCTest >> test02CollectUnreferencedObjects [
 	self assert: universe heap objects isEmpty.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMGCTest >> test03DontCollectGlobalObjects [
 
 	| object |
@@ -40,7 +40,7 @@ SOMGCTest >> test03DontCollectGlobalObjects [
 	self assert: universe heap objects size equals: 1.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMGCTest >> test04DontCollectObjectsReferencedFromGlobals [
 
 	| arr object |
@@ -53,7 +53,7 @@ SOMGCTest >> test04DontCollectObjectsReferencedFromGlobals [
 	self assert: universe heap objects size equals: 2.
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SOMGCTest >> test05CollectObjectsNotReferencedAnymore [
 
 	| arr object2 |

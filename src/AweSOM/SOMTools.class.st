@@ -9,6 +9,9 @@ Class {
 
 { #category : #'class path' }
 SOMTools class >> basePath [
+	basePath ifNil: [ 
+		basePath := Smalltalk platform currentWorkingDirectoryPath, 'core-lib' ].
+	
 	^ basePath
 ]
 
@@ -23,19 +26,20 @@ SOMTools class >> basePath: aString [
 
 { #category : #'class path' }
 SOMTools class >> basicInterpreterTestClassPath [
-	basePath ifNil: [
-		self notify: 'SOMTools basePath was not set. Use SOMTools>>basePath: to set path to core-lib directory.' ].
+	| bp |
+	bp := self basePath.
 
-	^ { basePath, '/Smalltalk'.
-		 basePath, '/TestSuite/BasicInterpreterTests' }
+	^ { bp, '/Smalltalk'.
+		 bp, '/TestSuite/BasicInterpreterTests' }
+
 ]
 
 { #category : #'class path' }
 SOMTools class >> basicSmalltalkClassPath [
-	basePath ifNil: [
-		self notify: 'SOMTools basePath was not set. Use SOMTools>>basePath: to set path to core-lib directory.' ].
+	| bp |
+	bp := self basePath.
 
-	^ { basePath, '/Smalltalk' }
+	^ { bp, '/Smalltalk' }
 ]
 
 { #category : #fileout }

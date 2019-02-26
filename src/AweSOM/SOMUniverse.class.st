@@ -108,6 +108,14 @@ SOMUniverse >> classParser [
 	^ SOMClassParser
 ]
 
+{ #category : #'as yet unclassified' }
+SOMUniverse >> classpathPrepend: aString [
+	| cp |
+	cp := self class classPaths asOrderedCollection.
+	cp add: aString beforeIndex: 1.
+	self class classPaths: cp asArray
+]
+
 { #category : #accessing }
 SOMUniverse >> compiler [
 
@@ -126,6 +134,8 @@ SOMUniverse >> createGlobal: globalName somClass: className [
 	somClass := self
 		globalAt: className
 		ifAbsentPut: [self loadSOMClass: className].
+	somClass ifNil: [ Error signal: 'Loading class ', className, ' failed. Classpath: ', SOMUniverse classPaths printString ].
+	
 	instance := sqClass
 		inUniverse: self
 		withSomClass: somClass.
@@ -163,6 +173,27 @@ SOMUniverse >> exitCode [
 { #category : #'universe configuration' }
 SOMUniverse >> frameClass [
 	^ SOMFrame
+]
+
+{ #category : #'as yet unclassified' }
+SOMUniverse >> getPathClassExt: aString [
+  " take argument of the form '../foo/Test.som' and return
+    '../foo', 'Test', 'som'"
+
+	| pathElements fileName parentPath nameParts |
+	pathElements := ('/' split: aString) asOrderedCollection.
+	
+	fileName   := pathElements removeLast.
+	parentPath := '/' join: pathElements.
+	nameParts  := '.' split: fileName.
+	
+	nameParts size > 2 ifTrue: [
+		Error signal: 'Does class name in arguments have . in its name? Argument: ', aString  ].
+	
+	^ { parentPath ifNil: [ '' ] ifNotNil: [ parentPath ].
+		 nameParts at: 1.
+		 nameParts size > 1 ifTrue: [ nameParts at: 2 ] ifFalse: [ '' ] }
+
 ]
 
 { #category : #'gobal accessing' }
@@ -205,6 +236,50 @@ SOMUniverse >> globalNil [
 SOMUniverse >> globals [
 
 	^ globals
+]
+
+{ #category : #'as yet unclassified' }
+SOMUniverse >> handleArguments: args [
+	| gotClasspath remainingArgs i |
+	gotClasspath := false.
+	remainingArgs := OrderedCollection new.
+	
+	i := 1.
+	[ i < args size ] whileTrue: [ 
+		| arg |
+		arg := args at: i.
+		arg = '-cp'
+			ifTrue: [ 
+				i + 1 >= args size ifTrue: [ 
+					self printUsage.
+					^ nil ].
+			
+				self setupClasspath: (args at: i + 1).
+				i := i + 1. "skip classpath"
+				gotClasspath := true ]
+			ifFalse: [
+				({ '-h'. '--help'. '-?' } includes: arg)
+					ifTrue: [ 
+						self printUsage.
+						^ nil ]
+					ifFalse: [ 
+						remainingArgs add: arg ]
+				].
+		i := i + 1 ].
+	
+	gotClasspath ifFalse: [ self setupDefaultClasspath. ].
+	
+	remainingArgs := remainingArgs asArray.
+	
+	remainingArgs doWithIndex: [ :e :idx |
+		| split |
+		split := self getPathClassExt: e.
+		(split at: 1) = '' ifFalse: [ 
+			self classpathPrepend: (split at: 1) ].
+		
+		remainingArgs at: idx put: (split at: 2) ].
+	
+	^ remainingArgs
 ]
 
 { #category : #'gobal accessing' }
@@ -456,12 +531,36 @@ SOMUniverse >> primitiveClass [
 	^ SOMPrimitive
 ]
 
+{ #category : #printing }
+SOMUniverse >> printUsage [
+	 Transcript
+		show: 'Usage: som [-options] [args...]'; cr;
+		cr;
+		show: 'where options include:'; cr;
+		show: '    -cp <directories separated by :'; cr;
+		show: '                  set search path for application classes'
+
+]
+
 { #category : #quiting }
 SOMUniverse >> quit: errorCode [
 
 	interpreter stop.
 	exitCode := errorCode number.
 
+]
+
+{ #category : #'as yet unclassified' }
+SOMUniverse >> setupClasspath: classpathString [
+	| cp |
+	cp := ':' split: classpathString.
+	self class classPaths: cp
+
+]
+
+{ #category : #'as yet unclassified' }
+SOMUniverse >> setupDefaultClasspath [
+	self setupClasspath: '.'
 ]
 
 { #category : #initializing }
@@ -477,9 +576,10 @@ SOMUniverse >> sortedSubClassesOf: class [
 { #category : #initializing }
 SOMUniverse >> start: arguments [
 
-	| wrappedArguments |
+	| remainingArgs wrappedArguments |
+	remainingArgs := self handleArguments: arguments.
  	self initializeRealGlobalsIfNecessary.
-	wrappedArguments := arguments collect: [ :arg | self newString: arg].
+	wrappedArguments := remainingArgs collect: [ :arg | self newString: arg].
 	self bootstrapWithArguments: (SOMArray inUniverse: self withAll: wrappedArguments).
 ]
 

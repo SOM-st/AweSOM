@@ -8,7 +8,7 @@ Class {
 SOMTest >> exec: aTest [
 	| universe |
 	universe := SOMUniverse new.
-	universe start: {'TestSuite/TestHarness'. aTest}.
+	universe start: {'TestSuite/TestHarness.som'. aTest}.
 	self assert: universe exitCode equals: 0.
 
 ]

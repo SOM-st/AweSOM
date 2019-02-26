@@ -6,7 +6,6 @@ Class {
 		'holder',
 		'outer',
 		'arguments',
-		'fakeSource',
 		'isPrimitive',
 		'onClassSide',
 		'locals',
@@ -78,8 +77,7 @@ SOMMethodGenerationContext >> assemble: holderClass [
 		ifTrue: [holderClass class]
 		ifFalse: [holderClass].
 	compileClass compile: (String streamContents: [:s | s
-		nextPutAll: self combineSelectorAndArgs; cr;
-		nextPutAll: self fakeSource])
+		nextPutAll: self combineSelectorAndArgs; cr])
 ]
 
 { #category : #assembling }
@@ -284,16 +282,6 @@ SOMMethodGenerationContext >> emitSend: selector isSuper: isSuper [
 	isSuper
 		ifTrue: [self bcSuperSend: selector]
 		ifFalse: [self bcSend: selector]
-]
-
-{ #category : #accessing }
-SOMMethodGenerationContext >> fakeSource [
-	^ fakeSource
-]
-
-{ #category : #accessing }
-SOMMethodGenerationContext >> fakeSource: anObject [
-	fakeSource := anObject
 ]
 
 { #category : #accessing }

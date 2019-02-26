@@ -536,9 +536,6 @@ SOMMethodParser >> primary: doSuper [
 { #category : #patterns }
 SOMMethodParser >> primitiveBlock [
 	self expect: #primitive.
-	mgenc fakeSource: '^ SOMPrimitives ', 
-						 self cgenc theName,
-						 mgenc combineSelectorAndArgs.
 ]
 
 { #category : #patterns }

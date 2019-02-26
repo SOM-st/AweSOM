@@ -41,15 +41,6 @@ ParseMethodTest >> test02ParseArguments [
 ]
 
 { #category : #tests }
-ParseMethodTest >> test03FakeParseBody [
-
-	self setUpParser: 'x: abc y: def4 = ( 1 * (2*(2)). )'.
-	parser shouldReadSources: true.
-	result := parser apply: #method.
-	self assert: result fakeSource equals: ' 1 * (2*(2)). '.
-]
-
-{ #category : #tests }
 ParseMethodTest >> test04Primitive [
 
 	| res |
@@ -64,7 +55,6 @@ ParseMethodTest >> test05PrimitiveMethodGeneratesBody [
 	self setUpParser: 'test = primitive'.
 	parser fakeCgenc. "className = Dummy"
 	result := parser apply: #method.
-	self assert: result fakeSource equals: '^ SOMPrimitives Dummytest'
 ]
 
 { #category : #tests }
@@ -72,7 +62,6 @@ ParseMethodTest >> test06PrimitiveWithParameters [
 
 	self setUpParser: 'test: a test: b = primitive'.
 	result := parser apply: #method.
-	self assert: result fakeSource equals: '^ SOMPrimitives Dummytest: a test: b'
 ]
 
 { #category : #tests }

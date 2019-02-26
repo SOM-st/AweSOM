@@ -30,6 +30,14 @@ SOMTools class >> basicInterpreterTestClassPath [
 		 basePath, '/TestSuite/BasicInterpreterTests' }
 ]
 
+{ #category : #'class path' }
+SOMTools class >> basicSmalltalkClassPath [
+	basePath ifNil: [
+		self notify: 'SOMTools basePath was not set. Use SOMTools>>basePath: to set path to core-lib directory.' ].
+
+	^ { basePath, '/Smalltalk' }
+]
+
 { #category : #fileout }
 SOMTools class >> fileout [
 

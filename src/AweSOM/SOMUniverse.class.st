@@ -7,7 +7,8 @@ Class {
 		'outStream',
 		'heap',
 		'symbolTable',
-		'numberCache'
+		'numberCache',
+		'exitCode'
 	],
 	#classVars : [
 		'ClassPaths',
@@ -152,6 +153,11 @@ SOMUniverse >> eval: code [
 	shellClassSource := self createShellClassWith: code.
 	shellClass := self loadAndStoreFromSource: shellClassSource.
 	self start: {shellClass somName string}.
+]
+
+{ #category : #accessing }
+SOMUniverse >> exitCode [
+	^ exitCode
 ]
 
 { #category : #'universe configuration' }
@@ -454,9 +460,8 @@ SOMUniverse >> primitiveClass [
 SOMUniverse >> quit: errorCode [
 
 	interpreter stop.
-	Transcript
-		cr; cr; cr;
-		show: 'VM exited with error code ', errorCode number asString
+	exitCode := errorCode number.
+
 ]
 
 { #category : #initializing }
@@ -483,7 +488,7 @@ SOMUniverse >> start: className method: methodName [
 	| invokable class frame |
  	self initializeRealGlobalsIfNecessary.
 	
-	class := self globalAt: className asSymbol.
+	class := self loadSOMClass: className.
 	invokable := class somClass lookupInvokable: methodName asSymbol.
 	 
 	frame := self 

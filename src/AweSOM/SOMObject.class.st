@@ -192,6 +192,11 @@ SOMObject >> primEqualEqual: otherObject [
 ]
 
 { #category : #primitives }
+SOMObject >> primclass [
+	^ somClass
+]
+
+{ #category : #primitives }
 SOMObject >> primhalt [
 	Halt now.
 	self universe interpreter showInspection.

@@ -10,7 +10,7 @@ Class {
 { #category : #'class path' }
 SOMTools class >> basePath [
 	basePath ifNil: [ 
-		basePath := Smalltalk platform currentWorkingDirectoryPath, 'core-lib' ].
+		basePath := Smalltalk platform currentWorkingDirectoryPath, '/core-lib' ].
 	
 	^ basePath
 ]

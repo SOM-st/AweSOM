@@ -149,19 +149,19 @@ SOMLexer >> matchEscapeChar [
 	cur := self currentChar.
 	
 	cur == $t ifTrue: [ 
-		text nextPut: Character tab ].
+		text nextPut: Character tab. ^ self ].
 	cur == $b ifTrue: [
-		text nextPut: Character backspace ].
+		text nextPut: Character backspace. ^ self ].
 	cur == $n ifTrue: [
-		text nextPut: Character lf ].
+		text nextPut: Character lf. ^ self ].
 	cur == $r ifTrue: [
-		text nextPut: Character cr ].
+		text nextPut: Character cr. ^ self ].
 	cur == $f ifTrue: [
-		text nextPut: Character newPage ].
+		text nextPut: Character newPage. ^ self ].
 	cur == $' ifTrue: [
-		text nextPut: $' ].
+		text nextPut: $'. ^ self ].
 	cur == $\ ifTrue: [
-		text nextPut: $\ ].
+		text nextPut: $\. ^ self ].
 	
 	Error signal: 'Found unsupported escape sequence. Current character: ', cur asString.	
 	
@@ -271,8 +271,8 @@ SOMLexer >> matchString [
 	self readNext. "skip start $' "
 	[ self currentChar == $' ]
 		whileFalse: [
+			self readBufferIfEmpty: [ ^ sym ].
 			self matchStringChar.
-			self readBufferIfEmpty: [ ^ sym ]
 		].
 	
 	self readNext. "skip the ending $'"

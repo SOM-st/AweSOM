@@ -485,7 +485,7 @@ SOMMethodParser >> mgenc: anMgenc [
 { #category : #patterns }
 SOMMethodParser >> negativeDecimal [
 	self expect: #minus.
-	^ self literalInteger negated 
+	^ self literalDecimal negated 
 ]
 
 { #category : #patterns }

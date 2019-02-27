@@ -15,7 +15,8 @@ SOMNumber class >> create: number in: universe [
 		^ number <=  SOMInteger maxInt
 			ifTrue: [SOMInteger inUniverse: universe new: number]
 			ifFalse: [SOMBigInteger inUniverse: universe new: number]].
-	self halt.
+
+	Error signal: 'The value: ', number asString, ' is not one of the supported numbers'
 ]
 
 { #category : #'as yet unclassified' }

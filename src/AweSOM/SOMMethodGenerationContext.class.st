@@ -45,7 +45,7 @@ SOMMethodGenerationContext >> addArgumentIfAbsent: argName [
 SOMMethodGenerationContext >> addLiteralIfAbsent: literal [
 
 	| idx |
-	idx := self literals indexOf: literal.
+	idx := self literals identityIndexOf: literal.
 	idx isZero ifFalse: [^ idx].
 	self literals add: literal.
 	^ self literals size
@@ -161,8 +161,7 @@ SOMMethodGenerationContext >> bcPushBlock: method [
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcPushConstant: const [
 	| literalIndex |
-	self addLiteralIfAbsent: const.
-	literalIndex := self literalIndex: const.
+	literalIndex := self addLiteralIfAbsent: const.
 	self bytecode add: (SOMBCPushConstant in: self index: literalIndex).
 	^ literalIndex
 ]
@@ -178,8 +177,9 @@ SOMMethodGenerationContext >> bcPushField: fieldName [
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcPushGlobal: global [
 
-	self addLiteralIfAbsent: global.
-	^ self bytecode add: (SOMBCPushGlobal in: self index: (self literalIndex: global)).
+	| idx |
+	idx := self addLiteralIfAbsent: global.
+	^ self bytecode add: (SOMBCPushGlobal in: self index: idx).
 ]
 
 { #category : #bytecode }
@@ -203,15 +203,17 @@ SOMMethodGenerationContext >> bcReturnNonLocal [
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcSend: selector [
 
-	self addLiteralIfAbsent: selector asSymbol.
-	^ self bytecode add: (SOMBCSend in: self index: (self literalIndex: selector)).
+	| idx |
+	idx := self addLiteralIfAbsent: selector asSymbol.
+	^ self bytecode add: (SOMBCSend in: self index: idx).
 ]
 
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcSuperSend: selector [
 
-	self addLiteralIfAbsent: selector asSymbol.
-	^ self bytecode add: (SOMBCSuperSend in: self index: (self literalIndex: selector)).
+	| idx |
+	idx := self addLiteralIfAbsent: selector asSymbol.
+	^ self bytecode add: (SOMBCSuperSend in: self index: idx).
 ]
 
 { #category : #accessing }
@@ -348,15 +350,6 @@ SOMMethodGenerationContext >> isPrimitive [
 { #category : #accessing }
 SOMMethodGenerationContext >> isPrimitive: anObject [
 	isPrimitive := anObject
-]
-
-{ #category : #accessing }
-SOMMethodGenerationContext >> literalIndex: obj [
-
-	| idx |
-	idx := self literals indexOf: obj.
-	idx isZero ifTrue: [self error: 'Object not found in literal collection'].
-	^ idx
 ]
 
 { #category : #accessing }

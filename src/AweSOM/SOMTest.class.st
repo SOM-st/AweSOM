@@ -8,14 +8,14 @@ Class {
 SOMTest >> exec: aTest [
 	| universe |
 	universe := SOMUniverse new.
-	universe start: {'TestSuite/TestHarness.som'. aTest}.
+	universe start: {'-cp'. 'Smalltalk'. 'TestSuite/TestHarness.som'. aTest}.
 	self assert: universe exitCode equals: 0.
 
 ]
 
 { #category : #tests }
 SOMTest >> setUp [
-	SOMUniverse classPaths: SOMTools basicInterpreterTestClassPath
+	SOMUniverse classPaths: nil
 ]
 
 { #category : #tests }

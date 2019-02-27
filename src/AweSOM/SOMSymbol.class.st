@@ -20,7 +20,7 @@ SOMSymbol >> isSOMSymbol [
 
 { #category : #primitives }
 SOMSymbol >> primEqualEqual: other [
-	other isSOMSymbol ifFalse: [^ false].
+	other isSOMSymbol ifFalse: [^ self universe newBool: false].
 	
 	^ self universe newBool: 
 	  (self symbol = other symbol

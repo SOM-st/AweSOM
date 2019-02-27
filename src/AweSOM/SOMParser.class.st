@@ -147,6 +147,11 @@ SOMParser >> peek [
 ]
 
 { #category : #private }
+SOMParser >> peekForNextSymbolFromLexerIfNecessary [
+	^ lexer peekDone.
+]
+
+{ #category : #private }
 SOMParser >> printableSymbol [
 	^ sym == #integer         or: [
 	  sym == #STString        or: [

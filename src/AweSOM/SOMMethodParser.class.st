@@ -285,10 +285,41 @@ SOMMethodParser >> keywordSelector [
 
 { #category : #patterns }
 SOMMethodParser >> literal [
-	sym == #pound    ifTrue: [ ^ self literalSymbol. ].
+	sym == #pound ifTrue: [
+		self peekForNextSymbolFromLexerIfNecessary.
+		nextSym == #newTerm
+			ifTrue: [ ^ self literalArray ]
+			ifFalse: [ ^ self literalSymbol ] ].
 	sym == #STString ifTrue: [ ^ self literalString. ].
 
 	self literalNumber.
+]
+
+{ #category : #patterns }
+SOMMethodParser >> literalArray [
+	| i arraySizeLiteralIndex |
+
+	self expect: #pound.
+	self expect: #newTerm.
+		
+	"create empty array"
+	mgenc bcPushGlobal: 'Array'.
+	arraySizeLiteralIndex := mgenc bcPushConstant: 'ArraySizeLiteralPlaceholder'.
+	mgenc bcSend: 'new:'.
+	
+	i := 1.
+	
+	[ sym = #endTerm ] whileFalse: [ 
+		| pushIndex |
+		pushIndex := universe newNumber: i.
+		mgenc bcPushConstant: pushIndex.
+		self literal.
+		mgenc bcSend: 'at:put:'.
+		i := i + 1 ].
+	
+	mgenc updateLiteralAt: arraySizeLiteralIndex with: (universe newNumber: i - 1).
+	self expect: #endTerm
+
 ]
 
 { #category : #patterns }

@@ -309,6 +309,12 @@ SOMLexer >> peek [
 	^ nextSym.
 ]
 
+{ #category : #lexing }
+SOMLexer >> peekDone [
+	^ peekDone
+
+]
+
 { #category : #constant }
 SOMLexer >> primitive [
 	^ 'primitive'

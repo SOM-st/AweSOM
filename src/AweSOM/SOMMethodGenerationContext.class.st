@@ -160,8 +160,11 @@ SOMMethodGenerationContext >> bcPushBlock: method [
 
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcPushConstant: const [
+	| literalIndex |
 	self addLiteralIfAbsent: const.
-	self bytecode add: (SOMBCPushConstant in: self index: (self literalIndex: const)).
+	literalIndex := self literalIndex: const.
+	self bytecode add: (SOMBCPushConstant in: self index: literalIndex).
+	^ literalIndex
 ]
 
 { #category : #bytecode }
@@ -482,4 +485,9 @@ SOMMethodGenerationContext >> somHolder [
 { #category : #accessing }
 SOMMethodGenerationContext >> somHolder: anObject [ 
 	holder := anObject
+]
+
+{ #category : #accessing }
+SOMMethodGenerationContext >> updateLiteralAt: index with: literal [
+	self literals at: index put: literal
 ]

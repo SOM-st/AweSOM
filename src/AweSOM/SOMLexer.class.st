@@ -92,8 +92,8 @@ SOMLexer >> isOperator: char [
 	  char == $< or: [
 	  char == $, or: [
 	  char == $@ or: [
-	  char == $%
-	]]]]]]]]]]]].
+	  char == $% or: [
+	  char == $- ]]]]]]]]]]]]].
 ]
 
 { #category : #lexing }
@@ -189,8 +189,8 @@ SOMLexer >> matchMinusOrSeparator [
 		^ sym.
 	].
 
-	^ self match: #minus.
-	
+	^ self matchOperator
+
 ]
 
 { #category : #lexing }
@@ -222,6 +222,7 @@ SOMLexer >> matchOperator [
 	cur == $, ifTrue: [ ^ self match: #comma].
 	cur == $@ ifTrue: [ ^ self match: #at  ].
 	cur == $% ifTrue: [ ^ self match: #per ].
+	cur == $- ifTrue: [ ^ self match: #minus ].
 	
 	Error signal: 'STEFAN: this is unexpected, I think...'.
 ]

@@ -110,10 +110,20 @@ SOMClass >> performPrimitive: selector withArguments: arguments [
 ]
 
 { #category : #primitives }
+SOMClass >> primname [
+	^ somName
+]
+
+{ #category : #primitives }
 SOMClass >> primnew [
 	^ self squeakClass 
 		inUniverse: universe
 		withSomClass: self
+]
+
+{ #category : #primitives }
+SOMClass >> primsuperclass [
+	^ somSuperClass
 ]
 
 { #category : #accessing }

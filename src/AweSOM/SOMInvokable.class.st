@@ -48,9 +48,13 @@ SOMInvokable >> printOn: stream [
 	stream
 		nextPut: $<;
 		nextPutAll: self class name; space;
-		nextPutAll: self somHolder somName symbol asString;
+		nextPutAll: (self somHolder = universe globalNil
+							ifTrue: [ 'nil' ]
+							ifFalse: [ self somHolder somName symbol asString]);
 		nextPutAll: '>>#';
-		nextPutAll: self somSignature string;
+		nextPutAll:( self somSignature
+							ifNil: [ 'nil' ]
+							ifNotNil: [ self somSignature string ]);
 		nextPut: $>.
 ]
 

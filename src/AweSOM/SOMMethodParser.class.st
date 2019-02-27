@@ -311,10 +311,12 @@ SOMMethodParser >> literalArray [
 	
 	[ sym = #endTerm ] whileFalse: [ 
 		| pushIndex |
+		mgenc bcDup.
 		pushIndex := universe newNumber: i.
 		mgenc bcPushConstant: pushIndex.
 		self literal.
 		mgenc bcSend: 'at:put:'.
+		mgenc bcPop.
 		i := i + 1 ].
 	
 	mgenc updateLiteralAt: arraySizeLiteralIndex with: (universe newNumber: i - 1).

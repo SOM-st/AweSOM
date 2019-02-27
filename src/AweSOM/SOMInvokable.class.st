@@ -40,6 +40,11 @@ SOMInvokable >> numberOfArguments: args [
 ]
 
 { #category : #accessing }
+SOMInvokable >> primsignature [
+	^ somSignature
+]
+
+{ #category : #accessing }
 SOMInvokable >> printOn: stream [
 
 	self somSignature = universe globalNil

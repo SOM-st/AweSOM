@@ -110,6 +110,11 @@ SOMClass >> performPrimitive: selector withArguments: arguments [
 ]
 
 { #category : #primitives }
+SOMClass >> primmethods [
+	^ somInstanceInvokables
+]
+
+{ #category : #primitives }
 SOMClass >> primname [
 	^ somName
 ]

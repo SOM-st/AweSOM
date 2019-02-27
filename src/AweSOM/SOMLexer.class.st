@@ -144,6 +144,31 @@ SOMLexer >> matchDigit [
 ]
 
 { #category : #lexing }
+SOMLexer >> matchEscapeChar [
+	| cur |
+	cur := self currentChar.
+	
+	cur == $t ifTrue: [ 
+		text nextPut: Character tab ].
+	cur == $b ifTrue: [
+		text nextPut: Character backspace ].
+	cur == $n ifTrue: [
+		text nextPut: Character lf ].
+	cur == $r ifTrue: [
+		text nextPut: Character cr ].
+	cur == $f ifTrue: [
+		text nextPut: Character newPage ].
+	cur == $' ifTrue: [
+		text nextPut: $' ].
+	cur == $\ ifTrue: [
+		text nextPut: $\ ].
+	
+	Error signal: 'Found unsupported escape sequence. Current character: ', cur asString.	
+	
+	"self readNext is done by caller to simplify the smalltalk code"
+]
+
+{ #category : #lexing }
 SOMLexer >> matchLetter [
 	symChr := nil.
 	text := RWBinaryOrTextStream on: String new.
@@ -246,13 +271,28 @@ SOMLexer >> matchString [
 	self readNext. "skip start $' "
 	[ self currentChar == $' ]
 		whileFalse: [
-			text nextPut: self currentChar.
-			self readNext.
+			self matchStringChar.
+			self readBufferIfEmpty: [ ^ sym ]
 		].
 	
 	self readNext. "skip the ending $'"
 	
 	^ sym
+]
+
+{ #category : #lexing }
+SOMLexer >> matchStringChar [
+	| cur |
+	cur := self currentChar.
+	$\ == cur
+		ifTrue: [
+			self readNext.
+			self matchEscapeChar.
+			self readNext ]
+		ifFalse: [
+			text nextPut: cur.
+			self readNext ]
+
 ]
 
 { #category : #private }

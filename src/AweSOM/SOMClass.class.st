@@ -110,6 +110,19 @@ SOMClass >> performPrimitive: selector withArguments: arguments [
 ]
 
 { #category : #primitives }
+SOMClass >> primfromString: aSOMString [
+	| str |
+	str := aSOMString string.
+
+	(universe globalAt: #Integer) = self ifTrue: [
+		^ SOMInteger inUniverse: universe
+						 new: (Integer readFrom: str) ].
+	
+	self assert: (universe globalAt: #Double) = self.
+	^ SOMDouble inUniverse: universe new: (Float readFrom: str)
+]
+
+{ #category : #primitives }
 SOMClass >> primmethods [
 	^ somInstanceInvokables
 ]

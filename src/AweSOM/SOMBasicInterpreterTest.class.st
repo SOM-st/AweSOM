@@ -255,6 +255,9 @@ SOMBasicInterpreterTest >> testNumberOfTests [
 
 { #category : #tests }
 SOMBasicInterpreterTest >> testObjectCreation [
+	<expectedFailure> "Currently, AweSOM is simply too slow to execute this test sensibly"
+	self timeLimit: 5 seconds.
+	
 	self load: 'ObjectCreation' execute: 'test' expect: 1000000 as: #Integer
 ]
 

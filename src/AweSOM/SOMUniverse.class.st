@@ -245,7 +245,7 @@ SOMUniverse >> handleArguments: args [
 	remainingArgs := OrderedCollection new.
 	
 	i := 1.
-	[ i < args size ] whileTrue: [ 
+	[ i <= args size ] whileTrue: [ 
 		| arg |
 		arg := args at: i.
 		arg = '-cp'

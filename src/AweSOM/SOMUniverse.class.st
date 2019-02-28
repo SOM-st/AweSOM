@@ -354,6 +354,8 @@ SOMUniverse >> initialize [
 	heap := SOMHeap in: self.
 	symbolTable := SOMSymbolTable in: self.
 	numberCache := IdentityDictionary new.
+
+	exitCode := 0.
 ]
 
 { #category : #initializing }

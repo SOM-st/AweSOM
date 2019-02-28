@@ -45,13 +45,6 @@ SOMFrame >> arguments [
 ]
 
 { #category : #accessing }
-SOMFrame >> at: index put: object [
-
-	object = false ifTrue: [self halt].
-	^ self indexableFields at: index put: object
-]
-
-{ #category : #accessing }
 SOMFrame >> bytecodeIndex [
 	^ bytecodeIndex
 ]

@@ -31,7 +31,7 @@ SOMMethodParser >> assignation [
 	self evaluation.
 	
 	list do: [:v | mgenc bcDup ].
-	list do: [:v | mgenc lookUpAndPop: v in: universe ]
+	list do: [:v | self genPopVariable: v ]
 ]
 
 { #category : #patterns }
@@ -236,6 +236,33 @@ SOMMethodParser >> formula [
 	"only the first message in a sequence can be a super send"
 	[sym == #operatorSequence or: [self symIn: BinaryOpSyms]]
 		whileTrue: [self binaryMessage: false ].
+]
+
+{ #category : #patterns }
+SOMMethodParser >> genPopVariable: variable [
+	mgenc findVariable: variable context: 1 ifFound: [:idx :contextLvl :isArg |
+		isArg
+			ifTrue: [ mgenc bcPopArgumentIndex: idx ctxIndex: contextLvl ]
+			ifFalse: [  mgenc bcPopLocalIndex: idx ctxIndex: contextLvl ].
+		^ self ].
+
+	mgenc bcPopField: variable.
+
+]
+
+{ #category : #patterns }
+SOMMethodParser >> genPushVariable: variable [
+	mgenc findVariable: variable context: 1 ifFound: [:idx :contextLvl :isArg |
+		isArg
+			ifTrue: [ mgenc bcPushArgumentIndex: idx ctxIndex: contextLvl ]
+			ifFalse: [  mgenc bcPushLocalIndex: idx ctxIndex: contextLvl ].
+		^ self ].
+	
+	(mgenc hasField: variable) ifTrue: [
+		mgenc bcPushField: variable.
+		^ self ].
+
+	mgenc bcPushGlobal: variable
 ]
 
 { #category : #patterns }
@@ -546,8 +573,8 @@ SOMMethodParser >> primary: doSuper [
 			"v := #self. sends to #super push #self as receiver"
 			superSend := true.
 		].
-		"self genPushVariable: v."
-		mgenc lookupVariable: v in: universe.
+	
+		self genPushVariable: v.
 		^ superSend.
 	].
 

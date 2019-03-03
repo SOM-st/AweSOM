@@ -283,10 +283,33 @@ SOMMethodGenerationContext >> emitSend: selector isSuper: isSuper [
 		ifFalse: [self bcSend: selector]
 ]
 
+{ #category : #lookup }
+SOMMethodGenerationContext >> findVariable: varName context: ctx ifFound: aBlock [
+	| idx isArgument |
+	isArgument := false.
+
+	idx := locals indexOf: varName.
+	idx = 0 ifTrue: [
+		idx := arguments indexOf: varName.
+		idx = 0
+			ifTrue: [
+				outer ifNil: [ ^ false ]
+				ifNotNil: [
+					^ outer findVariable: varName context: ctx + 1 ifFound: aBlock ]]
+			ifFalse: [ isArgument := true ]].
+	
+	^ aBlock value: idx value: ctx value: isArgument
+]
+
 { #category : #accessing }
 SOMMethodGenerationContext >> finished [
 
 	isFinished := true
+]
+
+{ #category : #lookup }
+SOMMethodGenerationContext >> hasField: field [
+	^ holder hasField: field
 ]
 
 { #category : #accessing }
@@ -364,49 +387,6 @@ SOMMethodGenerationContext >> locals [
 { #category : #accessing }
 SOMMethodGenerationContext >> locals: anObject [
 	locals := anObject
-]
-
-{ #category : #variables }
-SOMMethodGenerationContext >> lookUpAndPop: varName in: universe [
-
-	| lookup |
-	lookup := SOMVariableLookup
-		lookupVar: (varName = 'super' ifTrue: ['self'] ifFalse: varName)
-		inMethodContext: self
-		inUniverse: universe.
-	lookup found ifFalse: [self error: 'Cannot lookup var ' , varName , ' for pop'].
-	lookup isArgument ifTrue: [
-		self bcPopArgumentIndex: lookup index ctxIndex: lookup contextIndex.
-		^self].
-	lookup isLocal ifTrue: [
-		self bcPopLocalIndex: lookup index ctxIndex: lookup contextIndex.
-		^self].
-	lookup isField ifTrue: [
-		self bcPopField: varName.
-		^self].
-	self halt. "trying to store in global"
-]
-
-{ #category : #variables }
-SOMMethodGenerationContext >> lookupVariable: varName in: universe [
-
-	| lookup |
-	lookup := SOMVariableLookup
-		lookupVar: (varName = 'super' ifTrue: ['self'] ifFalse: varName)
-		inMethodContext: self
-		inUniverse: universe.
-	lookup found ifFalse: [Transcript cr; show: 'Cannot lookup var'. ^ self].
-	lookup isArgument ifTrue: [
-		self bcPushArgumentIdx: lookup index ctxIdx: lookup contextIndex.
-		^self].
-	lookup isLocal ifTrue: [
-		self bcPushLocalIndex: lookup index ctxIndex: lookup contextIndex.
-		^self].
-	lookup isField ifTrue: [
-		self bcPushField: varName.
-		^self].
-	self bcPushGlobal: varName.
-	
 ]
 
 { #category : #accessing }

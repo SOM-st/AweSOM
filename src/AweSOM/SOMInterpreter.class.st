@@ -123,7 +123,7 @@ SOMInterpreter >> doPushGlobal [
 	| global |
 	global := 
 		self universe 
-			globalAt: (self currentBytecode literalValue)
+			globalAt: self currentBytecode literalValue
 			ifAbsent: [
 				self sendUnknownGlobal: 
 					self currentBytecode literalValue.

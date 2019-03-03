@@ -126,7 +126,7 @@ SOMClassGenerationContext >> createEmptyClassIn: universe [
 { #category : #initialization }
 SOMClassGenerationContext >> defaultSuperClassName [
 
-	^ 'Object'
+	^ #Object
 ]
 
 { #category : #testing }

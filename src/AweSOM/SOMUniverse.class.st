@@ -350,7 +350,7 @@ SOMUniverse >> initialize [
 
 	super initialize.
 	self interpreter: (self class defaultInterpreter inUniverse: self).
-	globals := Dictionary new.
+	globals := IdentityDictionary new.
 	heap := SOMHeap in: self.
 	symbolTable := SOMSymbolTable in: self.
 	numberCache := IdentityDictionary new.

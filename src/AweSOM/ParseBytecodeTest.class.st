@@ -116,7 +116,7 @@ ParseBytecodeTest >> test05UnaryMessage [
 
 	self setUpParser: 'x = (1 test)' andApply: #method.
 	self assert: result bytecode size equals: 5.
-	self assertLiteralAt: 2 equals: 'test'.
+	self assertLiteralAt: 2 equals: #test.
 	self assert: result bytecodeCount equals: 9.
 
 ]
@@ -126,8 +126,8 @@ ParseBytecodeTest >> test06MultipleUnaryMessages [
 
 	self setUpParser: 'x = (1 test test2 test3)' andApply: #method.
 	self assert: result bytecode size equals: 7.
-	self assertLiteralAt: 3 equals: 'test2'.
-	self assertLiteralAt: 4 equals: 'test3'.
+	self assertLiteralAt: 3 equals: #test2.
+	self assertLiteralAt: 4 equals: #test3.
 	self assert: result bytecodeCount equals: 13.
 
 ]
@@ -138,7 +138,7 @@ ParseBytecodeTest >> test07BinaryMessage [
 	self setUpParser: 'x = (1 + 2)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
-	self assertLiteralAt: 3 equals: '+'.
+	self assertLiteralAt: 3 equals: #+.
 ]
 
 { #category : #tests }
@@ -147,8 +147,8 @@ ParseBytecodeTest >> test08BinaryUnaryMessage [
 	self setUpParser: 'x = (1 + 2 test)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
-	self assertLiteralAt: 3 equals: 'test'.
-	self assertLiteralAt: 4 equals: '+'.
+	self assertLiteralAt: 3 equals: #test.
+	self assertLiteralAt: 4 equals: #+.
 	self assert: result bytecode size equals: 7.
 ]
 
@@ -159,8 +159,8 @@ ParseBytecodeTest >> test09MultipleBinaryMessages [
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
 	self assertLiteralAt: 4 accessor: #number equals: 3.
-	self assertLiteralAt: 3 equals: '+'.
-	self assertLiteralAt: 5 equals: '++'.
+	self assertLiteralAt: 3 equals: #+.
+	self assertLiteralAt: 5 equals: #++.
 ]
 
 { #category : #tests }
@@ -169,7 +169,7 @@ ParseBytecodeTest >> test10aKeywordMessage [
 	self setUpParser: 'x = (1 a: 2)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
-	self assertLiteralAt: 3 equals: 'a:'.
+	self assertLiteralAt: 3 equals: #a:.
 ]
 
 { #category : #tests }
@@ -179,7 +179,7 @@ ParseBytecodeTest >> test10bKeywordMessage [
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
 	self assertLiteralAt: 3 accessor: #number equals: 3.
-	self assertLiteralAt: 4 equals: 'a:b:'.
+	self assertLiteralAt: 4 equals: #a:b:.
 ]
 
 { #category : #tests }
@@ -187,8 +187,8 @@ ParseBytecodeTest >> test10cKeywordMessage [
 
 	self setUpParser: 'x = (1 a: self test)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
-	self assertLiteralAt: 3 equals: 'test'.
-	self assertLiteralAt: 4 equals: 'a:'.
+	self assertLiteralAt: 3 equals: #test.
+	self assertLiteralAt: 4 equals: #a:.
 ]
 
 { #category : #tests }
@@ -196,8 +196,8 @@ ParseBytecodeTest >> test10dKeywordMessage [
 
 	self setUpParser: 'x = (self test a: 1)' andApply: #method.
 	self assertLiteralAt: 3 accessor: #number equals: 1.
-	self assertLiteralAt: 2 equals: 'test'.
-	self assertLiteralAt: 4 equals: 'a:'.
+	self assertLiteralAt: 2 equals: #test.
+	self assertLiteralAt: 4 equals: #a:.
 ]
 
 { #category : #tests }
@@ -206,10 +206,10 @@ ParseBytecodeTest >> test11KeywordBinaryMessage [
 	self setUpParser: 'x = (1 + 2 a: 3 b: 4)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
-	self assertLiteralAt: 3 equals: '+'.
+	self assertLiteralAt: 3 equals: #+.
 	self assertLiteralAt: 4 accessor: #number equals: 3.
 	self assertLiteralAt: 5 accessor: #number equals: 4.
-	self assertLiteralAt: 6 equals: 'a:b:'.
+	self assertLiteralAt: 6 equals: #a:b:.
 ]
 
 { #category : #tests }
@@ -218,13 +218,13 @@ ParseBytecodeTest >> test12KeywordBinaryUnaryMessage [
 	self setUpParser: 'x = (1 + 2 test a: 3 test2 b: 4 test3.)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
-	self assertLiteralAt: 3 equals: 'test'.
-	self assertLiteralAt: 4 equals: '+'.
+	self assertLiteralAt: 3 equals: #test.
+	self assertLiteralAt: 4 equals: #+.
 	self assertLiteralAt: 5 accessor: #number equals: 3.
-	self assertLiteralAt: 6 equals: 'test2'.
+	self assertLiteralAt: 6 equals: #test2.
 	self assertLiteralAt: 7 accessor: #number equals: 4.
-	self assertLiteralAt: 8 equals: 'test3'.
-	self assertLiteralAt: 9 equals: 'a:b:'.
+	self assertLiteralAt: 8 equals: #test3.
+	self assertLiteralAt: 9 equals: #a:b:.
 ]
 
 { #category : #tests }
@@ -233,8 +233,8 @@ ParseBytecodeTest >> test13ParenthesisExpr [
 	self setUpParser: 'x = ((1 + 2) test)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assertLiteralAt: 2 accessor: #number equals: 2.
-	self assertLiteralAt: 3 equals: '+'.
-	self assertLiteralAt: 4 equals: 'test'.
+	self assertLiteralAt: 3 equals: #+.
+	self assertLiteralAt: 4 equals: #test.
 ]
 
 { #category : #tests }
@@ -242,7 +242,7 @@ ParseBytecodeTest >> test14aSuperSimple [
 
 	self setUpParser: 'x = (super test)' andApply: #method.
 	self assert: bytecode first index equals: 1. "self"
-	self assertLiteralAt: 2 equals: 'test'.
+	self assertLiteralAt: 2 equals: #test.
 	self assertBcAt: 2 is: SOMBCSuperSend.
 ]
 
@@ -252,9 +252,9 @@ ParseBytecodeTest >> test14bSuperMsgAsArg [
 	self setUpParser: 'x = (1 a: super test)' andApply: #method.
 	self assertLiteralAt: 1 accessor: #number equals: 1.
 	self assert: bytecode second index equals: 1. "self"
-	self assertLiteralAt: 3 equals: 'test'.
+	self assertLiteralAt: 3 equals: #test.
 	self assertBcAt: 3 is: SOMBCSuperSend.
-	self assertLiteralAt: 4 equals: 'a:'.
+	self assertLiteralAt: 4 equals: #a:.
 	self assertBcAt: 4 is: SOMBCSend.
 ]
 
@@ -304,9 +304,9 @@ ParseBytecodeTest >> test20MultipleArguments [
 
 	self setUpParser: '[''abc'' println. ^nil]' withMgencAndApply: #nestedBlock.
 	self assertLiteralAt: 1 accessor: #string equals: 'abc'.
-	self assertLiteralAt: 2 equals: 'println'.
+	self assertLiteralAt: 2 equals: #println.
 	self assertBcAt: 4 is: SOMBCPushGlobal.
-	self assertLiteralAt: 4 equals: 'nil'.
+	self assertLiteralAt: 4 equals: #nil.
 	self assertBcAt: 5 is: SOMBCReturnNonLocal.
 ]
 

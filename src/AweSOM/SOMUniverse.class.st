@@ -403,7 +403,7 @@ SOMUniverse >> initializeObjectSystem [
 	somFalseObject := self newInstance: somFalseClass.
 	
 	somSystemClass := self loadSOMClass: #System.
-	systemObject := self newInstance: somSystemClass.
+	systemObject := SOMSystem inUniverse: self withSomClass: somSystemClass.
 	
 	self initializeGlobalsDict: systemObject.
 	

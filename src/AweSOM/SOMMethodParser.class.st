@@ -330,9 +330,9 @@ SOMMethodParser >> literalArray [
 	self expect: #newTerm.
 		
 	"create empty array"
-	mgenc bcPushGlobal: 'Array'.
+	mgenc bcPushGlobal: #Array.
 	arraySizeLiteralIndex := mgenc bcPushConstant: 'ArraySizeLiteralPlaceholder'.
-	mgenc bcSend: 'new:'.
+	mgenc bcSend: #new:.
 	
 	i := 1.
 	
@@ -342,7 +342,7 @@ SOMMethodParser >> literalArray [
 		pushIndex := universe newNumber: i.
 		mgenc bcPushConstant: pushIndex.
 		self literal.
-		mgenc bcSend: 'at:put:'.
+		mgenc bcSend: #at:put:.
 		mgenc bcPop.
 		i := i + 1 ].
 	

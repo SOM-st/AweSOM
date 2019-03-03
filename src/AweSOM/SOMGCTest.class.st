@@ -14,7 +14,7 @@ SOMGCTest >> setUp [
 { #category : #tests }
 SOMGCTest >> test01ObjectCollectionExists [
 
-	universe initializeFakeGlobals.
+	universe initializeTestObjectSystem.
 	self assert: universe heap objects notEmpty.
 ]
 

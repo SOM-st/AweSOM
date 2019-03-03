@@ -73,6 +73,43 @@ SOMUniverse class >> defaultInterpreter: interpClass [
 	DefaultInterpreter := interpClass
 ]
 
+{ #category : #initializing }
+SOMUniverse >> allocateBasicObjects [
+	"Allocate the nil object"
+	somNilObject := SOMObject inUniverse: self.
+	
+	"Allocate the Metaclass classes"
+	somMetaclassClass := self newMetaclassClass.
+
+	"Allocate the rest of the system classes"
+	somObjectClass := self newSystemClass.
+	somNilClass := self newSystemClass.
+	somClassClass := self newSystemClass.
+	somArrayClass := self newSystemClass.
+	somSymbolClass := self newSystemClass.
+	somMethodClass := self newSystemClass.
+	somIntegerClass := self newSystemClass.
+	somPrimitiveClass := self newSystemClass.
+	somStringClass := self newSystemClass.
+	somDoubleClass := self newSystemClass.
+	
+	"Setup the class reference for the nil object"
+	somNilObject somClass: somNilClass.
+	
+	"Initialize the system classes"
+	self initializeSystemClass: somObjectClass superclass: nil named: #Object.
+	self initializeSystemClass: somClassClass  superclass: somObjectClass  named: #Class.
+	self initializeSystemClass: somMetaclassClass superclass: somClassClass named: #Metaclass.
+	self initializeSystemClass: somNilClass superclass: somObjectClass named: #Nil.
+	self initializeSystemClass: somArrayClass superclass: somObjectClass named: #Array.
+	self initializeSystemClass: somMethodClass superclass: somArrayClass named: #Method.
+	self initializeSystemClass: somStringClass superclass: somObjectClass named: #String.
+	self initializeSystemClass: somSymbolClass superclass: somStringClass named: #Symbol.
+	self initializeSystemClass: somIntegerClass superclass: somObjectClass named: #Integer.
+	self initializeSystemClass: somPrimitiveClass superclass: somObjectClass named: #Primitive.
+	self initializeSystemClass: somDoubleClass superclass: somObjectClass named: #Double.
+]
+
 { #category : #bootstrapping }
 SOMUniverse >> bootstrapFrameFor: receiver withArguments: args [
 	| frame |
@@ -170,7 +207,7 @@ SOMUniverse >> createShellClassWith: code [
 SOMUniverse >> eval: code [
 
 	| shellClassSource shellClass |
-	self initializeRealGlobalsIfNecessary.
+	self initializeObjectSystemIfNecessary.
 	shellClassSource := self createShellClassWith: code.
 	shellClass := self loadAndStoreFromSource: shellClassSource.
 	self start: {shellClass somName string}.
@@ -235,7 +272,7 @@ SOMUniverse >> globalAt: aSymbol put: anObject [
 { #category : #'gobal accessing' }
 SOMUniverse >> globalNil [
 
-	^ self globalAt: #nil
+	^ somNilObject
 ]
 
 { #category : #'gobal accessing' }
@@ -304,54 +341,6 @@ SOMUniverse >> heap: anObject [
 ]
 
 { #category : #initializing }
-SOMUniverse >> initClassSystem [
-
-	| class metaclass |
-	class     := self classClass inUniverse: self.
-	metaclass := self classClass inUniverse: self.
-	class somClass: metaclass.
-	metaclass somClass: class.
-	metaclass somSuperClass: class.
-	self globalAt: #Class put: class.
-	self globalAt: #Metaclass put: metaclass.
-]
-
-{ #category : #initializing }
-SOMUniverse >> initNil [
-
-	self globalAt: #nil put: nil.
-	self globalAt: #nil put: (SOMObject inUniverse: self).
-]
-
-{ #category : #initializing }
-SOMUniverse >> initSystemClassFrom: sqClass [
-
-	| superclass somClass |
-	superclass := sqClass = SOMObject
-		ifTrue: [self globalNil]
-		ifFalse: [self globalAt: sqClass superclass somName].
-	somClass := self classClass
-		inUniverse: self
-		withSomSuperClass: superclass.
-	self
-		globalAt: sqClass somName
-		ifAbsentPut: [somClass].
-]
-
-{ #category : #initializing }
-SOMUniverse >> initSystemClassesWith: classLoader [
-
-	| systemClasses name |
-	systemClasses := self sortedSubClassesOf: SOMObject.
-	systemClasses do: [:class | self initSystemClassFrom: class].
-	(self globalAt: #Class) somSuperClass: (self globalAt: #Object).
-	systemClasses do: [:class |
-		name := class somName.
-		(self globalAt: name) somName: (self newSymbol: name).
-		classLoader value: name].
-]
-
-{ #category : #initializing }
 SOMUniverse >> initialize [
 
 	super initialize.
@@ -362,56 +351,109 @@ SOMUniverse >> initialize [
 	numberCache := IdentityDictionary new.
 
 	exitCode := 0.
+	isInitialized := false.
 ]
 
 { #category : #initializing }
-SOMUniverse >> initializeFakeGlobals [
+SOMUniverse >> initializeGlobalsDict: systemObject [
+	"Put special objects and classess into the dictionary of globals"
+	self globalAt: #nil put: somNilObject.
+	self globalAt: #true put: somTrueObject.
+	self globalAt: #false put: somFalseObject.
+	self globalAt: #system put: systemObject.
+	self globalAt: #System put: somSymbolClass.
+	self globalAt: #Block put: somBlockClass.
+	
+	self globalAt: #True put: somTrueClass.
+	self globalAt: #False put: somFalseClass.
 
-	| nilClass |
-	self
-		initNil;
-		initClassSystem;
-		initSystemClassesWith: [:className | "do nothing"].
-	"prepare for tests"
-	nilClass := self classClass 
-		inUniverse: self
-		withSomSuperClass: (self globalAt: #Object).
-	(self globalAt: #nil) somClass: nilClass.
-	self globalAt: #Nil put: nilClass.
-	self globalAt: #system put: (SOMSystem inUniverse: self).
-	self globalAt: #System put: (self classClass inUniverse: self).
-	self globalAt: #true put: (SOMObject inUniverse: self).
-	self globalAt: #false put: (self classClass inUniverse: self).
+	^ systemObject
+
 ]
 
 { #category : #initializing }
-SOMUniverse >> initializeRealGlobals [
+SOMUniverse >> initializeObjectSystem [
+	| systemObject |
+	self allocateBasicObjects.
+	
+	"Load methods and fields into the system classes"
+	self loadSystemClass: somObjectClass.
+	self loadSystemClass: somClassClass.
+	self loadSystemClass: somMetaclassClass.
+	self loadSystemClass: somNilClass.
+	self loadSystemClass: somArrayClass.
+	self loadSystemClass: somMethodClass.
+	self loadSystemClass: somStringClass.
+	self loadSystemClass: somSymbolClass.
+	self loadSystemClass: somIntegerClass.
+	self loadSystemClass: somPrimitiveClass.
+	self loadSystemClass: somDoubleClass.
 
-	"self initializeGlobalsWithClassLoader: [:className | self loadSOMClass: className]."
-	| preliminaryNil |
-	self
-		initNil;
-		initClassSystem.
+	"Fix up objectClass"
+	somObjectClass somSuperClass: somNilObject.
 	
-	preliminaryNil := self globalAt: #nil.
-	self createGlobal: #nil somClass: #Nil.
+	"Load the generic block class"
+	somBlockClass := self loadSOMClass: #Block.
 	
-	"This hack is necessary since the parsing can already create literals like numbers and others
-	 which might have the nil object in object slots.
-	 If we do not do the #becomeForward: these slotes refer to the old, useless object since it is not recognized as nil."
-	preliminaryNil becomeForward: (self globalAt: #nil).	
+	"Setup the true and false objects"
+	somTrueClass := self loadSOMClass: #True.
+	somTrueObject := self newInstance: somTrueClass.
 	
-	self
-		createGlobal: #true somClass: #True;
-		createGlobal: #false somClass: #False;
-		initSystemClassesWith: [:className | self loadSystemClass: className];
-		createGlobal: #system somClass: #System.
+	somFalseClass := self loadSOMClass: #False.
+	somFalseObject := self newInstance: somFalseClass.
+	
+	somSystemClass := self loadSOMClass: #System.
+	systemObject := self newInstance: somSystemClass.
+	
+	self initializeGlobalsDict: systemObject.
+	
+	isInitialized := true.
+	^ systemObject
+
 ]
 
 { #category : #initializing }
-SOMUniverse >> initializeRealGlobalsIfNecessary [
+SOMUniverse >> initializeObjectSystemIfNecessary [
 
-	self globalAt: #Array ifAbsent: [self initializeRealGlobals].
+	isInitialized ifFalse: [ self initalizeObjectSystem ]
+]
+
+{ #category : #initializing }
+SOMUniverse >> initializeSystemClass: systemClass superclass: superClass named: name [
+	self assert: name isSymbol.
+
+	superClass
+		ifNotNil: [
+			systemClass somSuperClass: superClass.
+			systemClass somClass somSuperClass: superClass somClass ]
+		ifNil: [ 
+			systemClass somClass somSuperClass: somClassClass ].
+	
+	"Initialize the array of instance fields"
+	systemClass somInstanceFields: (self newArray: 0).
+	systemClass somClass somInstanceFields: (self newArray: 0).
+
+	"Initialize the array of instance invokables"
+	systemClass somInstanceInvokables: (self newArray: 0).
+	systemClass somClass somInstanceInvokables: (self newArray: 0).
+	
+	"Initialize the name of the system class"
+	systemClass somName: (self newSymbol: name).
+	systemClass somClass somName: (self newSymbol: name, ' class').
+
+	"Insert the system class into the globals dictionary"
+	self globalAt: name put: systemClass
+
+]
+
+{ #category : #initializing }
+SOMUniverse >> initializeTestObjectSystem [
+	self allocateBasicObjects.
+	self initializeGlobalsDict: somNilObject.
+
+	isInitialized := true.
+	^ somNilObject
+	
 ]
 
 { #category : #accessing }
@@ -454,11 +496,21 @@ SOMUniverse >> loadSOMClass: className [
 ]
 
 { #category : #loading }
-SOMUniverse >> loadSystemClass: classStubName [
+SOMUniverse >> loadSystemClass: systemClass [
+	| className |
+	className := systemClass somName symbol.
 
 	^ self compiler
-		loadAndCompileSOMClass: classStubName
-		stub: (self globalAt: classStubName ifAbsent: [nil]).
+		loadAndCompileSOMClass: className
+		stub: (self globalAt: className ifAbsent: [nil]).
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newArray: size [
+
+	^ SOMArray
+		inUniverse: self
+		size: size
 ]
 
 { #category : #'object creation' }
@@ -473,6 +525,26 @@ SOMUniverse >> newArrayWithAll: collection [
 SOMUniverse >> newBool: squeakBool [
 
 	^ self globals at: squeakBool asString asSymbol.
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newInstance: aSomClass [
+	^ SOMObject inUniverse: self withSomClass: aSomClass
+]
+
+{ #category : #initializing }
+SOMUniverse >> newMetaclassClass [
+	| result |
+	"Allocate the metaclass classes"
+	result := SOMClass inUniverse: self.
+	result somClass: (SOMClass inUniverse: self).
+	"Setup the metaclass hierarchy"
+	
+	result somClass somClass: result.
+
+	"Return the freshly allocated metaclass class"
+	^ result
+
 ]
 
 { #category : #'object creation' }
@@ -495,6 +567,17 @@ SOMUniverse >> newString: string [
 SOMUniverse >> newSymbol: symbolOrString [
 
 	^ self symbolTable somSymbolFor: symbolOrString.
+]
+
+{ #category : #'object creation' }
+SOMUniverse >> newSystemClass [
+	| systemClass |
+	systemClass := SOMClass inUniverse: self.
+	
+	systemClass somClass: (SOMClass inUniverse: self).
+	systemClass somClass somClass: somMetaclassClass.
+	
+	^ systemClass
 ]
 
 { #category : #accessing }
@@ -566,7 +649,7 @@ SOMUniverse >> start: arguments [
 
 	| remainingArgs wrappedArguments |
 	remainingArgs := self handleArguments: arguments.
- 	self initializeRealGlobalsIfNecessary.
+ 	self initializeObjectSystem.
 	wrappedArguments := remainingArgs collect: [ :arg | self newString: arg].
 	self bootstrapWithArguments: (SOMArray inUniverse: self withAll: wrappedArguments).
 ]
@@ -574,9 +657,9 @@ SOMUniverse >> start: arguments [
 { #category : #initializing }
 SOMUniverse >> start: className method: methodName [
 	| invokable class frame |
- 	self initializeRealGlobalsIfNecessary.
+ 	self initializeObjectSystem.
 	
-	class := self loadSOMClass: className.
+	class := self loadSOMClass: className asSymbol.
 	invokable := class somClass lookupInvokable: methodName asSymbol.
 	 
 	frame := self 

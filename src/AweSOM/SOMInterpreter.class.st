@@ -160,7 +160,7 @@ SOMInterpreter >> doReturnNonLocal [
 		 This can be a problem with nested blocks. In this case, the sender will
 		 be the surrounding block and not the object that actually sent the #value message."
 		| block sender method numArgs |
-		block := self somFrame argumentAtIndex: 1 contextLevel: 1.
+		block := (self somFrame frameAtContextLevel: 2) stackElementAtIndex: 0.
 		sender := self somFrame somPreviousFrame outerContext argumentAtIndex: 1 contextLevel: 1.
 
  		self popFrame.
@@ -168,7 +168,7 @@ SOMInterpreter >> doReturnNonLocal [
 		"pop old arguments from stack"
 		method := self somFrame somMethod.
 		numArgs := method numberOfArguments.
-		numArgs timesRepeat: [ self somFrame pop ].
+		numArgs - 1 timesRepeat: [ self somFrame pop ].
 		
 		"execute the escapedBlock message instead"
 		sender sendMessage: #escapedBlock: withArguments: (

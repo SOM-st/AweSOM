@@ -110,6 +110,11 @@ SOMClass >> performPrimitive: selector withArguments: arguments [
 ]
 
 { #category : #primitives }
+SOMClass >> primPositiveInfinity [
+	^ universe newNumber: Float infinity
+]
+
+{ #category : #primitives }
 SOMClass >> primfromString: aSOMString [
 	| str |
 	str := aSOMString string.

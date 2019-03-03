@@ -166,7 +166,7 @@ SOMInterpreterTest >> test06PushArguments [
 			withArguments: {'a'. 'b'} 
 			withByteCodes: [:mgenc | 
 				mgenc 
-					bcPushArgumentIdx: 2 ctxIdx: 1;
+					bcPushArgumentIndex: 2 ctxIndex: 1;
 					bcHalt
 			])
 		withArguments: {universe newNumber: 41. universe newNumber: 42}.
@@ -218,7 +218,7 @@ SOMInterpreterTest >> test09PopArgument [
 			withByteCodes: [:mgenc | 
 				mgenc 
 					bcPushConstant: (universe newNumber: 42);
-					bcPopArgumentIndex: 2 ctxIdx: 1;
+					bcPopArgumentIndex: 2 ctxIndex: 1;
 					bcHalt
 			])
 		withArguments: {universe newNumber: 41. nil}.
@@ -260,8 +260,8 @@ SOMInterpreterTest >> test11Send [
 		withByteCodes: 
 			[ :mgenc | 
 			mgenc
-				bcPushArgumentIdx: 2
-					ctxIdx: 1;
+				bcPushArgumentIndex: 2
+					ctxIndex: 1;
 				bcReturnLocal ].
 	testClazz somInstanceInvokables: (SOMArray 
 			inUniverse: universe
@@ -310,8 +310,8 @@ SOMInterpreterTest >> test12DNU [
 					mgenc
 						bcPushConstant: params;
 						bcPushConstant: (universe newNumber: paramIndex);
-						bcPushArgumentIdx: paramIndex
-							ctxIdx: 1;
+						bcPushArgumentIndex: paramIndex
+							ctxIndex: 1;
 						bcSend: #at:put: ].
 			mgenc bcReturnLocal ].
 	testClazz somInstanceInvokables: (SOMArray 
@@ -359,8 +359,8 @@ SOMInterpreterTest >> test13Block [
 		withByteCodes: 
 			[ :mgenc | 
 			mgenc
-				bcPushArgumentIdx: 2
-					ctxIdx: 1;
+				bcPushArgumentIndex: 2
+					ctxIndex: 1;
 				bcReturnLocal	"pushes the second REAL param" ].
 	testMethod numberOfArguments: 2.	"no self"
 	self startInterpreterWith: (self 
@@ -431,8 +431,8 @@ SOMInterpreterTest >> test15SuperSend [
 		withByteCodes: 
 			[ :mgenc | 
 			mgenc
-				bcPushArgumentIdx: 1
-					ctxIdx: 1;
+				bcPushArgumentIndex: 1
+					ctxIndex: 1;
 				bcSuperSend: 'test';
 				bcReturnLocal ].
 	testMethod somHolder: testClazz.
@@ -513,8 +513,8 @@ SOMInterpreterTest >> test17PopField [
 			mgenc
 				bcPushConstant: (universe newNumber: 42);
 				bcPopField: testFieldName string;
-				bcPushArgumentIdx: 1
-					ctxIdx: 1;
+				bcPushArgumentIndex: 1
+					ctxIndex: 1;
 				bcReturnLocal ].
 	testClazz somInstanceInvokables: (SOMArray 
 			inUniverse: universe

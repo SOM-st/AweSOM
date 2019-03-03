@@ -119,12 +119,6 @@ SOMMethodGenerationContext >> bcPop [
 ]
 
 { #category : #bytecode }
-SOMMethodGenerationContext >> bcPopArgumentIndex: i1 ctxIdx: i2 [
-
-	self bytecode add: (SOMBCPopArgument in: self index: i1 contextIndex: i2).
-]
-
-{ #category : #bytecode }
 SOMMethodGenerationContext >> bcPopArgumentIndex: idx ctxIndex: ctxIdx [
 
 	self bytecode add: (SOMBCPopArgument in: self index: idx contextIndex: ctxIdx).
@@ -145,9 +139,9 @@ SOMMethodGenerationContext >> bcPopLocalIndex: idx ctxIndex: ctxIdx [
 ]
 
 { #category : #bytecode }
-SOMMethodGenerationContext >> bcPushArgumentIdx: i1 ctxIdx: i2 [
+SOMMethodGenerationContext >> bcPushArgumentIndex: idx ctxIndex: ctxIdx [
 
-	self bytecode add: (SOMBCPushArgument in: self index: i1 contextIndex: i2).
+	self bytecode add: (SOMBCPushArgument in: self index: idx contextIndex: ctxIdx).
 ]
 
 { #category : #bytecode }
@@ -183,9 +177,9 @@ SOMMethodGenerationContext >> bcPushGlobal: global [
 ]
 
 { #category : #bytecode }
-SOMMethodGenerationContext >> bcPushLocalIndex: i1 ctxIndex: i2 [
+SOMMethodGenerationContext >> bcPushLocalIndex: idx ctxIndex: ctxIdx [
 
-	self bytecode add: (SOMBCPushLocal in: self index: i1 contextIndex: i2).
+	self bytecode add: (SOMBCPushLocal in: self index: idx contextIndex: ctxIdx).
 ]
 
 { #category : #bytecode }
@@ -456,7 +450,7 @@ SOMMethodGenerationContext >> removeLastBytecode [
 { #category : #bytecode }
 SOMMethodGenerationContext >> returnSelf [
 
-	self bcPushArgumentIdx: 1 ctxIdx: 1.
+	self bcPushArgumentIndex: 1 ctxIndex: 1.
 	self bcReturnLocal.
 ]
 

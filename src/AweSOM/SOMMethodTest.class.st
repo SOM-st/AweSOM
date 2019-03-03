@@ -10,7 +10,7 @@ Class {
 { #category : #helper }
 SOMMethodTest >> createMethod: source [
 
-	method := ((universe methodParser
+	method := ((SOMMethodParser
 		inUniverse: universe
 		onSource: source from: 'test')
 			fakeCgenc;

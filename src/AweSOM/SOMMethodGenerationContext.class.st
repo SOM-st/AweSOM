@@ -84,11 +84,11 @@ SOMMethodGenerationContext >> assemble: holderClass [
 SOMMethodGenerationContext >> assembleIn: universe [
 
 	^ self isPrimitive
-		ifTrue: [universe primitiveClass
+		ifTrue: [SOMPrimitive
 			inUniverse: universe
 			named: self signature
 			numArgs: arguments size]
-		ifFalse: [ (universe methodClass
+		ifFalse: [ (SOMMethod
 			inUniverse: universe
 			named: self signature
 			numArgs: self arguments size

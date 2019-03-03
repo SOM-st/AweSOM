@@ -8,14 +8,14 @@ Class {
 CompileSOMMethodTest >> createMgencFromSource: source [
 	
 	| parser |
-	parser := universe methodParser inUniverse: universe onSource: source from: 'test'.
+	parser := SOMMethodParser inUniverse: universe onSource: source from: 'test'.
 	^ parser apply: #method.
 ]
 
 { #category : #tests }
 CompileSOMMethodTest >> test01BuildSimpleMethod [
 	| mgenc method |
-	mgenc := universe methodGenClass named: 'a:b:c:'.
+	mgenc := SOMMethodGenerationContext named: 'a:b:c:'.
 	method := mgenc assembleIn: universe.
 	self 
 		assert: method somSignature symbol

@@ -118,7 +118,7 @@ SOMClassGenerationContext >> createEmptyClassIn: universe [
 	superclass := universe
 		globalAt: self superName
 		ifAbsent: [universe loadSOMClass: self superName].
-	^ universe classClass 
+	^ SOMClass
 		inUniverse: universe
 		withSomSuperClass: superclass.
 ]

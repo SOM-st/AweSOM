@@ -22,7 +22,7 @@ CompileSOMClassTest >> compileSource: source [
 CompileSOMClassTest >> createCgencFromSource: source [
 	
 	| parser |
-	parser := universe classParser inUniverse: universe onSource: source from: 'test'.
+	parser := SOMClassParser inUniverse: universe onSource: source from: 'test'.
 	parser start.
 	^ parser cgenc.
 ]
@@ -86,7 +86,7 @@ CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 	
 	"Instance fields declared in SOM might not map properly to the field 'fields', if on the VM-side instance fields are added to subclasses of SOMObject that are not supposed to be visible from SOM, e.g. Method's field 'bytecodes'."
 	
-	self loadClazzes: {  #Object. #Method  }.
+	self loadClazzes: { #Object. #Method }.
 	cgenc := self createCgencFromSource: 
 	  'MethodSubClass = Method(	| thisMightCollideWithBytecodes |
 	   setField = (thisMightCollideWithBytecodes := 42.))'.

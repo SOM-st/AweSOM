@@ -20,7 +20,7 @@ SOMInterpreterTest >> assembleMethod: name withArguments: args withByteCodes: by
 SOMInterpreterTest >> assembleMethod: name withArguments: args withLocals: locals withByteCodes: byteCodeGenerator [
 
 	| testMgenc |
-	testMgenc := universe methodGenClass named: name.
+	testMgenc := SOMMethodGenerationContext named: name.
 	byteCodeGenerator value: testMgenc.
 	testMgenc arguments
 		add: 'self';
@@ -43,7 +43,7 @@ SOMInterpreterTest >> assembleMethod: name withLocals: locals withByteCodes: byt
 SOMInterpreterTest >> compileMethod: source [ 
 
 	| parser mgenc |
-	parser := universe methodParser inUniverse: universe onSource: source from: 'test'.
+	parser := SOMMethodParser inUniverse: universe onSource: source from: 'test'.
 	mgenc := parser apply: #method.
 	^ mgenc assembleIn: universe.
 ]
@@ -253,7 +253,7 @@ SOMInterpreterTest >> test10ReturnLocal [
 { #category : #tests }
 SOMInterpreterTest >> test11Send [
 	| testClazz testMethod testInstance |
-	testClazz := universe classClass inUniverse: universe.
+	testClazz := SOMClass inUniverse: universe.
 	testMethod := self 
 		assembleMethod: 'testMessage:p2:'
 		withArguments: {  'a'. 'b'  }
@@ -294,7 +294,7 @@ SOMInterpreterTest >> test11Send [
 SOMInterpreterTest >> test12DNU [
 	| testClazz testMethod testInstance params result |
 	self loadClazzes: {  #Array. #Object  }.
-	testClazz := universe classClass inUniverse: universe.
+	testClazz := SOMClass inUniverse: universe.
 	params := SOMArray 
 		inUniverse: universe
 		size: 5.
@@ -408,7 +408,7 @@ SOMInterpreterTest >> test14ReturnNonLocal [
 { #category : #tests }
 SOMInterpreterTest >> test15SuperSend [
 	| testClazz testMethod superClazz superMethod testInstance |
-	superClazz := universe classClass inUniverse: universe.
+	superClazz := SOMClass inUniverse: universe.
 	superMethod := self 
 		assembleMethod: 'test'
 		withByteCodes: 
@@ -423,7 +423,7 @@ SOMInterpreterTest >> test15SuperSend [
 	superClazz somInstanceFields: (SOMArray 
 			inUniverse: universe
 			withAll: {  (universe newSymbol: 'class')  }).
-	testClazz := universe classClass 
+	testClazz := SOMClass
 		inUniverse: universe
 		withSomSuperClass: superClazz.
 	testMethod := self 
@@ -465,7 +465,7 @@ SOMInterpreterTest >> test15SuperSend [
 SOMInterpreterTest >> test16PushField [
 	| testClazz testMethod testInstance testFieldName |
 	testFieldName := universe newSymbol: 'testField'.
-	testClazz := universe classClass inUniverse: universe.
+	testClazz := SOMClass inUniverse: universe.
 	testMethod := self 
 		assembleMethod: 'testMessage'
 		withByteCodes: 
@@ -505,7 +505,7 @@ SOMInterpreterTest >> test16PushField [
 SOMInterpreterTest >> test17PopField [
 	| testClazz testMethod testInstance testFieldName |
 	testFieldName := universe newSymbol: 'testField'.
-	testClazz := universe classClass inUniverse: universe.
+	testClazz := SOMClass inUniverse: universe.
 	testMethod := self 
 		assembleMethod: 'testMessage'
 		withByteCodes: 

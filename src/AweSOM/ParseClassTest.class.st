@@ -11,7 +11,7 @@ Class {
 { #category : #running }
 ParseClassTest >> parserClass [
 
-	^ universe classParser
+	^ SOMClassParser
 ]
 
 { #category : #running }

@@ -121,7 +121,7 @@ SOMParser >> initialize [
 
 { #category : #helper }
 SOMParser >> methodParser [
-	^ universe methodParser new
+	^ SOMMethodParser new
 			universe: self universe;
 			fileName: fileName;
 			shouldReadSources: self shouldReadSources;

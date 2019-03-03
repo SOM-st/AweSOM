@@ -8,7 +8,28 @@ Class {
 		'heap',
 		'symbolTable',
 		'numberCache',
-		'exitCode'
+		'exitCode',
+		'isInitialized',
+		'somObjectClass',
+		'somClassClass',
+		'somMetaclassClass',
+		'somNilClass',
+		'somIntegerClass',
+		'somArrayClass',
+		'somMethodClass',
+		'somSymbolClass',
+		'somPrimitiveClass',
+		'somStringClass',
+		'somDoubleClass',
+		'somBooleanClass',
+		'somTrueObject',
+		'somFalseObject',
+		'somSystemObject',
+		'somTrueClass',
+		'somFalseClass',
+		'somSystemClass',
+		'somNilObject',
+		'somBlockClass'
 	],
 	#classVars : [
 		'ClassPaths',
@@ -67,7 +88,7 @@ SOMUniverse >> bootstrapFrameFor: receiver withArguments: args [
 { #category : #bootstrapping }
 SOMUniverse >> bootstrapMethod [
 
-	^ self methodClass
+	^ SOMMethod
 		inUniverse: self
 		named: #bootstrap
 		numArgs: 1
@@ -96,16 +117,6 @@ SOMUniverse >> bootstrapWithEntryPoint: invokable on: receiver withArguments: ar
 	invokable ifNotNil: [invokable invokeInFrame: bootstrapFrame].
 	self interpreter start.
 	^ bootstrapFrame
-]
-
-{ #category : #'universe configuration' }
-SOMUniverse >> classClass [
-	^ SOMClass
-]
-
-{ #category : #'universe configuration' }
-SOMUniverse >> classParser [
-	^ SOMClassParser
 ]
 
 { #category : #'as yet unclassified' }
@@ -168,11 +179,6 @@ SOMUniverse >> eval: code [
 { #category : #accessing }
 SOMUniverse >> exitCode [
 	^ exitCode
-]
-
-{ #category : #'universe configuration' }
-SOMUniverse >> frameClass [
-	^ SOMFrame
 ]
 
 { #category : #'as yet unclassified' }
@@ -455,21 +461,6 @@ SOMUniverse >> loadSystemClass: classStubName [
 		stub: (self globalAt: classStubName ifAbsent: [nil]).
 ]
 
-{ #category : #'universe configuration' }
-SOMUniverse >> methodClass [
-	^ SOMMethod
-]
-
-{ #category : #'universe configuration' }
-SOMUniverse >> methodGenClass [
-	^ SOMMethodGenerationContext
-]
-
-{ #category : #'universe configuration' }
-SOMUniverse >> methodParser [
-	^ SOMMethodParser
-]
-
 { #category : #'object creation' }
 SOMUniverse >> newArrayWithAll: collection [
 
@@ -526,11 +517,6 @@ SOMUniverse >> outStream [
 SOMUniverse >> outStream: writeStream [
 
 	outStream := writeStream
-]
-
-{ #category : #'universe configuration' }
-SOMUniverse >> primitiveClass [
-	^ SOMPrimitive
 ]
 
 { #category : #printing }

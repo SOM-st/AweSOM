@@ -7,7 +7,7 @@ Class {
 { #category : #running }
 ParseMethodTest >> parserClass [
 
-	^ universe methodParser
+	^ SOMMethodParser
 ]
 
 { #category : #running }

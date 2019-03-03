@@ -171,7 +171,7 @@ SOMInterpreter >> doReturnNonLocal [
 		numArgs timesRepeat: [ self somFrame pop ].
 		
 		"execute the escapedBlock message instead"
-		sender sendMessage: #escapedBlock withArguments: (
+		sender sendMessage: #escapedBlock: withArguments: (
 			SOMArray inUniverse: universe withAll: {block}).
 			^ self ].
 	

@@ -17,9 +17,9 @@ SOMClass class >> inUniverse: universe withSomSuperClass: superClazz [
 	"metaclass"
 	superMeta := superClazz isClass
 		ifTrue: [superClazz somClass]
-		ifFalse: [universe globalAt: #Class].
+		ifFalse: [universe globalClassClass].
 	metaclass := (self inUniverse: universe)
-		somClass: (universe globalAt: #Metaclass);
+		somClass: (universe globalMetaclassClass);
 		somSuperClass: superMeta;
 		yourself.
 	"class"
@@ -114,11 +114,11 @@ SOMClass >> primfromString: aSOMString [
 	| str |
 	str := aSOMString string.
 
-	(universe globalAt: #Integer) = self ifTrue: [
+	(universe globalIntegerClass) = self ifTrue: [
 		^ SOMInteger inUniverse: universe
 						 new: (Integer readFrom: str) ].
 	
-	self assert: (universe globalAt: #Double) = self.
+	self assert: (universe globalDoubleClass) = self.
 	^ SOMDouble inUniverse: universe new: (Float readFrom: str)
 ]
 

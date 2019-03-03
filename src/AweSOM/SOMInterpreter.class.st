@@ -98,7 +98,7 @@ SOMInterpreter >> doPushBlock [
 	| blockMethod block |
 	blockMethod := self currentBytecode literalValue.
 	block := (SOMBlock inUniverse: self universe)
-		somClass: (self universe globalAt: #Block);
+		somClass: (self universe globalBlockClass);
 		somBlockMethod: blockMethod;
 		somContext: self somFrame.
 	self somFrame push: block
@@ -160,7 +160,6 @@ SOMInterpreter >> doReturnNonLocal [
 		 This can be a problem with nested blocks. In this case, the sender will
 		 be the surrounding block and not the object that actually sent the #value message."
 		| block sender method numArgs |
-		2 halt.
 		block := self somFrame argumentAtIndex: 1 contextLevel: 1.
 		sender := self somFrame somPreviousFrame outerContext argumentAtIndex: 1 contextLevel: 1.
 

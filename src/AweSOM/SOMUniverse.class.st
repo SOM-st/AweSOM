@@ -132,7 +132,7 @@ SOMUniverse >> bootstrapMethod [
 		numLocals: 0
 		maxStackDepth: 2
 		bytecodes: {SOMBCHalt new}
-		holder: (self globalAt: #System)
+		holder: self globalSystemClass
 		lexicalContext: self globalNil.
 
 ]
@@ -141,7 +141,7 @@ SOMUniverse >> bootstrapMethod [
 SOMUniverse >> bootstrapWithArguments: args [ 
 
 	self 
-		bootstrapWithEntryPoint: ((self globalAt: #System) lookupInvokable: #initialize:)
+		bootstrapWithEntryPoint: ((self globalSystemClass) lookupInvokable: #initialize:)
 		on: (self globalAt: #system)
 		withArguments: args.
 ]
@@ -267,6 +267,36 @@ SOMUniverse >> globalAt: aSymbol put: anObject [
 	^ globals 
 		at: aSymbol
 		put: anObject
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalBlockClass [
+	^ somBlockClass
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalClassClass [
+	^ somClassClass
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalDoubleClass [
+	^ somDoubleClass
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalFalse [
+	^ somFalseObject
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalIntegerClass [
+	^ somIntegerClass
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> globalMetaclassClass [
+	^ somMetaclassClass
 ]
 
 { #category : #'gobal accessing' }
@@ -455,6 +485,9 @@ SOMUniverse >> initializeTestObjectSystem [
 
 	self initializeGlobalsDict: somNilObject.
 
+	somSystemClass := self newSystemClass.
+	self globalAt: #System put: somSystemClass.
+
 	isInitialized := true.
 	^ somNilObject
 	
@@ -537,7 +570,7 @@ SOMUniverse >> newArrayWithAll: collection [
 { #category : #'object creation' }
 SOMUniverse >> newBool: squeakBool [
 
-	^ self globals at: squeakBool asString asSymbol.
+	^  squeakBool ifTrue: [ somTrueObject ] ifFalse: [ somFalseObject ]
 ]
 
 { #category : #'object creation' }

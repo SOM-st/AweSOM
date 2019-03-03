@@ -306,6 +306,11 @@ SOMUniverse >> globalNil [
 ]
 
 { #category : #'gobal accessing' }
+SOMUniverse >> globalSystemClass [
+	^ somSystemClass
+]
+
+{ #category : #'gobal accessing' }
 SOMUniverse >> globals [
 
 	^ globals
@@ -391,11 +396,6 @@ SOMUniverse >> initializeGlobalsDict: systemObject [
 	self globalAt: #true put: somTrueObject.
 	self globalAt: #false put: somFalseObject.
 	self globalAt: #system put: systemObject.
-	self globalAt: #System put: somSymbolClass.
-	self globalAt: #Block put: somBlockClass.
-	
-	self globalAt: #True put: somTrueClass.
-	self globalAt: #False put: somFalseClass.
 
 	^ systemObject
 
@@ -533,8 +533,8 @@ SOMUniverse >> loadSOMClass: className [
 { #category : #loading }
 SOMUniverse >> loadSOMClass: className stub: stub [
 
-	^ self globalAt: className ifAbsent: [
-		^ self compiler
+	^ self globalAt: className ifAbsentPut: [
+		self compiler
 			loadAndCompileSOMClass: className
 			stub: stub ]
 .

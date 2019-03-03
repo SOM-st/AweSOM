@@ -85,7 +85,8 @@ SOMFrame >> hasContext [
 
 { #category : #testing }
 SOMFrame >> hasPreviousFrame [
-	^ self somPreviousFrame ~= self universe globalNil
+	
+	^ self somPreviousFrame ~~ self universe globalNil
 ]
 
 { #category : #initialization }

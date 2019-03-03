@@ -21,7 +21,7 @@ SOMSystem >> primexit: errorCode [
 { #category : #primitives }
 SOMSystem >> primfullGC [
 
-	self flag: #rkrk.
+	^ universe globalFalse
 ]
 
 { #category : #primitives }

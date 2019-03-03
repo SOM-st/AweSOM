@@ -9,3 +9,8 @@ SOMBigInteger >> primSlash: other [
 
 	^ universe newNumber: self number // other number
 ]
+
+{ #category : #accessing }
+SOMBigInteger >> setDefaultClass [
+	somClass := universe globalIntegerClass
+]

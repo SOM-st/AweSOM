@@ -22,3 +22,8 @@ SOMInteger >> primatRandom [
 
 	^ universe newNumber: self number atRandom.
 ]
+
+{ #category : #accessing }
+SOMInteger >> setDefaultClass [
+	somClass := universe globalIntegerClass
+]

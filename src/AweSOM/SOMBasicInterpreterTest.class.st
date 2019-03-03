@@ -31,8 +31,13 @@ SOMBasicInterpreterTest >> assert: actual equals: aValue as: aType [
 SOMBasicInterpreterTest >> load: className execute: methodName expect: aValue as: aType [
 	| result |
 	SOMUniverse classPaths: SOMTools basicInterpreterTestClassPath.
-	result := SOMUniverse new start: className method: methodName.
-	self assert: result equals: aValue as: aType
+	
+	[ result := SOMUniverse new start: className method: methodName. ] on: SOMParseError do: [:e | 
+		aType == #SOMParseError ifFalse: [ e signal ]
+	 ].
+	
+	aType == #SOMParseError ifFalse: [
+		self assert: result equals: aValue as: aType ]
 ]
 
 { #category : #tests }

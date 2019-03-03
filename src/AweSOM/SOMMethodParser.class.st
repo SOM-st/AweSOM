@@ -246,6 +246,12 @@ SOMMethodParser >> genPopVariable: variable [
 			ifFalse: [  mgenc bcPopLocalIndex: idx ctxIndex: contextLvl ].
 		^ self ].
 
+	(mgenc hasField: variable) ifFalse: [ 
+		SOMParseError signalWith:
+				'Trying to write to a field with name "', variable asString,
+				'", but the field does not exist in class ', mgenc holder theName asString
+			expectedSym: nil and: self. ].
+
 	mgenc bcPopField: variable.
 
 ]

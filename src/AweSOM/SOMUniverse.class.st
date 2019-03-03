@@ -490,9 +490,15 @@ SOMUniverse >> loadAndStoreSOMClass: className [
 { #category : #loading }
 SOMUniverse >> loadSOMClass: className [
 
+	^ self loadSOMClass: className stub: nil
+]
+
+{ #category : #loading }
+SOMUniverse >> loadSOMClass: className stub: stub [
+
 	^ self compiler
 		loadAndCompileSOMClass: className
-		stub: nil.
+		stub: stub
 ]
 
 { #category : #loading }
@@ -502,7 +508,7 @@ SOMUniverse >> loadSystemClass: systemClass [
 
 	^ self compiler
 		loadAndCompileSOMClass: className
-		stub: (self globalAt: className ifAbsent: [nil]).
+		stub: systemClass.
 ]
 
 { #category : #'object creation' }

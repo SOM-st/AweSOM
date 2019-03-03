@@ -576,7 +576,7 @@ SOMMethodParser >> primary: doSuper [
 		| v |
 		v := self variable.
 		v = #super ifTrue: [
-			"v := #self. sends to #super push #self as receiver"
+			v := #self. "sends to #super push #self as receiver"
 			superSend := true.
 		].
 	

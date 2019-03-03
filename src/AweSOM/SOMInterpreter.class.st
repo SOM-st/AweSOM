@@ -154,9 +154,29 @@ SOMInterpreter >> doReturnNonLocal [
 	result := self somFrame pop.
 	context := self somFrame outerContext.
 	
-	self flag: #arv.
-	"implement escaped block case"
+	"Make sure block context is still on the stack"
+	context hasPreviousFrame ifFalse: [
+		"Try to recover by sending #escapedBlock: to the sending object.
+		 This can be a problem with nested blocks. In this case, the sender will
+		 be the surrounding block and not the object that actually sent the #value message."
+		| block sender method numArgs |
+		2 halt.
+		block := self somFrame argumentAtIndex: 1 contextLevel: 1.
+		sender := self somFrame somPreviousFrame outerContext argumentAtIndex: 1 contextLevel: 1.
+
+ 		self popFrame.
+		
+		"pop old arguments from stack"
+		method := self somFrame somMethod.
+		numArgs := method numberOfArguments.
+		numArgs timesRepeat: [ self somFrame pop ].
+		
+		"execute the escapedBlock message instead"
+		sender sendMessage: #escapedBlock withArguments: (
+			SOMArray inUniverse: universe withAll: {block}).
+			^ self ].
 	
+	"unwind frames"
 	[self somFrame ~= context] whileTrue: [self popFrame].
 	self popFrameAndPushResult: result
 ]

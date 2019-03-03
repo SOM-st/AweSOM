@@ -650,12 +650,13 @@ SOMUniverse >> outStream: writeStream [
 
 { #category : #printing }
 SOMUniverse >> printUsage [
-	 Transcript
-		show: 'Usage: som [-options] [args...]'; cr;
-		cr;
-		show: 'where options include:'; cr;
-		show: '    -cp <directories separated by :'; cr;
-		show: '                  set search path for application classes'
+	 self outStream
+		nextPutAll: 'Usage: som [-options] [args...]'; lf;
+		lf;
+		nextPutAll: 'where options include:'; lf;
+		nextPutAll: '    -cp <directories separated by ":">'; lf;
+		nextPutAll: '              sets search path for application classes'; lf;
+		lf
 
 ]
 

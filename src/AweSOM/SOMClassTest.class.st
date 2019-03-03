@@ -4,6 +4,13 @@ Class {
 	#category : #'AweSOM-VM-Test'
 }
 
+{ #category : #running }
+SOMClassTest >> setUp [
+	SOMUniverse classPaths: SOMTools basicInterpreterTestClassPath.
+	super setUp.
+	
+]
+
 { #category : #tests }
 SOMClassTest >> test01ObjectCreation [
 

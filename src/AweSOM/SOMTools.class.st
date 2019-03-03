@@ -30,6 +30,7 @@ SOMTools class >> basicInterpreterTestClassPath [
 	bp := self basePath.
 
 	^ { bp, '/Smalltalk'.
+		 bp, '/TestSuite'.
 		 bp, '/TestSuite/BasicInterpreterTests' }
 
 ]

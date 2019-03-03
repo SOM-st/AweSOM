@@ -14,6 +14,11 @@ Class {
 }
 
 { #category : #adding }
+SOMClassGenerationContext >> addClassFields: fields [
+	classFields addAll: fields.
+]
+
+{ #category : #adding }
 SOMClassGenerationContext >> addField: field [
 	self isClassSide
 		ifTrue:  [classFields add: field]
@@ -24,13 +29,18 @@ SOMClassGenerationContext >> addField: field [
 SOMClassGenerationContext >> addFields: fieldNames [
 
 	^ self isClassSide
-		ifTrue: [self classFields: fieldNames]
-		ifFalse: [self instanceFields: fieldNames]
+		ifTrue: [classFields addAll: fieldNames]
+		ifFalse: [instanceFields addAll: fieldNames]
 ]
 
 { #category : #adding }
 SOMClassGenerationContext >> addInstanceField: field [
 	instanceFields add: field.
+]
+
+{ #category : #adding }
+SOMClassGenerationContext >> addInstanceFields: fields [
+	instanceFields addAll: fields.
 ]
 
 { #category : #adding }
@@ -41,36 +51,6 @@ SOMClassGenerationContext >> addMethod: methodGenContext [
 		ifTrue: [
 			methodGenContext onClassSide: true.
 			self classMethods add: methodGenContext]
-]
-
-{ #category : #variables }
-SOMClassGenerationContext >> allClassFieldsIn: universe [
-
-	| superClass |
-	self superName = 'nil' ifTrue: [^ self classFields].
-	superClass := universe
-		globalAt: self superName asSymbol
-		ifAbsent: ["self error: 'Field lookup: Cannot find my superclass ' , self superName , '!'"
-			"Transcript
-				cr;
-				show: 'Field lookup: Cannot find my superclass ' , self superName , '!'."
-			^ self classFields].
-	^ superClass somClass allInstanceFields , self classFields.
-]
-
-{ #category : #variables }
-SOMClassGenerationContext >> allInstanceFieldsIn: universe [
-
-	| superClass |
-	self superName = 'nil' ifTrue: [^ self instanceFields].
-	superClass := universe
-		globalAt: self superName asSymbol
-		ifAbsent: ["self error: 'Field lookup: Cannot find my superclass ' , self superName , '!'"
-			"Transcript
-				cr;
-				show: 'Field lookup: Cannot find my superclass ' , self superName , '!'."
-			^ self instanceFields].
-	^ superClass allInstanceFields , self instanceFields.
 ]
 
 { #category : #assembling }
@@ -106,11 +86,6 @@ SOMClassGenerationContext >> classMethods [
 	^ classMethods
 ]
 
-{ #category : #accessing }
-SOMClassGenerationContext >> classMethods: anObject [
-	classMethods := anObject
-]
-
 { #category : #assembling }
 SOMClassGenerationContext >> createEmptyClassIn: universe [
 
@@ -121,12 +96,6 @@ SOMClassGenerationContext >> createEmptyClassIn: universe [
 	^ SOMClass
 		inUniverse: universe
 		withSomSuperClass: superclass.
-]
-
-{ #category : #initialization }
-SOMClassGenerationContext >> defaultSuperClassName [
-
-	^ #Object
 ]
 
 { #category : #testing }
@@ -176,14 +145,14 @@ SOMClassGenerationContext >> initInstanceSideOf: somClass in: universe [
 SOMClassGenerationContext >> initialize [
 
 	super initialize.
-	self
-		isClassSide: false;
-		superName: self defaultSuperClassName;
-		instanceFields: OrderedCollection new;
-		classFields: OrderedCollection new;
-		instanceMethods: OrderedCollection new;
-		classMethods: OrderedCollection new;
-		theName: ''.
+	
+	isClassSide := false.
+	superName := #nil.
+	instanceFields := OrderedCollection new.
+	classFields := OrderedCollection new.
+	instanceMethods := OrderedCollection new.
+	classMethods := OrderedCollection new.
+	theName := ''.
 ]
 
 { #category : #accessing }
@@ -199,11 +168,6 @@ SOMClassGenerationContext >> instanceFields: anObject [
 { #category : #accessing }
 SOMClassGenerationContext >> instanceMethods [
 	^ instanceMethods
-]
-
-{ #category : #accessing }
-SOMClassGenerationContext >> instanceMethods: anObject [
-	instanceMethods := anObject
 ]
 
 { #category : #accessing }

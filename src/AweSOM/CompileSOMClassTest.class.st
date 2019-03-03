@@ -33,6 +33,7 @@ CompileSOMClassTest >> test01SimpleClassCreation [
 	| cgenc clazz |
 	cgenc := SOMClassGenerationContext new.
 	cgenc theName: 'Robert'.
+	cgenc superName: #Object.
 	cgenc instanceFields: {  'alter'. 'adresse'  }.
 	clazz := cgenc assembleIn: universe.
 	self assert: (clazz isKindOf: SOMClass).

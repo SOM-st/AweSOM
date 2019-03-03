@@ -36,12 +36,31 @@ SOMClassParser >> classSide [
 
 { #category : #patterns }
 SOMClassParser >> classStart [
+	| superName |
 	cgenc theName: self identifier.
 	
 	self expect: #equal.
 	
-	sym == #identifier
-		ifTrue:  [cgenc superName: self identifier.].
+	superName := sym == #identifier
+		ifTrue:  [ self identifier ]
+		ifFalse: [ #Object ].
+	cgenc superName: superName.
+	
+	"Load the super class, if it is not nil (to break dependency cycle)"
+	superName == #nil ifFalse: [ 
+		| superClass |
+		superClass := universe loadSOMClass: superName.
+		superClass allInstanceFields.
+		
+		superClass ifNil: [
+			SOMParseError signalWith: 'Super class "', superName asString, '" could not be loaded'
+							 expectedSym: nil and: self ].
+
+		cgenc addInstanceFields: superClass allInstanceFields.
+		cgenc addClassFields: superClass somClass allInstanceFields.		
+	].
+	
+
 		
 ]
 

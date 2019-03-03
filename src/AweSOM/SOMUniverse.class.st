@@ -479,7 +479,7 @@ SOMUniverse >> loadAndStoreFromSource: source [
 		stub: nil
 		from: '<eval>'.
 	^ self
-		globalAt: class somName string
+		globalAt: class somName symbol
 		put: class
 ]
 
@@ -500,9 +500,12 @@ SOMUniverse >> loadSOMClass: className [
 { #category : #loading }
 SOMUniverse >> loadSOMClass: className stub: stub [
 
-	^ self compiler
-		loadAndCompileSOMClass: className
-		stub: stub
+	^ self globalAt: className ifAbsent: [
+		^ self compiler
+			loadAndCompileSOMClass: className
+			stub: stub ]
+.
+	
 ]
 
 { #category : #loading }

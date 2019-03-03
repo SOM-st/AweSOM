@@ -17,7 +17,7 @@ SOMClassTest >> test01ObjectCreation [
 { #category : #tests }
 SOMClassTest >> test02Subclassing [
 	| somArray newClass newInstance |
-	self loadClazzes: {  #Array. #Object  }.
+	self loadClazzes: #(#Array #Object).
 	somArray := universe globalAt: #Array.
 	newClass := SOMClass
 		inUniverse: universe
@@ -35,7 +35,7 @@ SOMClassTest >> test02Subclassing [
 SOMClassTest >> test03LookupOfFields [
 
 	| source class method pushBc field |
-	self loadClazzes: {#Object.}.
+	self loadClazzes: {#Object}.
 	source := 'ClassA = ( | x | m=(x) )'.
 	class := universe loadAndStoreFromSource: source.
 	method := class somInstanceInvokables at: 1.
@@ -49,7 +49,7 @@ SOMClassTest >> test04LookupOfFieldDefinedInSuperclass [
 
 	| sourceSuper sourceSub
 	  class method pushBc field |
-	self loadClazzes: {#Object.}.
+	self loadClazzes: {#Object}.
 	sourceSuper := 'ClassA = ( | aField | )'.
 	sourceSub   := 'ClassB = ClassA ( m=(aField) )'.
 	
@@ -88,7 +88,7 @@ SOMClassTest >> test06ClassClassHasCorrectInstanceFields [
 SOMClassTest >> test07MetaClassHasInstanceFields [
 
 	| class field method pushFieldBc |
-	self loadClazzes: {#Object. #Class}.
+	self loadClazzes: #(#Object #Class).
 	class := universe loadAndStoreFromSource: 'ClassA = (---- | x | m = (x))'.
 	self assert: class somClass somInstanceFields size equals: 1.
 	method := class somClass somInstanceInvokables at: 1.

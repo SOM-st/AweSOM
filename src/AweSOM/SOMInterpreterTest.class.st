@@ -293,7 +293,7 @@ SOMInterpreterTest >> test11Send [
 { #category : #tests }
 SOMInterpreterTest >> test12DNU [
 	| testClazz testMethod testInstance params result |
-	self loadClazzes: {  #Array. #Object  }.
+	self loadClazzes: #(#Array #Object).
 	testClazz := SOMClass inUniverse: universe.
 	params := SOMArray 
 		inUniverse: universe
@@ -352,7 +352,7 @@ SOMInterpreterTest >> test12DNU [
 { #category : #tests }
 SOMInterpreterTest >> test13Block [
 	| testMethod |
-	self loadClazzes: {  #Object. #Block  }.
+	self loadClazzes: #(#Object #Block).
 	testMethod := self 
 		assembleMethod: 'testMessage:p2:'
 		withArguments: {  'a'. 'b'  }

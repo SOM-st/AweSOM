@@ -79,7 +79,7 @@ SOMPrimitiveTest >> test03PrimitiveNames [
 { #category : #tests }
 SOMPrimitiveTest >> test04PrimitiveNew [
 	| clazz instance primLength |
-	self loadClazzes: {  #Object. #Array  }.
+	self loadClazzes: #(#Object #Array).
 	clazz := universe globalAt: #Array.
 	instance := clazz primnew.
 	self 

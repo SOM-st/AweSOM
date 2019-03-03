@@ -449,6 +449,10 @@ SOMUniverse >> initializeSystemClass: systemClass superclass: superClass named: 
 { #category : #initializing }
 SOMUniverse >> initializeTestObjectSystem [
 	self allocateBasicObjects.
+	
+	somBlockClass := self newSystemClass.
+	self initializeSystemClass: somBlockClass superclass: somObjectClass named: #Block.
+
 	self initializeGlobalsDict: somNilObject.
 
 	isInitialized := true.

@@ -47,7 +47,7 @@ SOMObjectTest >> test04Array [
 { #category : #tests }
 SOMObjectTest >> test04bArray [
 	| array |
-	self loadClazzes: {  #Object. #Array  }.
+	self loadClazzes: #(#Object #Array).
 	array := SOMArray 
 		inUniverse: universe
 		withSomClass: (universe globalAt: #Array)

@@ -272,6 +272,13 @@ SOMUniverse >> globalBlockClass [
 ]
 
 { #category : #'gobal accessing' }
+SOMUniverse >> globalBlockClass: numArgs [
+	| className |
+	className := 'Block', (numArgs + 1) asString.
+	^ self loadSOMClass: className asSymbol
+]
+
+{ #category : #'gobal accessing' }
 SOMUniverse >> globalClassClass [
 	^ somClassClass
 ]
@@ -562,6 +569,15 @@ SOMUniverse >> newArrayWithAll: collection [
 	^ SOMArray
 		inUniverse: self
 		withAll: collection
+]
+
+{ #category : #'gobal accessing' }
+SOMUniverse >> newBlock: blockMethod in: aSomFrame [
+
+	^ (SOMBlock inUniverse: self)
+		somClass: (self globalBlockClass: blockMethod numberOfArguments);
+		somBlockMethod: blockMethod;
+		somContext: aSomFrame
 ]
 
 { #category : #'object creation' }

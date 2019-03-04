@@ -97,11 +97,10 @@ SOMInterpreter >> doPushArgument [
 SOMInterpreter >> doPushBlock [
 	| blockMethod block |
 	blockMethod := self currentBytecode literalValue.
-	block := (SOMBlock inUniverse: self universe)
-		somClass: (self universe globalBlockClass);
-		somBlockMethod: blockMethod;
-		somContext: self somFrame.
-	self somFrame push: block
+	block := universe newBlock: blockMethod in: frame.
+	
+	frame push: block
+
 ]
 
 { #category : #'bytecode processing' }

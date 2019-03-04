@@ -21,7 +21,8 @@ SOMSystem >> primexit: errorCode [
 { #category : #primitives }
 SOMSystem >> primfullGC [
 
-	^ universe globalFalse
+	universe heap collectGarbage.
+	^ universe globalTrue
 ]
 
 { #category : #primitives }

@@ -315,6 +315,11 @@ SOMUniverse >> globalSystemClass [
 ]
 
 { #category : #'gobal accessing' }
+SOMUniverse >> globalTrue [
+	^ somTrueObject
+]
+
+{ #category : #'gobal accessing' }
 SOMUniverse >> globals [
 
 	^ globals

@@ -104,3 +104,25 @@ SOMClassTest >> test07MetaClassHasInstanceFields [
 	self shouldnt: [field := class fieldAtIndex: pushFieldBc fieldIndex] raise: Error.
 	self assert: universe globalNil equals: field.
 ]
+
+{ #category : #tests }
+SOMClassTest >> test08NumberOfFieldsInSubclass [
+
+	| sourceSuper sourceSub
+	  classSuper classSub method pushBc field |
+	self loadClazzes: #(#Object).
+	sourceSuper := 'ClassA = ( | aa1 aa2 aa3 | )'.
+	sourceSub   := 'ClassB = ClassA ( | bb1 bb2 bb3 |  m=(aa2) )'.
+	
+	classSuper := universe loadAndStoreFromSource: sourceSuper.
+	classSub := universe loadAndStoreFromSource: sourceSub.
+	
+	method := classSub somInstanceInvokables at: 1.
+	pushBc := method bytecodes first.
+
+	self shouldnt: [field := classSub allInstanceFields at: pushBc fieldIndex] raise: Error.
+	self assert: field string equals: 'aa2'.
+
+	self assert: classSuper somInstanceFields size equals: 3.
+	self assert: classSub somInstanceFields size equals: 6.
+]

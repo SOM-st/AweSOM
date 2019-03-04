@@ -127,9 +127,14 @@ SOMMethodGenerationContext >> bcPopArgumentIndex: idx ctxIndex: ctxIdx [
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcPopField: fieldName [
 
-	| idx |
+	| idx fieldIdx bc |
+	self assert: (self hasField: fieldName).
 	idx := self addLiteralIfAbsent: fieldName.
-	^ self bytecode add: (SOMBCPopField in: self index: idx)
+	fieldIdx := holder fieldIndex: fieldName.
+	bc := SOMBCPopField in: self index: idx.
+	bc fieldIndex: fieldIdx.
+	^ self bytecode add: bc.
+
 ]
 
 { #category : #bytecode }
@@ -163,9 +168,13 @@ SOMMethodGenerationContext >> bcPushConstant: const [
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcPushField: fieldName [
 
-	| idx |
+	| idx fieldIdx bc |
+	self assert: [holder isNil or: [self hasField: fieldName]].
 	idx := self addLiteralIfAbsent: fieldName.
-	^ self bytecode add: (SOMBCPushField in: self index: idx).
+	fieldIdx := holder fieldIndex: fieldName.
+	bc := SOMBCPushField in: self index: idx.
+	bc fieldIndex: fieldIdx.
+	^ self bytecode add: bc.
 ]
 
 { #category : #bytecode }

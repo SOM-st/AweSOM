@@ -81,19 +81,6 @@ SOMMethod >> constants: anObject [
 	constants := anObject
 ]
 
-{ #category : #'as yet unclassified' }
-SOMMethod >> inferFieldIndexesFrom: holder [
-
-	self flag: #rkrk. "Cleanup using polymorphism or replace mechanism"
-	bytecodes do: [:bytecode |
-		(bytecode isKindOf: SOMBytecodeWithFieldIndex) 
-			ifTrue: [bytecode inferFieldIndexFrom: holder].
-		"infer recursively if block"
-		(bytecode isKindOf: SOMBCPushBlock) 
-			ifTrue: [bytecode literalValue 
-				inferFieldIndexesFrom: holder]].
-]
-
 { #category : #initialization }
 SOMMethod >> initialize [
 
@@ -158,11 +145,4 @@ SOMMethod >> numberOfLocals [
 { #category : #accessing }
 SOMMethod >> numberOfLocals: anObject [
 	numberOfLocals := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SOMMethod >> somHolder: holder [
-
-	super somHolder: holder.
-	holder ~= universe globalNil ifTrue: [self inferFieldIndexesFrom: holder]
 ]

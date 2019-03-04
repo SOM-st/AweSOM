@@ -14,6 +14,12 @@ Class {
 }
 
 { #category : #adding }
+SOMClassGenerationContext >> addClassField: fieldName [
+
+	classFields add: fieldName.
+]
+
+{ #category : #adding }
 SOMClassGenerationContext >> addClassFields: fields [
 	classFields addAll: fields.
 ]
@@ -77,11 +83,6 @@ SOMClassGenerationContext >> classFields [
 ]
 
 { #category : #accessing }
-SOMClassGenerationContext >> classFields: anObject [
-	classFields := anObject
-]
-
-{ #category : #accessing }
 SOMClassGenerationContext >> classMethods [
 	^ classMethods
 ]
@@ -96,6 +97,13 @@ SOMClassGenerationContext >> createEmptyClassIn: universe [
 	^ SOMClass
 		inUniverse: universe
 		withSomSuperClass: superclass.
+]
+
+{ #category : #adding }
+SOMClassGenerationContext >> fieldIndex: fieldName [
+	^ self isClassSide
+		ifTrue:  [classFields indexOf: fieldName]
+		ifFalse: [instanceFields indexOf: fieldName].
 ]
 
 { #category : #testing }

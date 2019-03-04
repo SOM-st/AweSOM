@@ -32,11 +32,8 @@ SOMClass class >> inUniverse: universe withSomSuperClass: superClazz [
 { #category : #accessing }
 SOMClass >> allInstanceFields [
 
-	| instFields |
-	instFields := self somInstanceFields elements collect: [:ea | ea string].
-	^ self somSuperClass isClass
-		ifTrue: [self somSuperClass allInstanceFields , instFields]
-		ifFalse: [instFields].
+	^ self somInstanceFields elements collect: [:ea | ea string].
+
 ]
 
 { #category : #testing }
@@ -48,24 +45,18 @@ SOMClass >> hasSuperClass [
 { #category : #accessing }
 SOMClass >> indexOfInstanceField: aSOMSymbol [ 
 
-	| index |
-	index := self somInstanceFields indexOf: aSOMSymbol.
-	^ (index = 0 and: [self hasSuperClass])
-		ifTrue: [self somSuperClass indexOfInstanceField: aSOMSymbol]
-		ifFalse: [self numberOfSuperInstanceFields + index].
+	^ self somInstanceFields indexOf: aSOMSymbol.
+
 ]
 
 { #category : #initialization }
 SOMClass >> initialize [
 	super initialize.
 	somSuperClass := universe globalNil.
-	somName  := universe globalNil.
-	somInstanceFields  := universe globalNil.
-	somInstanceInvokables  := universe globalNil.
-	self
-		somInstanceFields: (SOMArray inUniverse: universe);
-		somInstanceInvokables: (SOMArray inUniverse: universe);
-		somName: (universe newString: '')
+	somInstanceFields := (SOMArray inUniverse: universe).
+	
+	self somInstanceInvokables: (SOMArray inUniverse: universe).
+	somName := (universe newString: '')
 ]
 
 { #category : #testing }
@@ -86,14 +77,7 @@ SOMClass >> lookupInvokable: signature [
 
 { #category : #accessing }
 SOMClass >> numberOfInstanceFields [
-	^ self somInstanceFields size + self numberOfSuperInstanceFields
-]
-
-{ #category : #accessing }
-SOMClass >> numberOfSuperInstanceFields [
-	^ somSuperClass isClass
-		ifTrue: [somSuperClass numberOfInstanceFields]
-		ifFalse: [0]
+	^ self somInstanceFields size
 ]
 
 { #category : #'as yet unclassified' }
@@ -112,6 +96,11 @@ SOMClass >> performPrimitive: selector withArguments: arguments [
 { #category : #primitives }
 SOMClass >> primPositiveInfinity [
 	^ universe newNumber: Float infinity
+]
+
+{ #category : #accessing }
+SOMClass >> primfields [
+	^ somInstanceFields
 ]
 
 { #category : #primitives }
@@ -156,11 +145,7 @@ SOMClass >> somInstanceFields [
 
 { #category : #accessing }
 SOMClass >> somInstanceFields: anObject [ 
-	somInstanceFields := anObject.
-	somInstanceInvokables ~= universe globalNil
-		ifTrue: [somInstanceInvokables do: [ :invokable | 
-			(invokable isKindOf: SOMMethod)
-				ifTrue: [invokable inferFieldIndexesFrom: self]]]
+	somInstanceFields := anObject
 ]
 
 { #category : #accessing }
@@ -169,8 +154,8 @@ SOMClass >> somInstanceInvokables [
 ]
 
 { #category : #accessing }
-SOMClass >> somInstanceInvokables: anObject [ 
-	somInstanceInvokables := anObject.
+SOMClass >> somInstanceInvokables: aSomArray [ 
+	somInstanceInvokables := aSomArray.
 	somInstanceInvokables do: [ :invokable | invokable somHolder: self ]
 ]
 

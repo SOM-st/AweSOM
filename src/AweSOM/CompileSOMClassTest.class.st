@@ -34,7 +34,7 @@ CompileSOMClassTest >> test01SimpleClassCreation [
 	cgenc := SOMClassGenerationContext new.
 	cgenc theName: 'Robert'.
 	cgenc superName: #Object.
-	cgenc instanceFields: {  'alter'. 'adresse'  }.
+	cgenc addInstanceFields: { 'alter'. 'adresse' }.
 	clazz := cgenc assembleIn: universe.
 	self assert: (clazz isKindOf: SOMClass).
 	self assert: clazz somName symbol equals: #Robert.
@@ -48,7 +48,7 @@ CompileSOMClassTest >> test01SimpleClassCreation [
 CompileSOMClassTest >> test02CompileClass [
 	| cgenc clazz |
 	cgenc := SOMClassGenerationContext new.
-	cgenc classFields: {  'alter'  }.
+	cgenc addClassField: 'alter'.
 	clazz := cgenc assembleIn: universe.
 	self 
 		assert: (clazz somClass somInstanceFields at: 1) string

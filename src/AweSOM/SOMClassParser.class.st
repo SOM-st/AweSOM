@@ -50,7 +50,6 @@ SOMClassParser >> classStart [
 	superName == #nil ifFalse: [ 
 		| superClass |
 		superClass := universe loadSOMClass: superName.
-		superClass allInstanceFields.
 		
 		superClass ifNil: [
 			SOMParseError signalWith: 'Super class "', superName asString, '" could not be loaded'

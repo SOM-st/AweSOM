@@ -16,11 +16,3 @@ SOMBytecodeWithFieldIndex >> fieldIndex [
 SOMBytecodeWithFieldIndex >> fieldIndex: anObject [
 	fieldIndex := anObject
 ]
-
-{ #category : #'as yet unclassified' }
-SOMBytecodeWithFieldIndex >> inferFieldIndexFrom: object [
-
-	| fieldName |
-	fieldName := object universe newSymbol: self literalValue.
-	self fieldIndex: (object indexOfInstanceField: fieldName).
-]

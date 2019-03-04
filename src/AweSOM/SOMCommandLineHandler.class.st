@@ -32,12 +32,16 @@ SOMCommandLineHandler >> activate [
 	
 	[ 
 	self stdout nextPutAll: 'start interpretation'; lf; flush.
-	1 halt.
+
 	universe start: self arguments ]
 		on: Error
 		do: [:ex |
 			ex printOn: self stderr.
-			self exitFailure ]
+			self exitFailure ].
+
+	self exitSuccess
+	
+	
 	
 
 ]

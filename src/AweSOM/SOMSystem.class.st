@@ -54,7 +54,7 @@ SOMSystem >> primload: clazzName [
 { #category : #primitives }
 SOMSystem >> primprintNewline [
 	
-	self universe outStream cr; flush.
+	self universe outStream lf; flush.
 ]
 
 { #category : #primitives }

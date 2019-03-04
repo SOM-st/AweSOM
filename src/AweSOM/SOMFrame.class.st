@@ -221,10 +221,10 @@ SOMFrame >> printBytecodesOn: stream [
 		stream
 			nextPutAll: ' in object: ';
 			nextPutAll: (self argumentAtIndex: 1 contextLevel: 1) asString].
-	stream cr.
+	stream lf.
 	self somMethod bytecodes doWithIndex: [:bc :index |
 		index = (self bytecodeIndex - 1) ifTrue: [stream nextPutAll: '->'].
-		stream nextPutAll: bc asString; cr.
+		stream nextPutAll: bc asString; lf.
 	]
 ]
 
@@ -261,19 +261,19 @@ SOMFrame >> printStackElement: somObject atIndex: index on: stream [
 	(somObject isNil or: [ somObject == somNil ]) ifTrue: 
 		[ stream
 			nextPutAll: 'nil';
-			cr.
+			lf.
 		^ self ].
 	somClazz := [somObject somClass] on: Error do: [somObject].
 	(somClazz isNil or: [ somClazz == somNil ]) ifTrue: 
 		[ stream
 			nextPutAll: 'object without class';
-			cr.
+			lf.
 		^ self ].
 	stream
 		nextPutAll: somObject asString;
 		nextPutAll: ' with class: ';
 		nextPutAll: somClazz asString;
-		cr
+		lf
 ]
 
 { #category : #printing }
@@ -282,10 +282,10 @@ SOMFrame >> printStackOn: stream [
 
 	stream nextPutAll: '    Method: ';
 		nextPutAll: self somMethod asString;
-		cr;
+		lf;
 		nextPutAll: '    Stackpointer: ';
 		nextPutAll: self stackPointer asString;
-		cr.
+		lf.
 	
 	self stackPointer to: 1 by: -1 do:
 		[ :index |

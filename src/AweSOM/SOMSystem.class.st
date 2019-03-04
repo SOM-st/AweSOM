@@ -66,6 +66,12 @@ SOMSystem >> primprintString: somString [
 ]
 
 { #category : #primitives }
+SOMSystem >> primticks [
+	
+	^ universe newNumber: Time primUTCMicrosecondsClock
+]
+
+{ #category : #primitives }
 SOMSystem >> primtime [
 	
 	^ universe newNumber: Time millisecondClockValue

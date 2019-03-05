@@ -30,14 +30,19 @@ SOMInteger >> primSlash: other [
 
 { #category : #primitives }
 SOMInteger >> primas32BitSignedValue [
-	self flag: 'todo'.
-	^ universe newNumber: self number
+	| val hiBitSet |
+	val := number.
+	hiBitSet := (val bitAnd: 16r80000000) ~~ 0.
+	val := val bitAnd: 16r7FFFFFFF.
+	hiBitSet ifTrue: [
+		val := 0 - (val bitXor: 16r7FFFFFFF) - 1 ].
+	^ universe newNumber: val
 ]
 
 { #category : #primitives }
 SOMInteger >> primas32BitUnsignedValue [
-	self flag: 'todo'.
-	^ universe newNumber: self number
+
+	^ universe newNumber: (self number bitAnd: 16rFFFFFFFF)
 ]
 
 { #category : #primitives }

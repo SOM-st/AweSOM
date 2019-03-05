@@ -1,2 +1,3 @@
 #!/bin/sh
-exec ./pharo ./awesom.image som "$@"
+SCRIPT_PATH=`dirname $0`
+exec ${SCRIPT_PATH}/pharo ${SCRIPT_PATH}/awesom.image som "$@"

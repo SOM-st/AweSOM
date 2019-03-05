@@ -86,6 +86,7 @@ CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 	| cgenc somClass instance privateInstVarNames |
 	
 	"Instance fields declared in SOM might not map properly to the field 'fields', if on the VM-side instance fields are added to subclasses of SOMObject that are not supposed to be visible from SOM, e.g. Method's field 'bytecodes'."
+	universe setupClasspath: 'Smalltalk:TestSuite:.'.
 	
 	self loadClazzes: { #Object. #Method }.
 	cgenc := self createCgencFromSource: 

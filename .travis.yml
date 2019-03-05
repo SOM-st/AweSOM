@@ -1,0 +1,16 @@
+dist: xenial
+
+matrix:
+  include:
+    # Using Smalltalk CI
+    - language: smalltalk
+      sudo: false
+      smalltalk:
+        - Pharo64-7.0
+
+    # Testing the custom Makefile
+    - language: c
+      sudo: false
+      script:
+        - make som
+        - ./som.sh -cp Smalltalk TestSuite/TestHarness.som

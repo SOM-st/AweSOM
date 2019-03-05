@@ -1,1 +1,0 @@
-Package { #name : #'AweSOMOMeta-Compiler' }

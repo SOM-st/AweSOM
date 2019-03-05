@@ -1,0 +1,139 @@
+Class {
+	#name : #CompileSOMClassTest,
+	#superclass : #TestCaseWithUniverse,
+	#category : #'AweSOM-Compiler-Test'
+}
+
+{ #category : #asserting }
+CompileSOMClassTest >> assertSuperClassOf: className is: superClassName [
+
+	self
+		assert: (universe globalAt: superClassName)
+		equals: (universe globalAt: className) somSuperClass.
+]
+
+{ #category : #compiling }
+CompileSOMClassTest >> compileSource: source [
+	
+	^ universe loadAndStoreFromSource: source
+]
+
+{ #category : #'as yet unclassified' }
+CompileSOMClassTest >> createCgencFromSource: source [
+	
+	| parser |
+	parser := SOMClassParser inUniverse: universe onSource: source from: 'test'.
+	parser start.
+	^ parser cgenc.
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test01SimpleClassCreation [
+
+	| cgenc clazz |
+	cgenc := SOMClassGenerationContext new.
+	cgenc theName: 'Robert'.
+	cgenc superName: #Object.
+	cgenc addInstanceFields: { 'alter'. 'adresse' }.
+	clazz := cgenc assembleIn: universe.
+	self assert: (clazz isKindOf: SOMClass).
+	self assert: clazz somName symbol equals: #Robert.
+	self assert: clazz somClass somName symbol equals: #'Robert class'.
+	self assert: clazz somSuperClass equals: (universe globalAt: #Object).
+	self assert: clazz somInstanceFields size equals: 2.
+	self assert: (clazz somInstanceFields at: 1) string equals: 'alter'
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test02CompileClass [
+	| cgenc clazz |
+	cgenc := SOMClassGenerationContext new.
+	cgenc addClassField: 'alter'.
+	clazz := cgenc assembleIn: universe.
+	self 
+		assert: (clazz somClass somInstanceFields at: 1) string
+		equals: 'alter'
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test03CompileClassWithMethod [
+	| cgenc clazz |
+	cgenc := self createCgencFromSource: 'Bla = Array (method1 = (^ 42) method2 = primitive ---- classMethod = ())'.
+	clazz := cgenc assembleIn: universe.
+	self 
+		assert: clazz somInstanceInvokables size
+		equals: 2.
+	self assert: ((clazz somInstanceInvokables at: 1) isKindOf: SOMMethod).
+	self assert: ((clazz somInstanceInvokables at: 2) isKindOf: SOMPrimitive).
+	self 
+		assert: clazz somClass somInstanceInvokables size
+		equals: 1
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test04CompileClassWithSuperclass [
+	| cgenc clazz |
+	cgenc := self createCgencFromSource: 'Bla = Array (method1 = (^ 42) method2 = primitive)'.
+	clazz := cgenc assembleIn: universe.
+	self 
+		assert: clazz somSuperClass
+		equals: (universe globalAt: #Array)
+	"self assert: clazz superClazz theName symbol equals: #Array."
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
+	| cgenc somClass instance privateInstVarNames |
+	
+	"Instance fields declared in SOM might not map properly to the field 'fields', if on the VM-side instance fields are added to subclasses of SOMObject that are not supposed to be visible from SOM, e.g. Method's field 'bytecodes'."
+	universe setupClasspath: 'Smalltalk:TestSuite:.'.
+	
+	self loadClazzes: { #Object. #Method }.
+	cgenc := self createCgencFromSource: 
+	  'MethodSubClass = Method(	| thisMightCollideWithBytecodes |
+	   setField = (thisMightCollideWithBytecodes := 42.))'.
+	somClass := cgenc assembleIn: universe.
+	instance := somClass primnew.
+	universe 
+		bootstrapWithEntryPoint: (somClass somInstanceInvokables at: 1)
+		on: (universe globalAt: #system)
+		withArguments: instance.
+	privateInstVarNames := instance class instVarNames select: [ :each | (each beginsWith: 'som') not ].
+	privateInstVarNames do: 
+		[ :each | 
+		self 
+			assert: ((universe newNumber: 42) primEqual: (instance instVarNamed: each))
+			equals: (universe globalAt: #false) ]
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test06AssembleNormalClass [
+
+	| class |
+	class := self compileSource: 'Test = (| a b| m1=(1+2))'.
+	self assert: class somInstanceFields elements second string equals: 'b'.
+	self assert: class somInstanceInvokables size equals: 1.
+]
+
+{ #category : #tests }
+CompileSOMClassTest >> test07InternalClassHierarchyEqualsSomClassHierarchy [
+
+	"This test is currently deactivated. It tests if the class
+	hierarchy of system classes is the same as in SOM. Currently
+	it isn't but there could be problems in the future because of this'"
+	universe := SOMUniverse new.
+	universe setupClasspath: 'Smalltalk:TestSuite:.'.
+	universe initializeObjectSystem.
+
+	"self assertSuperClassOf: #Object is: #nil."
+	self assertSuperClassOf: #Class is: #Object.
+	self assertSuperClassOf: #Metaclass is: #Class.
+	self assertSuperClassOf: #Nil is: #Object.
+	self assertSuperClassOf: #Array is: #Object.
+	self assertSuperClassOf: #Method is: #Array.
+	self assertSuperClassOf: #Symbol is: #String.
+	self assertSuperClassOf: #Integer is: #Object.
+	self assertSuperClassOf: #Primitive is: #Object.
+	self assertSuperClassOf: #String is: #Object.
+	self assertSuperClassOf: #Double is: #Object.
+]

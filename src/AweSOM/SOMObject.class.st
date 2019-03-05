@@ -6,7 +6,6 @@ Class {
 		'theHash',
 		'fields',
 		'indexableFields',
-		'gcField',
 		'somClass'
 	],
 	#category : #'AweSOM-CoreObjects'
@@ -51,7 +50,7 @@ SOMObject class >> inUniverse: universe withNumberOfAdditionalFields: nFields wi
 		setDefaultClass;
 		initialize;
 		postInitialize.
-	universe heap allocateFor: result.
+
 	^ result
 ]
 
@@ -89,14 +88,6 @@ SOMObject class >> somName [
 ]
 
 { #category : #accessing }
-SOMObject >> allMyReferences [
-
-	| normalFields |
-	normalFields := (1 to: self numberOfFields) collect: [:i | self fieldAtIndex: i].
-	^ normalFields , self indexableFields 
-]
-
-{ #category : #accessing }
 SOMObject >> fieldAtIndex: index [
 	^ fields at: index
 ]
@@ -114,16 +105,6 @@ SOMObject >> fields [
 { #category : #accessing }
 SOMObject >> fields: anObject [
 	fields := anObject
-]
-
-{ #category : #accessing }
-SOMObject >> gcField [
-	^ gcField
-]
-
-{ #category : #accessing }
-SOMObject >> gcField: anObject [
-	gcField := anObject
 ]
 
 { #category : #accessing }

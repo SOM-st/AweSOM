@@ -5,7 +5,6 @@ Class {
 		'globals',
 		'interpreter',
 		'outStream',
-		'heap',
 		'symbolTable',
 		'numberCache',
 		'exitCode',
@@ -374,23 +373,12 @@ SOMUniverse >> hasGlobalAt: aSymbol [
 	^ globals includesKey: aSymbol
 ]
 
-{ #category : #accessing }
-SOMUniverse >> heap [
-	^ heap
-]
-
-{ #category : #accessing }
-SOMUniverse >> heap: anObject [
-	heap := anObject
-]
-
 { #category : #initializing }
 SOMUniverse >> initialize [
 
 	super initialize.
 	self interpreter: (self class defaultInterpreter inUniverse: self).
 	globals := IdentityDictionary new.
-	heap := SOMHeap in: self.
 	symbolTable := SOMSymbolTable in: self.
 	numberCache := IdentityDictionary new.
 
@@ -454,7 +442,7 @@ SOMUniverse >> initializeObjectSystem [
 { #category : #initializing }
 SOMUniverse >> initializeObjectSystemIfNecessary [
 
-	isInitialized ifFalse: [ self initalizeObjectSystem ]
+	isInitialized ifFalse: [ self initializeObjectSystem ]
 ]
 
 { #category : #initializing }

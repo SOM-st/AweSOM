@@ -207,16 +207,18 @@ SOMMethodGenerationContext >> bcReturnNonLocal [
 SOMMethodGenerationContext >> bcSend: selector [
 
 	| idx |
-	idx := self addLiteralIfAbsent: selector asSymbol.
-	^ self bytecode add: (SOMBCSend in: self index: idx).
+	self assert: selector isSymbol.
+	idx := self addLiteralIfAbsent: selector.
+	^ self bytecode add: (SOMBCSend in: self index: idx numArgs: selector numArgs).
 ]
 
 { #category : #bytecode }
 SOMMethodGenerationContext >> bcSuperSend: selector [
 
 	| idx |
-	idx := self addLiteralIfAbsent: selector asSymbol.
-	^ self bytecode add: (SOMBCSuperSend in: self index: idx).
+	self assert: selector isSymbol.
+	idx := self addLiteralIfAbsent: selector.
+	^ self bytecode add: (SOMBCSuperSend in: self index: idx numArgs: selector numArgs).
 ]
 
 { #category : #accessing }

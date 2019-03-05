@@ -184,7 +184,7 @@ SOMInterpreter >> doSend [
 
 	| methodName receiver |
 	methodName := currentBytecode selector.
-	receiver := frame stackElementAtIndex: methodName numArgs + 1.
+	receiver := frame stackElementAtIndex: currentBytecode numArgs + 1.
 	^ self 
 		send: methodName
 		toClazz: receiver somClass

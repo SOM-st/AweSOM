@@ -13,6 +13,11 @@ SOMBCSend class >> in: mgenc index: idx numArgs: numArgs [
 		numArgs: numArgs
 ]
 
+{ #category : #interpreting }
+SOMBCSend >> interpret: interp [
+	interp doSend
+]
+
 { #category : #accessing }
 SOMBCSend >> numArgs [
 	^ numArgs

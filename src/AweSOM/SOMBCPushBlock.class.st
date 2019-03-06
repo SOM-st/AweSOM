@@ -4,6 +4,11 @@ Class {
 	#category : #'AweSOM-Interpreter'
 }
 
+{ #category : #interpreting }
+SOMBCPushBlock >> interpret: interp [
+	interp doPushBlock
+]
+
 { #category : #accessing }
 SOMBCPushBlock >> isPushBlock [
 	^ true

@@ -227,11 +227,6 @@ SOMInterpreter >> doSuperSend [
 		toClazz: superClazz
 ]
 
-{ #category : #accessing }
-SOMInterpreter >> instructionSelectors [
-	^ SOMBytecode instructionSelectorDict 
-]
-
 { #category : #'frame manipulation' }
 SOMInterpreter >> popFrame [
 	| currentFrame |
@@ -440,7 +435,7 @@ SOMInterpreter >> start [
 		"increase bytecode index here because frame might change
 		while dispatching current bytecode"
 		frame bytecodeIndex: bytecodeIndex + 1.
-		self perform: (self instructionSelectors at: bytecode class).
+		bytecode interpret: self
 	]
 ]
 

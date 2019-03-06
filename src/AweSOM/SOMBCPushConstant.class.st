@@ -9,6 +9,11 @@ SOMBCPushConstant >> const [
 	^ self literalValue
 ]
 
+{ #category : #interpreting }
+SOMBCPushConstant >> interpret: interp [
+	interp doPushConstant
+]
+
 { #category : #accessing }
 SOMBCPushConstant >> stackDepth [
 

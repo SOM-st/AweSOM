@@ -9,6 +9,11 @@ SOMBCPushGlobal >> global [
 	^ self literalValue
 ]
 
+{ #category : #interpreting }
+SOMBCPushGlobal >> interpret: interp [
+	interp doPushGlobal
+]
+
 { #category : #accessing }
 SOMBCPushGlobal >> stackDepth [
 

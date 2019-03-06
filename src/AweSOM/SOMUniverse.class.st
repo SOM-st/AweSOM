@@ -481,6 +481,10 @@ SOMUniverse >> initializeTestObjectSystem [
 	
 	somBlockClass := self newSystemClass.
 	self initializeSystemClass: somBlockClass superclass: somObjectClass named: #Block.
+	somBlockClasses at: 1 put: somBlockClass.
+	somBlockClasses at: 2 put: somBlockClass.
+	somBlockClasses at: 3 put: somBlockClass.
+
 
 	self initializeGlobalsDict: somNilObject.
 

@@ -6,7 +6,6 @@ Class {
 		'interpreter',
 		'outStream',
 		'symbolTable',
-		'numberCache',
 		'exitCode',
 		'isInitialized',
 		'somObjectClass',
@@ -28,7 +27,8 @@ Class {
 		'somFalseClass',
 		'somSystemClass',
 		'somNilObject',
-		'somBlockClass'
+		'somBlockClass',
+		'somBlockClasses'
 	],
 	#classVars : [
 		'ClassPaths',
@@ -380,7 +380,7 @@ SOMUniverse >> initialize [
 	self interpreter: (self class defaultInterpreter inUniverse: self).
 	globals := IdentityDictionary new.
 	symbolTable := SOMSymbolTable in: self.
-	numberCache := IdentityDictionary new.
+	somBlockClasses := Array new: 3.
 
 	exitCode := 0.
 	isInitialized := false.
@@ -602,9 +602,7 @@ SOMUniverse >> newMetaclassClass [
 { #category : #'object creation' }
 SOMUniverse >> newNumber: number [
 
-	^ self numberCache
-		at: number
-		ifAbsentPut: [SOMNumber create: number in: self].
+	^ SOMNumber create: number in: self.
 ]
 
 { #category : #'object creation' }
@@ -630,16 +628,6 @@ SOMUniverse >> newSystemClass [
 	systemClass somClass somClass: somMetaclassClass.
 	
 	^ systemClass
-]
-
-{ #category : #accessing }
-SOMUniverse >> numberCache [
-	^ numberCache
-]
-
-{ #category : #accessing }
-SOMUniverse >> numberCache: anObject [
-	numberCache := anObject
 ]
 
 { #category : #accessing }

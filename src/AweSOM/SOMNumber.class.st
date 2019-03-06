@@ -59,6 +59,12 @@ SOMNumber >> primEqual: other [
 ]
 
 { #category : #primitives }
+SOMNumber >> primEqualEqual: otherObject [ 
+
+	^ self universe newBool: number == otherObject number
+]
+
+{ #category : #primitives }
 SOMNumber >> primLowerThan: other [
 	
 	^ universe newBool: self number < other number

@@ -147,6 +147,12 @@ SOMObject >> isSOMSymbol [
 ]
 
 { #category : #accessing }
+SOMObject >> number [
+	"Needed to allow value equality for SOMNumber objects in SOMNumber>>#primEqualEqual:"
+	^ nil
+]
+
+{ #category : #accessing }
 SOMObject >> numberOfFields [
 	^ fields size
 ]

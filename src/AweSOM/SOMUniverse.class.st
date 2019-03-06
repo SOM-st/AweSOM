@@ -272,9 +272,8 @@ SOMUniverse >> globalBlockClass [
 
 { #category : #'gobal accessing' }
 SOMUniverse >> globalBlockClass: numArgs [
-	| className |
-	className := 'Block', (numArgs + 1) asString.
-	^ self loadSOMClass: className asSymbol
+	^ somBlockClasses at: numArgs + 1
+
 ]
 
 { #category : #'gobal accessing' }
@@ -421,6 +420,9 @@ SOMUniverse >> initializeObjectSystem [
 	
 	"Load the generic block class"
 	somBlockClass := self loadSOMClass: #Block.
+	somBlockClasses at: 1 put: (self loadSOMClass: #Block1).
+	somBlockClasses at: 2 put: (self loadSOMClass: #Block2).
+	somBlockClasses at: 3 put: (self loadSOMClass: #Block3).
 	
 	"Setup the true and false objects"
 	somTrueClass := self loadSOMClass: #True.

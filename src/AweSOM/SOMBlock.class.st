@@ -51,6 +51,11 @@ SOMBlock >> primrestart [
 ]
 
 { #category : #accessing }
+SOMBlock >> setDefaultClass [
+	"NO-OP, is set explicitly on object creation"
+]
+
+{ #category : #accessing }
 SOMBlock >> somBlockMethod [
 	^ somBlockMethod
 ]

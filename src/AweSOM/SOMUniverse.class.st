@@ -6,7 +6,6 @@ Class {
 		'interpreter',
 		'outStream',
 		'symbolTable',
-		'numberCache',
 		'exitCode',
 		'isInitialized',
 		'somObjectClass',
@@ -28,7 +27,8 @@ Class {
 		'somFalseClass',
 		'somSystemClass',
 		'somNilObject',
-		'somBlockClass'
+		'somBlockClass',
+		'somBlockClasses'
 	],
 	#classVars : [
 		'ClassPaths',
@@ -272,9 +272,8 @@ SOMUniverse >> globalBlockClass [
 
 { #category : #'gobal accessing' }
 SOMUniverse >> globalBlockClass: numArgs [
-	| className |
-	className := 'Block', (numArgs + 1) asString.
-	^ self loadSOMClass: className asSymbol
+	^ somBlockClasses at: numArgs + 1
+
 ]
 
 { #category : #'gobal accessing' }
@@ -380,7 +379,7 @@ SOMUniverse >> initialize [
 	self interpreter: (self class defaultInterpreter inUniverse: self).
 	globals := IdentityDictionary new.
 	symbolTable := SOMSymbolTable in: self.
-	numberCache := IdentityDictionary new.
+	somBlockClasses := Array new: 3.
 
 	exitCode := 0.
 	isInitialized := false.
@@ -421,6 +420,9 @@ SOMUniverse >> initializeObjectSystem [
 	
 	"Load the generic block class"
 	somBlockClass := self loadSOMClass: #Block.
+	somBlockClasses at: 1 put: (self loadSOMClass: #Block1).
+	somBlockClasses at: 2 put: (self loadSOMClass: #Block2).
+	somBlockClasses at: 3 put: (self loadSOMClass: #Block3).
 	
 	"Setup the true and false objects"
 	somTrueClass := self loadSOMClass: #True.
@@ -479,6 +481,10 @@ SOMUniverse >> initializeTestObjectSystem [
 	
 	somBlockClass := self newSystemClass.
 	self initializeSystemClass: somBlockClass superclass: somObjectClass named: #Block.
+	somBlockClasses at: 1 put: somBlockClass.
+	somBlockClasses at: 2 put: somBlockClass.
+	somBlockClasses at: 3 put: somBlockClass.
+
 
 	self initializeGlobalsDict: somNilObject.
 
@@ -602,9 +608,7 @@ SOMUniverse >> newMetaclassClass [
 { #category : #'object creation' }
 SOMUniverse >> newNumber: number [
 
-	^ self numberCache
-		at: number
-		ifAbsentPut: [SOMNumber create: number in: self].
+	^ SOMNumber create: number in: self.
 ]
 
 { #category : #'object creation' }
@@ -630,16 +634,6 @@ SOMUniverse >> newSystemClass [
 	systemClass somClass somClass: somMetaclassClass.
 	
 	^ systemClass
-]
-
-{ #category : #accessing }
-SOMUniverse >> numberCache [
-	^ numberCache
-]
-
-{ #category : #accessing }
-SOMUniverse >> numberCache: anObject [
-	numberCache := anObject
 ]
 
 { #category : #accessing }

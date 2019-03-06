@@ -53,9 +53,13 @@ SOMNumber >> primAnd: other [
 { #category : #primitives }
 SOMNumber >> primEqual: other [
 
-	^ universe newBool: 
-		((other isKindOf: SOMNumber)
-			and: [self number = other number])
+	^ universe newBool: self number = other number
+]
+
+{ #category : #primitives }
+SOMNumber >> primEqualEqual: otherObject [ 
+
+	^ self universe newBool: number == otherObject number
 ]
 
 { #category : #primitives }

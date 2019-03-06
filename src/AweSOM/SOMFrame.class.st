@@ -328,6 +328,10 @@ SOMFrame >> resetStackPointer [
 ]
 
 { #category : #accessing }
+SOMFrame >> setDefaultClass [
+]
+
+{ #category : #accessing }
 SOMFrame >> somContext [
 	^ somContext
 ]

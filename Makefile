@@ -10,7 +10,7 @@ pharo:
 
 awesom.image: Pharo.image pharo
 	./pharo ./Pharo.image save awesom
-	./pharo awesom.image metacello install gitlocal://$(ROOT_DIR)/src BaselineOfAweSOM
+	./pharo awesom.image metacello install tonel://$(ROOT_DIR)/src BaselineOfAweSOM
 
 som: awesom.image core-lib/.gitignore
 

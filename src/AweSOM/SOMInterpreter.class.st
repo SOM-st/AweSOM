@@ -96,7 +96,7 @@ SOMInterpreter >> doPushArgument [
 { #category : #'bytecode processing' }
 SOMInterpreter >> doPushBlock [
 	| blockMethod block |
-	blockMethod := self currentBytecode literalValue.
+	blockMethod := currentBytecode literalValue.
 	block := universe newBlock: blockMethod in: frame.
 	
 	frame push: block
@@ -183,8 +183,8 @@ SOMInterpreter >> doReturnNonLocal [
 SOMInterpreter >> doSend [
 
 	| methodName receiver |
-	methodName := self currentBytecode selector.
-	receiver := self somFrame stackElementAtIndex: methodName numArgs + 1.
+	methodName := currentBytecode selector.
+	receiver := frame stackElementAtIndex: currentBytecode numArgs + 1.
 	^ self 
 		send: methodName
 		toClazz: receiver somClass
@@ -225,11 +225,6 @@ SOMInterpreter >> doSuperSend [
 	self 
 		send: methodName
 		toClazz: superClazz
-]
-
-{ #category : #accessing }
-SOMInterpreter >> instructionSelectors [
-	^ SOMBytecode instructionSelectorDict 
 ]
 
 { #category : #'frame manipulation' }
@@ -426,7 +421,7 @@ SOMInterpreter >> somFrame: anFrame [
 
 { #category : #accessing }
 SOMInterpreter >> somMethod [
-	^ self somFrame somMethod
+	^ frame somMethod
 ]
 
 { #category : #initialization }
@@ -434,13 +429,13 @@ SOMInterpreter >> start [
 
 	stopped := false.
 	[stopped] whileFalse: [| bytecode bytecodeIndex |
-		bytecodeIndex := self somFrame bytecodeIndex.
+		bytecodeIndex := frame bytecodeIndex.
 		bytecode := self somMethod bytecodeAt: bytecodeIndex.
-		self currentBytecode: bytecode.
+		currentBytecode := bytecode.
 		"increase bytecode index here because frame might change
 		while dispatching current bytecode"
-		self somFrame bytecodeIndex: bytecodeIndex + 1.
-		self perform: (self instructionSelectors at: bytecode class).
+		frame bytecodeIndex: bytecodeIndex + 1.
+		bytecode interpret: self
 	]
 ]
 

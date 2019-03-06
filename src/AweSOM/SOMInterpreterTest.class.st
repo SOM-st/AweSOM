@@ -433,7 +433,7 @@ SOMInterpreterTest >> test15SuperSend [
 			mgenc
 				bcPushArgumentIndex: 1
 					ctxIndex: 1;
-				bcSuperSend: 'test';
+				bcSuperSend: #test;
 				bcReturnLocal ].
 	testMethod somHolder: testClazz.
 	testClazz somInstanceInvokables: (SOMArray 

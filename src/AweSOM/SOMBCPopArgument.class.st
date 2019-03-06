@@ -4,6 +4,11 @@ Class {
 	#category : #'AweSOM-Interpreter'
 }
 
+{ #category : #interpreting }
+SOMBCPopArgument >> interpret: interp [
+	interp doPopArgument
+]
+
 { #category : #accessing }
 SOMBCPopArgument >> stackDepth [
 

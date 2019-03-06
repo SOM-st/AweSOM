@@ -100,10 +100,12 @@ CompileSOMClassTest >> test05UnsharedFieldInMethodSubClass [
 		withArguments: instance.
 	privateInstVarNames := instance class instVarNames select: [ :each | (each beginsWith: 'som') not ].
 	privateInstVarNames do: 
-		[ :each | 
+		[ :each |
+		| instVarVal |
+		instVarVal := instance instVarNamed: each.
 		self 
-			assert: ((universe newNumber: 42) primEqual: (instance instVarNamed: each))
-			equals: (universe globalAt: #false) ]
+			assert: ((instVarVal isKindOf: SOMNumber) and: [instVarVal number = 42])
+			equals: false ]
 ]
 
 { #category : #tests }
